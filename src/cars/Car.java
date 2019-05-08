@@ -180,7 +180,7 @@ public class Car
 		sb.append(String.format("%-15s %s\n", "Driver Name:", driverName));
 		sb.append(String.format("%-15s %s\n", "Capacity:", passengerCapacity));
 
-		if (available)
+		if (bookingAvailable())
 		{
 			sb.append(String.format("%-15s %s\n", "Available:", "YES"));
 		} else
@@ -204,7 +204,7 @@ public class Car
 			sb.append(":" + driverName);
 		}
 		sb.append(":" + passengerCapacity);
-		if (available)
+		if (bookingAvailable())
 		{
 			sb.append(":" + "YES");
 		} else
@@ -252,9 +252,11 @@ public class Car
 	 */
 	private String completeBooking(int bookingIndex, double kilometers)
 	{
+		tripFee = 0;
 		Booking booking = currentBookings[bookingIndex];
 		// Remove booking from current bookings array.
 		currentBookings[bookingIndex] = null;
+		bookingSpotAvailable = bookingIndex;
 
 		// call complete booking on Booking object
 		// double kilometersTravelled = Math.random()* 100;
@@ -272,6 +274,7 @@ public class Car
 		}
 		String result = String.format("Thank you for riding with MiRide.\nWe hope you enjoyed your trip.\n$"
 				+ "%.2f has been deducted from your account.", tripFee);
+		tripFee = 0;
 		return result;
 	}
 
@@ -369,6 +372,14 @@ public class Car
 		{
 			if (currentBookings[i] == null)
 			{
+				if(i == currentBookings.length - 1)
+				{
+					available = false;
+				}
+				else
+				{
+					available = true;
+				}
 				bookingSpotAvailable = i;
 				return true;
 			}

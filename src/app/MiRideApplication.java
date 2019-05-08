@@ -78,11 +78,19 @@ public class MiRideApplication
 		Car car = getCarById(registrationNumber);
 		if(car != null)
         {
-            car.book(firstName, lastName, required, numPassengers);
-		    String message = "Thank you for your booking. \n" + car.getDriverName() 
+			if(car.book(firstName, lastName, required, numPassengers))
+			{
+
+				String message = "Thank you for your booking. \n" + car.getDriverName() 
 		        + " will pick you up on " + required.getFormattedDate() + ". \n"
 				+ "Your booking reference is: " + car.getBookingID(firstName, lastName, required);
-		    return message;
+				return message;
+			}
+			else
+			{
+				String message = "Booking could not be completed.";
+				return message;
+			}
         }
         else{
             return "Car with registration number: " + registrationNumber + " was not found.";
@@ -98,11 +106,18 @@ public class MiRideApplication
 		{
 			if (cars[i] != null)
 			{
-				result = cars[i].completeBooking(firstName, lastName, dateOfBooking, kilometers);
-				if(!result.equals("Booking not found"))
+				if(cars[i].isCarBookedOnDate(dateOfBooking))
 				{
-					return result;
+					return cars[i].completeBooking(firstName, lastName, dateOfBooking, kilometers);
 				}
+//				else
+//				{
+//					
+//				}
+//				if(!result.equals("Booking not found"))
+//				{
+//					return result;
+//				}
 			}
 		}
 		return "Booking not found.";
@@ -161,7 +176,7 @@ public class MiRideApplication
 		{
 			return false;
 		}
-		return false;
+		return true;
 	}
 	public String displaySpecificCar(String regNo)
 	{
@@ -263,6 +278,11 @@ public class MiRideApplication
 	public String isValidId(String id)
 	{
 		return MiRidesUtilities.isRegNoValid(id);
+	}
+	
+	public String isValidPassengerCapacity(int passengerNumber)
+	{
+		return MiRidesUtilities.isPassengerCapacityValid(passengerNumber);
 	}
 
 	public boolean checkIfCarExists(String regNo)
