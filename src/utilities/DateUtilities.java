@@ -29,7 +29,6 @@ public class DateUtilities {
 	
 	public static boolean dateIsNotMoreThan7Days(DateTime date)
 	{
-		
 		boolean within7Days = false;
 		DateTime today = new DateTime();
 		DateTime nextWeek = new DateTime(7);
@@ -40,5 +39,19 @@ public class DateUtilities {
 			within7Days = true;
 		}
 		return within7Days;
+	}
+	
+	public static boolean dateIsNotMoreThan3Days(DateTime date)
+	{
+		boolean within3Days = false;
+		DateTime today = new DateTime();
+		DateTime next3Days = new DateTime(3);
+		
+		int daysInFuture = DateTime.diffDays(next3Days, date);
+		if(daysInFuture > 0 && daysInFuture < 4)
+		{
+			within3Days = true;
+		}
+		return within3Days;
 	}
 }
