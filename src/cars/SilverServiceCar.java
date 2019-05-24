@@ -7,6 +7,7 @@ public class SilverServiceCar extends Car{
 
 	private double bookingFee;
 	private String[] refreshments;
+	private int refreshmentsCount = 0;
 	
 	// Constants
 	private final double MINIMUM_BOOKING_FEE = 3;
@@ -24,6 +25,7 @@ public class SilverServiceCar extends Car{
 		}
 		this.bookingFee = bookingFee;
 		this.refreshments = refreshments;
+		this.refreshmentsCount = refreshments.length;
 	}
 	
 	@Override
@@ -57,6 +59,35 @@ public class SilverServiceCar extends Car{
 	public double calculateFee(double km) {
 		double tripFee = km * (0.4 * bookingFee); 
 		return tripFee;
+	}
+	
+	@Override
+	public String getDetails() {
+		String base = super.getDetails();
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append(base);
+		// Refreshments
+		sb.append(String.format("%s\n", "Refreshments Available"));
+		for(int i = 0; i < refreshmentsCount; i++) {
+			sb.append(String.format("%s %-15s\n", "Item " + (i+1), refreshments[i]));
+		}
+		
+		// Bookings
+		sb.append(String.format("%s\n", "Current Bookings"));
+		for(int i = 0; i < currentBookings.length; i++) {
+			sb.append(String.format("%-15s\n", "______________________________"));
+			sb.append(currentBookings[i].getDetails());
+		}
+		
+		
+		// Past Bookings
+		sb.append(String.format("%s\n", "Past Bookings"));
+		for(int i = 0; i < pastBookings.length; i++) {
+			sb.append(String.format("%-15s\n", "______________________________"));
+			sb.append(pastBookings[i].getDetails());
+		}
+		return sb.toString();
 	}
 
 }

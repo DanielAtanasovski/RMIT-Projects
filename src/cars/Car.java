@@ -21,8 +21,8 @@ public class Car
 	private int passengerCapacity;
 
 	// Tracking bookings
-	private Booking[] currentBookings;
-	private Booking[] pastBookings;
+	protected Booking[] currentBookings;
+	protected Booking[] pastBookings;
 	private boolean available;
 	private int bookingSpotAvailable = 0;
 	private double tripFee = 0;
