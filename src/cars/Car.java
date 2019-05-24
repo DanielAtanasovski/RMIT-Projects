@@ -80,14 +80,22 @@ public class Car
 		// Booking is permissible
 		if (available && dateAvailable && dateValid && validPassengerNumber)
 		{
-			tripFee = STANDARD_BOOKING_FEE;
-			Booking booking = new Booking(firstName, lastName, required, numPassengers, this);
-			currentBookings[bookingSpotAvailable] = booking;
-			bookingSpotAvailable++;
+			createBooking(firstName, lastName, required, numPassengers);
 			booked = true;
 		}
 		return booked;
 	}
+	
+	/*
+	 * Creates the booking object.
+	 */
+	protected void createBooking(String firstName, String lastName, DateTime required, int numPassengers) {
+		tripFee = STANDARD_BOOKING_FEE;
+		Booking booking = new Booking(firstName, lastName, required, numPassengers, this);
+		currentBookings[bookingSpotAvailable] = booking;
+		bookingSpotAvailable++;
+	}
+	
 
 	/*
 	 * Completes a booking based on the name of the passenger and the booking date.
@@ -357,7 +365,7 @@ public class Car
 	/*
 	 * Checks that the date is not in the past or more than 7 days in the future.
 	 */
-	private boolean dateIsValid(DateTime date)
+	protected boolean dateIsValid(DateTime date)
 	{
 		return DateUtilities.dateIsNotInPast(date) && DateUtilities.dateIsNotMoreThan7Days(date);
 	}
@@ -389,8 +397,9 @@ public class Car
 
 	/*
 	 * Checks to see if if the car is currently booked on the date specified.
+	 * Protected so that child class can override
 	 */
-	private boolean notCurrentlyBookedOnDate(DateTime date)
+	protected boolean notCurrentlyBookedOnDate(DateTime date)
 	{
 		boolean foundDate = true;
 		for (int i = 0; i < currentBookings.length; i++)
