@@ -26,6 +26,7 @@ public class Car
 	private boolean available;
 	private int bookingSpotAvailable = 0;
 	private double tripFee = 0;
+	protected double bookingFee;
 
 	// Constants
 	private final double STANDARD_BOOKING_FEE = 1.5;
@@ -43,6 +44,7 @@ public class Car
 		available = true;
 		currentBookings = new Booking[5];
 		pastBookings = new Booking[10];
+		bookingFee = STANDARD_BOOKING_FEE;
 	}
 
 	/*
@@ -219,7 +221,8 @@ public class Car
 		{
 			sb.append(":" + "NO");
 		}
-
+		sb.append(":" + bookingFee);
+		
 		return sb.toString();
 	}
 

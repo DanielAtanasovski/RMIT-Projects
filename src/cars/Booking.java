@@ -78,7 +78,7 @@ public class Booking {
 	
 	/*
 	 * Computer readable state of the car
-	 */
+	 */ 
 	@Override
 	public String toString()
 	{

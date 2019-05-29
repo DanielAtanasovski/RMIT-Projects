@@ -5,7 +5,6 @@ import utilities.DateUtilities;
 
 public class SilverServiceCar extends Car{
 
-	private double bookingFee;
 	private String[] refreshments;
 	private int refreshmentsCount = 0;
 	
@@ -88,6 +87,29 @@ public class SilverServiceCar extends Car{
 			sb.append(pastBookings[i].getDetails());
 		}
 		return sb.toString();
+	}
+	
+	@Override
+	public String toString() {
+		String superString = super.toString();
+		StringBuilder sb = new StringBuilder();
+		sb.append(superString);
+		// Refreshments
+		for(int i = 0; i < refreshmentsCount; i++) {
+			sb.append("Item " + (i+1) + " " + refreshments[i]);
+		}
+		// Current Bookings
+		for(int i = 0; i < currentBookings.length; i++) {
+			Booking currentBook = currentBookings[i];
+			sb.append("|" + currentBook.toString() + " " + refreshments[i]);
+		}
+		// Completed Bookings
+		for(int i = 0; i < pastBookings.length; i++) {
+			sb.append("Item " + (i+1) + " " + refreshments[i]);
+		}
+		
+		return sb.toString();
+		
 	}
 
 }
