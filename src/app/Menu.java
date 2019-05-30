@@ -279,9 +279,9 @@ public class Menu
 		System.out.println("Enter Sort Order (A/D): ");
 		stringType = console.nextLine();
 		if (stringType.toUpperCase().equals("A")) {
-			orderType = false;
-		} else if (stringType.toUpperCase().equals("D")) {
 			orderType = true;
+		} else if (stringType.toUpperCase().equals("D")) {
+			orderType = false;
 		} else {
 			System.out.println("Invalid Order Type");
 		}

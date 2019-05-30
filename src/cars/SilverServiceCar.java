@@ -49,6 +49,7 @@ public class SilverServiceCar extends Car{
 	/*
 	 * Calculates and Returns the car's fee
 	 */
+	@Override
 	public double calculateFee(double km) {
 		double tripFee = km * (0.4 * bookingFee); 
 		return tripFee;

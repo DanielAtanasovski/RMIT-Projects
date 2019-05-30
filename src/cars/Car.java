@@ -320,8 +320,7 @@ public class Car
 		bookingSpotAvailable = bookingIndex;
 
 		// call complete booking on Booking object
-		// double kilometersTravelled = Math.random()* 100;
-		double fee = kilometers * (STANDARD_BOOKING_FEE * 0.3);
+		double fee = calculateFee(kilometers);
 		tripFee += fee;
 		booking.completeBooking(kilometers, fee, STANDARD_BOOKING_FEE);
 		// add booking to past bookings
@@ -337,6 +336,10 @@ public class Car
 				+ "%.2f has been deducted from your account.", tripFee);
 		tripFee = 0;
 		return result;
+	}
+	
+	protected double calculateFee(double km) {
+		return km * (STANDARD_BOOKING_FEE * 0.3);
 	}
 
 	/*
