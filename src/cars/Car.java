@@ -2,6 +2,7 @@ package cars;
 
 import java.util.ArrayList;
 
+import exceptions.InvalidBooking;
 import utilities.DateTime;
 import utilities.DateUtilities;
 import utilities.MiRidesUtilities;
@@ -69,7 +70,7 @@ public class Car
 	 * Booking six cars
 	 */
 
-	public boolean book(String firstName, String lastName, DateTime required, int numPassengers)
+	public boolean book(String firstName, String lastName, DateTime required, int numPassengers) throws InvalidBooking
 	{
 		boolean booked = false;
 		// Does car have five bookings
@@ -92,7 +93,7 @@ public class Car
 	/*
 	 * Creates the booking object.
 	 */
-	protected void createBooking(String firstName, String lastName, DateTime required, int numPassengers) {
+	protected void createBooking(String firstName, String lastName, DateTime required, int numPassengers) throws InvalidBooking{
 		System.out.println("-- Create Booking --");
 		tripFee = bookingFee;
 		Booking booking = new Booking(firstName, lastName, required, numPassengers, this);
@@ -139,7 +140,7 @@ public class Car
 	 * any booking date Return true ELSE Return false END
 	 * 
 	 */
-	public boolean isCarBookedOnDate(DateTime dateRequired)
+	public boolean isCarBookedOnDate(DateTime dateRequired) throws InvalidBooking
 	{
 		boolean carIsBookedOnDate = false;
 		for (int i = 0; i < currentBookings.length; i++)
@@ -149,6 +150,7 @@ public class Car
 				if (DateUtilities.datesAreTheSame(dateRequired, currentBookings[i].getBookingDate()))
 				{
 					carIsBookedOnDate = true;
+					throw new InvalidBooking("Error - Car already booked on date.");
 				}
 			}
 		}
@@ -421,8 +423,14 @@ public class Car
 	/*
 	 * Checks that the date is not in the past or more than 7 days in the future.
 	 */
-	protected boolean dateIsValid(DateTime date)
+	protected boolean dateIsValid(DateTime date) throws InvalidBooking
 	{
+		if (!DateUtilities.dateIsNotInPast(date))
+			throw new InvalidBooking("Error - Date is in the past.");
+		
+		if (!DateUtilities.dateIsNotMoreThan7Days(date))
+			throw new InvalidBooking("Error - Date is more than 7 days advanced.");
+		
 		return DateUtilities.dateIsNotInPast(date) && DateUtilities.dateIsNotMoreThan7Days(date);
 	}
 
@@ -453,9 +461,8 @@ public class Car
 
 	/*
 	 * Checks to see if if the car is currently booked on the date specified.
-	 * Protected so that child class can override
 	 */
-	protected boolean notCurrentlyBookedOnDate(DateTime date)
+	private boolean notCurrentlyBookedOnDate(DateTime date)
 	{
 		boolean foundDate = true;
 		for (int i = 0; i < currentBookings.length; i++)

@@ -1,5 +1,6 @@
 package cars;
 
+import exceptions.InvalidBooking;
 import utilities.DateTime;
 import utilities.DateUtilities;
 
@@ -28,7 +29,8 @@ public class SilverServiceCar extends Car{
 	}
 	
 	@Override
-	public boolean book(String firstName, String lastName, DateTime required, int numPassengers) {
+	public boolean book(String firstName, String lastName, 
+			DateTime required, int numPassengers) throws InvalidBooking {
 		boolean success;
 		
 		// Silver Service specific requirements
@@ -41,8 +43,14 @@ public class SilverServiceCar extends Car{
 	}
 	
 	@Override
-	protected boolean dateIsValid(DateTime date)
+	protected boolean dateIsValid(DateTime date) throws InvalidBooking
 	{
+		if(!DateUtilities.dateIsNotMoreThan3Days(date)) {
+			throw new InvalidBooking("Error - Date is more than 3 days advance.");
+		} else if (!(DateUtilities.dateIsNotInPast(date))) {
+			throw new InvalidBooking("Error - Date is in the past.");
+		}
+		
 		return DateUtilities.dateIsNotInPast(date) && DateUtilities.dateIsNotMoreThan3Days(date);
 	}
 	
