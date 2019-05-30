@@ -77,8 +77,11 @@ public class Menu
 	 */
 	private void createCar()
 	{
-		String id = "", make, model, driverName;
+		String id = "", make, model, driverName, serviceType;
 		int numPassengers = 0;
+		double fee = 0;
+		String[] refreshments = null;
+		boolean silverService = false;
 
 		System.out.print("Enter registration number: ");
 		id = promptUserForRegNo();
@@ -96,12 +99,29 @@ public class Menu
 
 			System.out.print("Enter number of passengers: ");
 			numPassengers = promptForPassengerNumbers();
+			
+			System.out.print("Enter Service Type (SD/SS): ");
+			serviceType = console.nextLine();
 
+			if (serviceType.toUpperCase() == "SS") {
+				System.out.print("Enter Standard Fee: ");
+				fee = promptForFee();
+				
+				System.out.print("Enter Service Type (SD/SS): ");
+				refreshments = promptForRefreshments();
+				silverService = true;
+				
+			} else if (serviceType.toUpperCase() != "SD") {
+				System.out.println("Error - Invalid service type");
+				return; 
+			}
+			
 			boolean result = application.checkIfCarExists(id);
 
 			if (!result)
 			{
-				String carRegistrationNumber = application.createCar(id, make, model, driverName, numPassengers);
+				String carRegistrationNumber = application.createCar(id, make, model, driverName,
+						numPassengers, silverService, fee, refreshments);
 				System.out.println(carRegistrationNumber);
 			} else
 			{
@@ -233,6 +253,37 @@ public class Menu
 			return numPassengers;
 		}
 	}
+	
+	/*
+	 * Checks user input for valid fee
+	 */
+	//TODO: Exception for invalid number
+	private double promptForFee() {
+//		double fee = 0.0;
+//		boolean validFee = false;
+//		if (!testingWithValidation) {
+//			return Double.parseDouble(console.nextLine());
+//		} else {
+//			while(!validFee) {
+//				fee = Double.parseDouble(console.nextLine());
+//				
+//			}
+//			return fee;
+//		}
+		return Double.parseDouble(console.nextLine());
+	}
+	
+	/*
+	 * Checks user input for valid refreshment list
+	 */
+	// TODO: Exception for invalid List
+	private String[] promptForRefreshments() {
+		String line = console.nextLine();
+		String[] refreshments = line.split(",");
+		return refreshments;
+	}
+	
+	
 
 	/*
 	 * Prompt user for registration number and validate it is in the correct form.

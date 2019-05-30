@@ -98,18 +98,20 @@ public class SilverServiceCar extends Car{
 		for(int i = 0; i < refreshmentsCount; i++) {
 			sb.append("Item " + (i+1) + " " + refreshments[i]);
 		}
-		// Current Bookings
-		for(int i = 0; i < currentBookings.length; i++) {
-			Booking currentBook = currentBookings[i];
-			sb.append("|" + currentBook.toString() + " " + refreshments[i]);
-		}
-		// Completed Bookings
-		for(int i = 0; i < pastBookings.length; i++) {
-			sb.append("Item " + (i+1) + " " + refreshments[i]);
-		}
+		
+		// FIXME: THIS MIGHT NOT WORK AS WE OVERRIDE IT BELOW
+		sb.append(super.toStringBookings());
 		
 		return sb.toString();
-		
+	}
+	
+	/*
+	 * This override method prevents the super class from adding 
+	 * the bookings before we need them.
+	 */
+	@Override
+	protected String toStringBookings() {
+		return "";
 	}
 
 }

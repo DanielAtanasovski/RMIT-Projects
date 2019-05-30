@@ -223,6 +223,25 @@ public class Car
 		}
 		sb.append(":" + bookingFee);
 		
+		// Booked Cars
+		sb.append(toStringBookings());
+		
+		return sb.toString();
+	}
+	
+	protected String toStringBookings() {
+		StringBuilder sb = new StringBuilder();
+		// Current Bookings
+		for(int i = 0; i < currentBookings.length; i++) {
+			Booking currentBook = currentBookings[i];
+			sb.append("|" + currentBook.toString());
+		}
+		// Completed Bookings
+		for(int i = 0; i < pastBookings.length; i++) {
+			Booking pastBook = pastBookings[i];
+			sb.append("|" + pastBook.toString());
+		}
+		
 		return sb.toString();
 	}
 

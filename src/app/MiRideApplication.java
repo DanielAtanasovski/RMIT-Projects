@@ -1,6 +1,7 @@
 package app;
 
 import cars.Car;
+import cars.SilverServiceCar;
 import utilities.DateTime;
 import utilities.MiRidesUtilities;
 
@@ -21,15 +22,18 @@ public class MiRideApplication
 		//seedData();
 	}
 	
-	public String createCar(String id, String make, String model, String driverName, int numPassengers) 
+	public String createCar(String id, String make, String model, String driverName,
+			int numPassengers, boolean silverService, Double fee, String[] refreshments) 
 	{
 		String validId = isValidId(id);
 		if(isValidId(id).contains("Error:"))
 		{
 			return validId;
 		}
+
 		if(!checkIfCarExists(id)) {
-			cars[itemCount] = new Car(id, make, model, driverName, numPassengers);
+			cars[itemCount] = (silverService) ? new Car(id, make, model, driverName, numPassengers) 
+					: new SilverServiceCar(id, make, model, driverName, numPassengers, fee, refreshments);
 			itemCount++;
 			return "New Car added successfully for registion number: " + cars[itemCount-1].getRegistrationNumber();
 		}
@@ -110,14 +114,6 @@ public class MiRideApplication
 				{
 					return cars[i].completeBooking(firstName, lastName, dateOfBooking, kilometers);
 				}
-//				else
-//				{
-//					
-//				}
-//				if(!result.equals("Booking not found"))
-//				{
-//					return result;
-//				}
 			}
 		}
 		return "Booking not found.";

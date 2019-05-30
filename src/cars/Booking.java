@@ -16,8 +16,8 @@ public class Booking {
 	private DateTime dateBooked;
 	private int numPassengers;
 	private double bookingFee;
-	private double kilometersTravelled;
-	private double tripFee;
+	private double kilometersTravelled = 0.0;
+	private double tripFee = 0.0;
 	private Car car;
 	
 	private final int NAME_MINIMUM_LENGTH = 3;
