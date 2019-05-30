@@ -269,7 +269,7 @@ public class MiRideApplication
 		return true;
 	}
 
-	public String displayAllBookings(boolean silverService)
+	public String displayAllBookings(boolean silverService, boolean aToZ)
 	{
 		if(itemCount == 0)
 		{
@@ -278,11 +278,89 @@ public class MiRideApplication
 		StringBuilder sb = new StringBuilder();
 		sb.append("Summary of all cars: ");
 		sb.append("\n");
-
+		 
+		// Prepare car list
+		Car[] selectedCars = new Car[15];
+		int selectedCarsAmount = 0;
 		for (int i = 0; i < itemCount; i++)
 		{
-			sb.append(cars[i].getDetails());
+			// Type Check
+			boolean isSilverService = cars[i] instanceof SilverServiceCar;
+			if (isSilverService != silverService) 
+				continue;
+			
+			selectedCars[selectedCarsAmount] = cars[i];
+			selectedCarsAmount++;
 		}
+		
+		// Check if there is any cars
+		if (selectedCarsAmount == 0)
+			return null;
+		
+		// Bubble Sort alphabetically
+		if (aToZ) {
+			for(int i = 0; i < selectedCarsAmount; i++) {
+				for(int j = 1; j < (selectedCarsAmount-i); j++) {
+					String carCheckReg = selectedCars[j-1].getRegistrationNumber().substring(0,3);
+		        	String secondCarCheckReg = selectedCars[j].getRegistrationNumber().substring(0,3);
+		        	
+		        	// First Letter
+		            if(carCheckReg.charAt(0) > secondCarCheckReg.charAt(0)) {
+		            	Car temp = selectedCars[j-1];
+		            	selectedCars[j-1] = selectedCars[j];
+		            	selectedCars[j] = temp;
+		            } else if (carCheckReg.charAt(0) == secondCarCheckReg.charAt(0)) {
+		            	// Second Letter
+		            	if(carCheckReg.charAt(1) > secondCarCheckReg.charAt(1)) {
+		            		Car temp = selectedCars[j-1];
+			            	selectedCars[j-1] = selectedCars[j];
+			            	selectedCars[j] = temp;
+		            	} else if (carCheckReg.charAt(1) == secondCarCheckReg.charAt(1)) {
+		            		// Third Letter
+		            		if (carCheckReg.charAt(2) > secondCarCheckReg.charAt(2)) {
+		            			Car temp = selectedCars[j-1];
+				            	selectedCars[j-1] = selectedCars[j];
+				            	selectedCars[j] = temp;
+		            		}
+		            	}
+		            }
+		         }
+		      }
+		} else {
+			for(int i = 0; i < selectedCarsAmount; i++) {
+				for(int j = 1; j < (selectedCarsAmount-i); j++) {
+					String carCheckReg = selectedCars[j-1].getRegistrationNumber().substring(0,3);
+		        	String secondCarCheckReg = selectedCars[j].getRegistrationNumber().substring(0,3);
+		        	
+		        	// First Letter
+		            if(carCheckReg.charAt(0) < secondCarCheckReg.charAt(0)) {
+		            	Car temp = selectedCars[j-1];
+		            	selectedCars[j-1] = selectedCars[j];
+		            	selectedCars[j] = temp;
+		            } else if (carCheckReg.charAt(0) == secondCarCheckReg.charAt(0)) {
+		            	// Second Letter
+		            	if(carCheckReg.charAt(1) < secondCarCheckReg.charAt(1)) {
+		            		Car temp = selectedCars[j-1];
+			            	selectedCars[j-1] = selectedCars[j];
+			            	selectedCars[j] = temp;
+		            	} else if (carCheckReg.charAt(1) == secondCarCheckReg.charAt(1)) {
+		            		// Third Letter
+		            		if (carCheckReg.charAt(2) < secondCarCheckReg.charAt(2)) {
+		            			Car temp = selectedCars[j-1];
+				            	selectedCars[j-1] = selectedCars[j];
+				            	selectedCars[j] = temp;
+		            		}
+		            	}
+		            }
+		         }
+		      }
+		}
+		
+		// Append to string builder
+		for (Car car : selectedCars) {
+			sb.append(car.getDetails());
+		}
+		
 		return sb.toString();
 	}
 

@@ -262,7 +262,9 @@ public class Menu
 	private void displayAll() {
 		String stringType;
 		boolean silverServiceType = false;
+		boolean orderType = false;
 		
+		// Service Type
 		System.out.println("Enter Type (SD/SS): ");
 		stringType = console.nextLine();
 		if (stringType.toUpperCase().equals("SD")) {
@@ -273,7 +275,25 @@ public class Menu
 			System.out.println("Invalid Service Type");
 		}
 		
-		System.out.println(application.displayAllBookings(silverServiceType));
+		// Order Type
+		System.out.println("Enter Sort Order (A/D): ");
+		stringType = console.nextLine();
+		if (stringType.toUpperCase().equals("A")) {
+			orderType = false;
+		} else if (stringType.toUpperCase().equals("D")) {
+			orderType = true;
+		} else {
+			System.out.println("Invalid Order Type");
+		}
+		
+		// Get Output
+		String allCars = application.displayAllBookings(silverServiceType, orderType);
+		if (allCars == null) {
+			System.out.println("Error - No Cars were found of the selected type.");
+			return;
+		}
+			
+		System.out.println(allCars);
 	}
 	
 	private void searchAvailableCars() {
