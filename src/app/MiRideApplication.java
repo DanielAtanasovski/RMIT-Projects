@@ -32,14 +32,15 @@ public class MiRideApplication
 		}
 
 		if(!checkIfCarExists(id)) {
-			cars[itemCount] = (silverService) ? new Car(id, make, model, driverName, numPassengers) 
-					: new SilverServiceCar(id, make, model, driverName, numPassengers, fee, refreshments);
+			cars[itemCount] = (silverService) ? new SilverServiceCar(id, make, model, driverName, numPassengers, fee, refreshments)
+					: new Car(id, make, model, driverName, numPassengers);
 			itemCount++;
 			return "New Car added successfully for registion number: " + cars[itemCount-1].getRegistrationNumber();
 		}
 		return "Error: Already exists in the system.";
 	}
 
+	
 	public String[] book(DateTime dateRequired)
 	{
 		int numberOfAvailableCars = 0;
@@ -174,6 +175,7 @@ public class MiRideApplication
 		}
 		return true;
 	}
+	
 	public String displaySpecificCar(String regNo)
 	{
 		for(int i = 0; i < cars.length; i++)
@@ -187,6 +189,29 @@ public class MiRideApplication
 			}
 		}
 		return "Error: The car could not be located.";
+	}
+	
+	public Car[] getCarsAvailable(DateTime dateRequired, boolean silverService) {
+		Car[] carList = new Car[15];
+		int carListCurrent = 0;
+		for (int i = 0; i < cars.length; i++) {
+			if (cars[i] == null) {
+				break;
+			}
+			
+			// Check if matches requirement
+			boolean isSilverService = cars[i] instanceof SilverServiceCar;
+			if (isSilverService != silverService) 
+				continue;
+
+			// Check Date
+			if (!cars[i].isCarBookedOnDate(dateRequired)) {
+				carList[carListCurrent] = cars[i];
+				carListCurrent++;
+			}
+		}
+		
+		return carList;
 	}
 	
 	public boolean seedData()
@@ -244,7 +269,7 @@ public class MiRideApplication
 		return true;
 	}
 
-	public String displayAllBookings()
+	public String displayAllBookings(boolean silverService)
 	{
 		if(itemCount == 0)
 		{

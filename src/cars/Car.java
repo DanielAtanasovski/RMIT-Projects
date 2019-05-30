@@ -25,6 +25,7 @@ public class Car
 	protected Booking[] pastBookings;
 	private boolean available;
 	private int bookingSpotAvailable = 0;
+	private int pastBookingSpotAvailable = 0;
 	private double tripFee = 0;
 	protected double bookingFee;
 
@@ -92,7 +93,8 @@ public class Car
 	 * Creates the booking object.
 	 */
 	protected void createBooking(String firstName, String lastName, DateTime required, int numPassengers) {
-		tripFee = STANDARD_BOOKING_FEE;
+		System.out.println("-- Create Booking --");
+		tripFee = bookingFee;
 		Booking booking = new Booking(firstName, lastName, required, numPassengers, this);
 		currentBookings[bookingSpotAvailable] = booking;
 		bookingSpotAvailable++;
@@ -189,6 +191,7 @@ public class Car
 
 		sb.append(String.format("%-15s %s\n", "Driver Name:", driverName));
 		sb.append(String.format("%-15s %s\n", "Capacity:", passengerCapacity));
+		sb.append(String.format("%-15s %s\n", "Standard Fee:", "$" + bookingFee));
 
 		if (bookingAvailable())
 		{
@@ -197,7 +200,35 @@ public class Car
 		{
 			sb.append(String.format("%-15s %s\n", "Available:", "NO"));
 		}
+		
+		sb.append(getDetailsBookings());
 
+		return sb.toString();
+	}
+	
+	protected String getDetailsBookings() {
+		StringBuilder sb = new StringBuilder();
+		
+		// Bookings
+		if (bookingSpotAvailable != 0) {
+			sb.append(String.format("%s\n", "Current Bookings"));
+			for(int i = 0; i < bookingSpotAvailable; i++) {
+				sb.append(currentBookings[i].getDetails());
+			}
+		}
+		
+				
+		// Past Bookings
+		if (pastBookings[0] != null) {
+			sb.append(String.format("%s\n", "Past Bookings"));
+			for(int i = 0; i < pastBookings.length; i++) {
+				if (pastBookings[i] == null){
+					break;
+				}
+				sb.append(pastBookings[i].getDetails());
+			}
+		}
+		
 		return sb.toString();
 	}
 

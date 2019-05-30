@@ -1,6 +1,8 @@
 package app;
 
 import java.util.Scanner;
+
+import cars.Car;
 import utilities.DateTime;
 import utilities.DateUtilities;
 
@@ -50,11 +52,14 @@ public class Menu
 					completeBooking();
 					break;
 				case "DA":
-					System.out.println(application.displayAllBookings());
+					displayAll();
 					break;
 				case "SS":
 					System.out.print("Enter Registration Number: ");
 					System.out.println(application.displaySpecificCar(console.nextLine()));
+					break;
+				case "SA":
+					searchAvailableCars();
 					break;
 				case "SD":
 					application.seedData();
@@ -103,15 +108,15 @@ public class Menu
 			System.out.print("Enter Service Type (SD/SS): ");
 			serviceType = console.nextLine();
 
-			if (serviceType.toUpperCase() == "SS") {
+			if (serviceType.toUpperCase().equals("SS")) {
 				System.out.print("Enter Standard Fee: ");
 				fee = promptForFee();
 				
-				System.out.print("Enter Service Type (SD/SS): ");
+				System.out.print("Enter List of Refreshments: ");
 				refreshments = promptForRefreshments();
 				silverService = true;
 				
-			} else if (serviceType.toUpperCase() != "SD") {
+			} else if (!serviceType.toUpperCase().equals("SD")) {
 				System.out.println("Error - Invalid service type");
 				return; 
 			}
@@ -254,6 +259,55 @@ public class Menu
 		}
 	}
 	
+	private void displayAll() {
+		String stringType;
+		boolean silverServiceType = false;
+		
+		System.out.println("Enter Type (SD/SS): ");
+		stringType = console.nextLine();
+		if (stringType.toUpperCase().equals("SD")) {
+			silverServiceType = false;
+		} else if (stringType.toUpperCase().equals("SS")) {
+			silverServiceType = true;
+		} else {
+			System.out.println("Invalid Service Type");
+		}
+		
+		System.out.println(application.displayAllBookings(silverServiceType));
+	}
+	
+	private void searchAvailableCars() {
+		String stringType;
+		boolean silverServiceType = false;
+		DateTime date;
+		
+		// Type Check
+		System.out.println("Enter Type (SD/SS): ");
+		stringType = console.nextLine();
+		if (stringType.toUpperCase().equals("SD")) {
+			silverServiceType = false;
+		} else if (stringType.toUpperCase().equals("SS")) {
+			silverServiceType = true;
+		} else {
+			System.out.println("Invalid Service Type");
+		}
+		
+		System.out.println("Enter Date: ");
+		date = promptForDate();
+		
+		Car[] availableCars = application.getCarsAvailable(date, silverServiceType);
+		if(availableCars[0] == null) {
+			System.out.println("Error - No cars were found for this date.");
+			return;
+		}
+		// Display Available Cars
+		for (int i = 0; i < availableCars.length; i++) {
+			if (availableCars[i] == null) 
+				break;
+			
+			System.out.println(availableCars[i].getDetails());
+		}
+	}
 	/*
 	 * Checks user input for valid fee
 	 */
@@ -283,7 +337,13 @@ public class Menu
 		return refreshments;
 	}
 	
-	
+	private DateTime promptForDate() {
+		String date = console.nextLine();
+		int day = Integer.parseInt(date.substring(0, 2));
+		int month = Integer.parseInt(date.substring(3, 5));
+		int year = Integer.parseInt(date.substring(6));
+		return new DateTime(day,month,year);
+	}
 
 	/*
 	 * Prompt user for registration number and validate it is in the correct form.

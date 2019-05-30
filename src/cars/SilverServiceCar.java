@@ -29,22 +29,16 @@ public class SilverServiceCar extends Car{
 	
 	@Override
 	public boolean book(String firstName, String lastName, DateTime required, int numPassengers) {
-		
-		// Check base car requirements.
-		boolean success = super.book(firstName, lastName, required, numPassengers);	
-		if (!success) {
-			return false;
-		}
+		boolean success;
 		
 		// Silver Service specific requirements
 		success = dateIsValid(required);
 		if (success) {
-			super.createBooking(firstName, lastName, required, numPassengers);
+			super.book(firstName, lastName, required, numPassengers);
 		}
 		
 		return success;
 	}
-	
 	
 	@Override
 	protected boolean dateIsValid(DateTime date)
@@ -69,24 +63,15 @@ public class SilverServiceCar extends Car{
 		// Refreshments
 		sb.append(String.format("%s\n", "Refreshments Available"));
 		for(int i = 0; i < refreshmentsCount; i++) {
-			sb.append(String.format("%s %-15s\n", "Item " + (i+1), refreshments[i]));
+			sb.append(String.format("%-15s %s\n", "Item " + (i+1), refreshments[i]));
 		}
 		
-		// Bookings
-		sb.append(String.format("%s\n", "Current Bookings"));
-		for(int i = 0; i < currentBookings.length; i++) {
-			sb.append(String.format("%-15s\n", "______________________________"));
-			sb.append(currentBookings[i].getDetails());
-		}
-		
-		
-		// Past Bookings
-		sb.append(String.format("%s\n", "Past Bookings"));
-		for(int i = 0; i < pastBookings.length; i++) {
-			sb.append(String.format("%-15s\n", "______________________________"));
-			sb.append(pastBookings[i].getDetails());
-		}
+		sb.append(super.getDetailsBookings());
 		return sb.toString();
+	}
+	@Override
+	protected String getDetailsBookings() {
+		return "";
 	}
 	
 	@Override
