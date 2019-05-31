@@ -92,7 +92,7 @@ public class Menu
 	/*
 	 * Creates cars for use in the system available or booking.
 	 */
-	private void createCar() throws InvalidRefreshments
+	private void createCar() throws InvalidRefreshments, NumberFormatException
 	{
 		String id = "", make, model, driverName, serviceType;
 		int numPassengers = 0;
@@ -116,6 +116,8 @@ public class Menu
 
 			System.out.print("Enter number of passengers: ");
 			numPassengers = promptForPassengerNumbers();
+			if (numPassengers == 0)
+				return;
 			
 			System.out.print("Enter Service Type (SD/SS): ");
 			serviceType = console.nextLine();
@@ -267,8 +269,13 @@ public class Menu
 		{
 			while (!validPassengerNumbers)
 			{
-				numPassengers = Integer.parseInt(console.nextLine());
-
+				try {
+					numPassengers = Integer.parseInt(console.nextLine());
+				} catch (NumberFormatException e) {
+					System.out.println("Error - Invalid Passengers");
+					return 0;
+				}
+				
 				String validId = application.isValidPassengerCapacity(numPassengers);
 				if (validId.contains("Error:"))
 				{
