@@ -1,23 +1,25 @@
 package utilities;
 
+import exceptions.InvalidId;
+
 public class MiRidesUtilities 
 {
 	private final static int ID_LENGTH = 6;
 	
-	public static String isRegNoValid(String regNo)
+	public static String isRegNoValid(String regNo) throws InvalidId
 	{
 		int regNoLength = regNo.length();
 		if(regNoLength != ID_LENGTH)
 		{
-			return "Error: registration number must be 6 characters";
+			throw new InvalidId("Error - Registration is not six characters.");
 		}
 		boolean letters = regNo.substring(0,3).matches("[a-zA-Z]+");
 		if (!letters) {
-			return "Error: The registration number should begin with three alphabetical characters.";
+			throw new InvalidId("Error - Registration does not begin with three letters.");	
 		}
 		boolean numbers = regNo.substring(3).matches("[0-9]+");
 		if (!numbers) {
-			return "Error: The registration number should end with three numeric characters.";
+			throw new InvalidId("Error - Registration does not end with three numerals.");
 		}
 		return regNo;
 	}

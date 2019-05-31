@@ -3,6 +3,8 @@ package cars;
 import java.util.ArrayList;
 
 import exceptions.InvalidBooking;
+import exceptions.InvalidDate;
+import exceptions.InvalidId;
 import utilities.DateTime;
 import utilities.DateUtilities;
 import utilities.MiRidesUtilities;
@@ -35,7 +37,8 @@ public class Car
 	private final int MAXIUM_PASSENGER_CAPACITY = 10;
 	private final int MINIMUM_PASSENGER_CAPACITY = 1;
 
-	public Car(String regNo, String make, String model, String driverName, int passengerCapacity)
+	public Car(String regNo, String make, String model, 
+			String driverName, int passengerCapacity) throws InvalidId
 	{
 		setRegNo(regNo); // Validates and sets registration number
 		setPassengerCapacity(passengerCapacity); // Validates and sets passenger capacity
@@ -70,7 +73,8 @@ public class Car
 	 * Booking six cars
 	 */
 
-	public boolean book(String firstName, String lastName, DateTime required, int numPassengers) throws InvalidBooking
+	public boolean book(String firstName, String lastName,
+			DateTime required, int numPassengers) throws InvalidBooking, InvalidDate
 	{
 		boolean booked = false;
 		// Does car have five bookings
@@ -93,7 +97,8 @@ public class Car
 	/*
 	 * Creates the booking object.
 	 */
-	protected void createBooking(String firstName, String lastName, DateTime required, int numPassengers) throws InvalidBooking{
+	protected void createBooking(String firstName, String lastName, 
+			DateTime required, int numPassengers) throws InvalidBooking, InvalidDate{
 		System.out.println("-- Create Booking --");
 		tripFee = bookingFee;
 		Booking booking = new Booking(firstName, lastName, required, numPassengers, this);
@@ -423,14 +428,8 @@ public class Car
 	/*
 	 * Checks that the date is not in the past or more than 7 days in the future.
 	 */
-	protected boolean dateIsValid(DateTime date) throws InvalidBooking
-	{
-		if (!DateUtilities.dateIsNotInPast(date))
-			throw new InvalidBooking("Error - Date is in the past.");
-		
-		if (!DateUtilities.dateIsNotMoreThan7Days(date))
-			throw new InvalidBooking("Error - Date is more than 7 days advanced.");
-		
+	protected boolean dateIsValid(DateTime date) throws InvalidDate
+	{		
 		return DateUtilities.dateIsNotInPast(date) && DateUtilities.dateIsNotMoreThan7Days(date);
 	}
 
@@ -482,7 +481,7 @@ public class Car
 	/*
 	 * Validates and sets the registration number
 	 */
-	private void setRegNo(String regNo)
+	private void setRegNo(String regNo) throws InvalidId
 	{
 		if (!MiRidesUtilities.isRegNoValid(regNo).contains("Error:"))
 		{

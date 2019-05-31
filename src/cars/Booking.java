@@ -1,6 +1,7 @@
 package cars;
 
 import exceptions.InvalidBooking;
+import exceptions.InvalidDate;
 import utilities.DateTime;
 import utilities.DateUtilities;
 /*
@@ -23,7 +24,8 @@ public class Booking {
 	
 	private final int NAME_MINIMUM_LENGTH = 3;
 
-	public Booking(String firstName, String lastName, DateTime required, int numPassengers, Car car) throws InvalidBooking
+	public Booking(String firstName, String lastName, 
+			DateTime required, int numPassengers, Car car) throws InvalidBooking, InvalidDate
 	{
 		generateId(car.getRegistrationNumber(), firstName, lastName, required);
 		validateAndSetDate(required);
@@ -173,7 +175,7 @@ public class Booking {
 	/*
 	 * Ensures the date is not in the past.
 	 */
-	private void validateAndSetDate(DateTime date) throws InvalidBooking
+	private void validateAndSetDate(DateTime date) throws InvalidBooking, InvalidDate
 	{
 		if (!(DateUtilities.dateIsNotInPast(date))) {
 			throw new InvalidBooking("Error - Date is in the past.");

@@ -1,8 +1,10 @@
 package utilities;
 
+import exceptions.InvalidDate;
+
 public class DateUtilities {
 
-	public static boolean dateIsNotInPast(DateTime date)
+	public static boolean dateIsNotInPast(DateTime date) throws InvalidDate
 	{
 		final int OFFSET_FOR_DAYS_IN_MILLISECONDS = 1;
 		boolean notInPast = false;
@@ -13,6 +15,8 @@ public class DateUtilities {
 		if(daysInPast >=0)
 		{
 			notInPast = true;
+		} else {
+			throw new InvalidDate("Error - Date is in the past.");
 		}
 		
 		return notInPast;
@@ -27,7 +31,7 @@ public class DateUtilities {
 		return false;
 	}
 	
-	public static boolean dateIsNotMoreThan7Days(DateTime date)
+	public static boolean dateIsNotMoreThan7Days(DateTime date) throws InvalidDate
 	{
 		boolean within7Days = false;
 		DateTime today = new DateTime();
@@ -37,11 +41,13 @@ public class DateUtilities {
 		if(daysInFuture >0 && daysInFuture <8)
 		{
 			within7Days = true;
+		} else {
+			throw new InvalidDate("Error - Date is more than 7 days in advance.");
 		}
 		return within7Days;
 	}
 	
-	public static boolean dateIsNotMoreThan3Days(DateTime date)
+	public static boolean dateIsNotMoreThan3Days(DateTime date) throws InvalidDate
 	{
 		boolean within3Days = false;
 		DateTime today = new DateTime();
@@ -51,6 +57,8 @@ public class DateUtilities {
 		if(daysInFuture > 0 && daysInFuture < 4)
 		{
 			within3Days = true;
+		} else {
+			throw new InvalidDate("Error - Date is more than 3 days in advance.");
 		}
 		return within3Days;
 	}

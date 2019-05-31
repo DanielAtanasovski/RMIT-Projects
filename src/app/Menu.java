@@ -3,6 +3,8 @@ package app;
 import java.util.Scanner;
 
 import cars.Car;
+import exceptions.InvalidDate;
+import exceptions.InvalidRefreshments;
 import utilities.DateTime;
 import utilities.DateUtilities;
 
@@ -43,10 +45,20 @@ public class Menu
 				switch (input)
 				{
 				case "CC":
-					createCar();
+					try {
+						createCar();
+					} catch (InvalidRefreshments e) {
+						System.out.println(e.getMessage());
+						continue;
+					}
 					break;
 				case "BC":
-					book();
+					try {
+						book();
+					} catch (InvalidDate e) {
+						System.out.println(e.getMessage());
+						continue;
+					}
 					break;
 				case "CB":
 					completeBooking();
@@ -80,7 +92,7 @@ public class Menu
 	/*
 	 * Creates cars for use in the system available or booking.
 	 */
-	private void createCar()
+	private void createCar() throws InvalidRefreshments
 	{
 		String id = "", make, model, driverName, serviceType;
 		int numPassengers = 0;
@@ -138,15 +150,12 @@ public class Menu
 	/*
 	 * Book a car by finding available cars for a specified date.
 	 */
-	private boolean book()
+	private boolean book() throws InvalidDate
 	{
 		System.out.println("Enter date car required: ");
 		System.out.println("format DD/MM/YYYY)");
 		String dateEntered = console.nextLine();
-		int day = Integer.parseInt(dateEntered.substring(0, 2));
-		int month = Integer.parseInt(dateEntered.substring(3, 5));
-		int year = Integer.parseInt(dateEntered.substring(6));
-		DateTime dateRequired = new DateTime(day, month, year);
+		DateTime dateRequired = generateDate(dateEntered);
 		
 		if(!DateUtilities.dateIsNotInPast(dateRequired) || !DateUtilities.dateIsNotMoreThan7Days(dateRequired))
 		{
@@ -184,9 +193,19 @@ public class Menu
 	}
 	
 	/*
+	 * Takes in an input string and converts it a new date
+	 */
+	private DateTime generateDate(String input) throws NumberFormatException, IndexOutOfBoundsException{
+		int day = Integer.parseInt(input.substring(0, 2));
+		int month = Integer.parseInt(input.substring(3, 5));
+		int year = Integer.parseInt(input.substring(6));
+		return new DateTime(day, month, year);
+	}
+	
+	/*
 	 * Complete bookings found by either registration number or booking date.
 	 */
-	private void completeBooking()
+	private void completeBooking() throws NumberFormatException, NullPointerException
 	{
 		System.out.print("Enter Registration or Booking Date:");
 		String response = console.nextLine();
@@ -195,16 +214,22 @@ public class Menu
 		// User entered a booking date
 		if (response.contains("/"))
 		{
+			double kilometers = 0;
 			System.out.print("Enter First Name:");
 			String firstName = console.nextLine();
 			System.out.print("Enter Last Name:");
 			String lastName = console.nextLine();
 			System.out.print("Enter kilometers:");
-			double kilometers = Double.parseDouble(console.nextLine());
-			int day = Integer.parseInt(response.substring(0, 2));
-			int month = Integer.parseInt(response.substring(3, 5));
-			int year = Integer.parseInt(response.substring(6));
-			DateTime dateOfBooking = new DateTime(day, month, year);
+			
+			try {
+				kilometers = Double.parseDouble(console.nextLine());
+			} catch (NumberFormatException e) {
+				throw e;
+			} catch (NullPointerException e) {
+				throw e;
+			}
+			
+			DateTime dateOfBooking = generateDate(response);
 			result = application.completeBooking(firstName, lastName, dateOfBooking, kilometers);
 			System.out.println(result);
 		} else
@@ -229,7 +254,7 @@ public class Menu
 		
 	}
 	
-	private int promptForPassengerNumbers()
+	private int promptForPassengerNumbers() throws NumberFormatException
 	{
 		int numPassengers = 0;
 		boolean validPassengerNumbers = false;
@@ -351,10 +376,34 @@ public class Menu
 	 * Checks user input for valid refreshment list
 	 */
 	// TODO: Exception for invalid List
-	private String[] promptForRefreshments() {
+	private String[] promptForRefreshments() throws InvalidRefreshments {
 		String line = console.nextLine();
 		String[] refreshments = line.split(",");
+		
+		if (refreshments.length < 3) 
+			throw new InvalidRefreshments("Error - Not enough Refreshments.");
+		if (duplicateRefreshmentCheck(refreshments))
+			throw new InvalidRefreshments("Error - Duplicate refreshments detected.");
+		
 		return refreshments;
+	}
+	
+	/*
+	 * Check for duplicate Refreshments
+	 */
+	private boolean duplicateRefreshmentCheck(String[] refreshments) {
+		for (int i = 0; i < refreshments.length; i++) {
+			String currentItem = refreshments[i];
+			for (int j = 0; j < refreshments.length; j++) {
+				if (j == i)
+					continue;
+				
+				if (currentItem.equals(refreshments[j])) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 	private DateTime promptForDate() {
@@ -398,9 +447,8 @@ public class Menu
 				}
 
 				String validId = application.isValidId(regNo);
-				if (validId.contains("Error:"))
+				if (validId == null || validId.contains("Error:"))
 				{
-					System.out.println(validId);
 					System.out.println("Enter registration number: ");
 					System.out.println("(or hit ENTER to exit)");
 				} else
