@@ -54,7 +54,6 @@ if (array_key_exists('user', $_POST) && array_key_exists('pass', $_POST)) {
         <button type="submit">Login</button>
     </form>
     <?php
-    // TODO: Show failed error message here if ['login_failed'] exists in post
     if ($loginFailed) {
         echo '<p style="color: red;">Login Failed!</p>';
     }
