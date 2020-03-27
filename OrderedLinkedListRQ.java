@@ -11,66 +11,190 @@ import java.lang.String;
  */
 public class OrderedLinkedListRQ implements Runqueue {
 
+    private Node head;
+
     /**
      * Constructs empty linked list
      */
     public OrderedLinkedListRQ() {
-        // Implement me
-
+        head = null;
     }  // end of OrderedLinkedList()
 
 
     @Override
     public void enqueue(String procLabel, int vt) {
-        // Implement me
+        // O(n)
+        Node newNode = new Node(procLabel, vt);
+        Node prevNode = null;
+        Node checkNode = head;
 
+        // Cases
+        if (head == null) {
+            // No Head
+            head = newNode;
+        } else if (vt < head.getProc().getVt()){
+            // Smaller than Head
+            head = newNode;
+            head.setNext(checkNode);
+        } else {
+            // Everything else
+            prevNode = head;
+            checkNode = head.getNext();
+            boolean set = false;
+
+            while(!set) {
+                if (checkNode == null) {
+                    // End of list
+                    prevNode.setNext(newNode);
+                    set = true;
+                } else if (vt < checkNode.getProc().getVt()){
+                    // Less than current node
+                    prevNode.setNext(newNode);
+                    newNode.setNext(checkNode);
+                    set = true;
+                } else {
+                    // Iterate to next node
+                    prevNode = checkNode;
+                    checkNode = prevNode.getNext();
+                }
+            }
+        }
     } // end of enqueue()
 
 
     @Override
     public String dequeue() {
-        // Implement me
+        // O(1)
+        String retString = "";
 
-        return ""; // placeholder, modify this
+        if (head != null) {
+            // Start of the list is typically the lowest
+            retString = head.getProc().getLabel();
+            head = head.getNext();
+        }
+
+        return retString;
     } // end of dequeue()
 
 
     @Override
     public boolean findProcess(String procLabel) {
-        // Implement me
+        // O(n)
+        boolean found = false;
+        Node currentNode = head;
 
-        return false; // placeholder, modify this
+        while (currentNode != null) {
+            if (currentNode.getProc().getLabel().equalsIgnoreCase(procLabel)){
+                found = true;
+                break;
+            }
+            currentNode = currentNode.getNext();
+        }
+
+        return found;
     } // end of findProcess()
 
 
     @Override
     public boolean removeProcess(String procLabel) {
-        // Implement me
+        // O(n)
+        boolean found = false;
+        Node prevNode = head;
+        Node currentNode = head.getNext();
+        // Head
+        if (head.getProc().getLabel().equalsIgnoreCase(procLabel)) {
+            head = head.getNext();
+        } else {
+            // Rest of list
+            while (currentNode != null) {
+                if (currentNode.getProc().getLabel().equalsIgnoreCase(procLabel)) {
+                    prevNode.setNext(currentNode.getNext());
+                    found = true;
+                    break;
+                }
+                prevNode = currentNode;
+                currentNode = currentNode.getNext();
+            }
+        }
 
-        return false; // placeholder, modify this
+        return found;
     } // End of removeProcess()
 
 
     @Override
     public int precedingProcessTime(String procLabel) {
-        // Implement me
+        // O(n)
+        int count = 0;
+        boolean found = false;
+        
+        if (head != null){
+            Node currentNode = head;
+            while (currentNode != null){
+                if (currentNode.getProc().getLabel().equalsIgnoreCase(procLabel)){
+                    // Found the node! Break loop
+                    found = true;
+                    break;
+                }
+                    
+                // Next Node
+                count += currentNode.getProc().getVt();
+                currentNode = currentNode.getNext();
+            }
+        }
 
-        return -1; // placeholder, modify this
+        if (!found)
+            count = -1;
+
+        return count;
     } // end of precedingProcessTime()
 
 
     @Override
     public int succeedingProcessTime(String procLabel) {
-        // Implement me
+        int count = 0;
+        boolean found = false;
+        
+        if (head != null){
+            Node currentNode = head;
+            while (currentNode != null){
 
-        return -1; // placeholder, modify this
+                // Check if found
+                if (found) {
+                    count += currentNode.getProc().getVt();
+                }
+
+                if (currentNode.getProc().getLabel().equalsIgnoreCase(procLabel)){
+                    // Found the node! Start Counting
+                    found = true;
+                }
+                    
+                // Next Node
+                currentNode = currentNode.getNext();
+            }
+        }
+
+        if (!found)
+            count = -1;
+
+        return count;
     } // end of precedingProcessTime()
 
 
     @Override
     public void printAllProcesses(PrintWriter os) {
-        //Implement me
+        // O(n)
+        if (head != null) {
+            Node currentNode = head;
+            while (currentNode != null) {
+                os.print(currentNode.getProc().getLabel());
+                currentNode = currentNode.getNext();
 
+                // To Remove the extra space at the end
+                if (currentNode != null)
+                    os.print(" ");
+            }
+            os.println();
+        }
     } // end of printAllProcess()
 
 } // end of class OrderedLinkedListRQ
