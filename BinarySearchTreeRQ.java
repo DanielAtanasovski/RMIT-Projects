@@ -37,8 +37,9 @@ public class BinarySearchTreeRQ implements Runqueue {
 	private static final int ROOT = 1; 
 	
     public BinarySearchTreeRQ() {
-    	//we start the array as 2, since the first index will always be null
-    	//the 
+    	//we start the array as a size of 2. Everything will be with a base of 2.
+    	//	Index 0 will be a null value to set up the array for the algorithm
+    	//	Index 1 will be the root of the tree.
         arrayOfNodes = new Node[2];
 
     }  // end of BinarySearchTreeRQ()
