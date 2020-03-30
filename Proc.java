@@ -23,4 +23,7 @@ public class Proc {
         return this.vt;
     }
 
+    public String print() {
+    	return "Proc label: " + label + " vt: " + vt + " ";
+    }
 }

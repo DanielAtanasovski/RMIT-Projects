@@ -60,6 +60,11 @@ public class BinarySearchTreeRQ implements Runqueue {
      */
 	private static final int TREE_ROOT_INDEX = 1; 
 	private static final int BASE_TREE_SIZE = 2;
+	
+	//for getting left and right of parent node/Proc
+	private static final int LEFT = 0;
+	private static final int RIGHT = 1;
+
     public BinarySearchTreeRQ() {
         arrayOfNodes = new Proc[BASE_TREE_SIZE];
 
@@ -68,28 +73,35 @@ public class BinarySearchTreeRQ implements Runqueue {
 
     @Override
     public void enqueue(String procLabel, int vt) {
+    	/*	NOTE: 
+    	 * 	- 	As seen in the Assignment 1 discussion, it doesn't matter if it is balanced....
+    	 *		I will try my best to have it balanced as it will speed up searching.
+    	 * 	-	The VT values are not unique and there for there is no way of making 
+    	 * 		a perfectly balanced tree with duplicates of values, thus i will do the following:
+    	 * 		-	If the vt of the Proc is < the parent it will go on the LEFT of the parent.
+    	 * 		-	If the vt of the Proc is > OR = to the parent it will go on the RIGHT of the parent.
+    	 * 
+    	 * 	- (See tree diagram above about duplicates)
+    	 */
+    	
         Proc nodeToAdd = new Proc(procLabel, vt);
-        //see if the tree doesnt even have a root set yet
+        Proc currParent = null; // the current parent we are looking at.
+        
+        //see if the tree doesn't even have a root set yet
         if(arrayOfNodes.length == BASE_TREE_SIZE && arrayOfNodes[TREE_ROOT_INDEX] != null) {
         	arrayOfNodes[TREE_ROOT_INDEX] = nodeToAdd;
         }else {
         	
-        	/*	NOTE: 
-        	 * 	- 	As seen in the Assignment 1 discussion, it doesn't matter if it is balanced....
-        	 *		I will try my best to have it balanced as it will speed up searching.
-        	 * 	-	The VT values are not unique and there for there is no way of making 
-        	 * 		a perfectly balanced tree with duplicates of values, thus i will do the following:
-        	 * 
-        	 * 		-	If the vt of the Proc is < the parent it will go on the LEFT of the parent.
-        	 * 		-	If the vt of the Proc is > OR = to the parent it will go on the RIGHT of the parent.
-        	 * 
-        	 * 	- (See tree diagram above about duplicates)
-        	 */
-        	
-        	
-        	//make new method
+        	currParent = arrayOfNodes[TREE_ROOT_INDEX]; //set to the base root of tree.
+        	for(int i = TREE_ROOT_INDEX; i < arrayOfNodes.length; i++) { //worse case in n^2, however should be closer to n log(n)
+        		Proc[] child = findChildren(arrayOfNodes[i]);
+        		if(nodeToAdd.getVt() > child[LEFT].getVt()) {
+        			
+        		}
 
-        	if(nodeToAdd.getVt() < )
+        	}
+        	
+        	
         }
         
     } // end of enqueue()
@@ -143,6 +155,39 @@ public class BinarySearchTreeRQ implements Runqueue {
     
     
     /////// Custom methods ///////
+
+    private int getIndexFor(Proc procToFind) {
+    	//essentialy doing the whole divide and conquer approach 
+    	for (int i = TREE_ROOT_INDEX; i < arrayOfNodes.length; i++) {
+    		if (arrayOfNodes[i] != null) {
+    			if(procToFind.getVt() < arrayOfNodes[i].getVt()) {
+    				i *= 2; // will to to the left child of the parent. 
+    			}else if(procToFind.getVt() >= arrayOfNodes[i].getVt()){
+    				//need to ensure that it isnt the node we actualy want.
+    				if(arrayOfNodes[i].equals(procToFind)) {
+        				return i;
+        			}
+    				i = (i * 2) + 1; // will get the right child of the parent
+    			}
+    			if(arrayOfNodes[i].equals(procToFind)) {
+    				return i;
+    			}
+    		}
+    	}
+		return -1;
+	}
+    
+    public Proc[] findChildren(Proc parent) {
+    	
+		// left node will always be index parent * 2
+		Proc leftChild = arrayOfNodes[getIndexFor(parent) * 2];
+		// right node will always be index parent * 2 + 1
+		Proc rightChild = arrayOfNodes[getIndexFor(parent) * 2 + 1];
+		Proc[] retProcArray = new Proc[2];
+		retProcArray[0] = leftChild;
+		retProcArray[1] = rightChild;
+		return retProcArray;
+	} // end of findParent
     
     private int getNumberOfLevels() {
 		return (int) (Math.log(arrayOfNodes.length) / Math.log(2));
