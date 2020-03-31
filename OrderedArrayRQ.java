@@ -92,23 +92,40 @@ public class OrderedArrayRQ implements Runqueue {
         // Reduce count
         procCount--;
 
-        return retString; // placeholder,modify this
+        return retString;
     } // end of dequeue()
-
 
     @Override
     public boolean findProcess(String procLabel){
-        // Implement me
+        // O(n)
+        boolean found = false;
+        for (int i = 0; i < procCount; i++) {
+            if (processes[i].getLabel().equals(procLabel)){
+                found = true;
+                break;
+            }
+        }
 
-        return false; // placeholder, modify this
+        return found;
     } // end of findProcess()
 
 
     @Override
     public boolean removeProcess(String procLabel) {
-        // Implement me
+        boolean deleted = false;
+        if (procCount != 0){
+            // Move each element up in the list
+            for (int i = 1; i < procCount; i++) {
+                if (deleted)
+                processes[i - 1] = processes[i];
 
-        return false; // placeholder, modify this
+                if (processes[i].getLabel().equals(procLabel)){
+                    deleted = true;
+                }
+            }
+        }
+
+        return deleted;
     } // end of removeProcess()
 
 
