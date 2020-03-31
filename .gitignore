@@ -8,3 +8,7 @@
 
 # vscode
 .vscode/
+
+# other
+.classpath
+.project
