@@ -5,3 +5,6 @@
 /Proc.class
 /Runqueue.class
 /RunqueueTester.class
+
+# vscode
+.vscode/
