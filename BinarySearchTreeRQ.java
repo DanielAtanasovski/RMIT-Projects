@@ -54,6 +54,7 @@ public class BinarySearchTreeRQ implements Runqueue {
 	
 	
 	private Proc[] arrayOfNodes;
+	private int priorityQueueNumber = 1;
 
     /**
      * Constructs empty queue
@@ -64,6 +65,16 @@ public class BinarySearchTreeRQ implements Runqueue {
 	//for getting left and right of parent node/Proc
 	private static final int LEFT = 0;
 	private static final int RIGHT = 1;
+
+	//for calculating the children from the parent index. (MULTIPLIER) 
+	private static final int LEFT_CHILD_MULTIPLIER = 2;
+	private static final int LEFT_TO_RIGHT_MULTIPLIER = 1;
+	
+	//return value
+	private static final int FAIL_VALUE = -1;
+	
+	private static final int BASE_NUMBER = 2;
+
 
     public BinarySearchTreeRQ() {
         arrayOfNodes = new Proc[BASE_TREE_SIZE];
@@ -84,24 +95,37 @@ public class BinarySearchTreeRQ implements Runqueue {
     	 * 	- (See tree diagram above about duplicates)
     	 */
     	
-        Proc nodeToAdd = new Proc(procLabel, vt);
-        Proc currParent = null; // the current parent we are looking at.
+        Proc procToAdd = new Proc(procLabel, vt, priorityQueueNumber);
+        priorityQueueNumber++;
         
         //see if the tree doesn't even have a root set yet
         if(arrayOfNodes.length == BASE_TREE_SIZE && arrayOfNodes[TREE_ROOT_INDEX] != null) {
-        	arrayOfNodes[TREE_ROOT_INDEX] = nodeToAdd;
+        	arrayOfNodes[TREE_ROOT_INDEX] = procToAdd;
         }else {
         	
-        	currParent = arrayOfNodes[TREE_ROOT_INDEX]; //set to the base root of tree.
         	for(int i = TREE_ROOT_INDEX; i < arrayOfNodes.length; i++) { //worse case in n^2, however should be closer to n log(n)
         		Proc[] child = findChildren(arrayOfNodes[i]);
-        		if(nodeToAdd.getVt() > child[LEFT].getVt()) {
-        			
+        		if(procToAdd.getVt() < child[LEFT].getVt()) {
+        			i *= LEFT_CHILD_MULTIPLIER;
+        		}else if (procToAdd.getVt() >= child[RIGHT].getVt()) {
+        			i = (i * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
+        		}
+        		
+        		if (i >= arrayOfNodes.length - Math.pow(BASE_NUMBER, getNumberOfLevels() -1)) {
+        			/*	
+        			 * 	If the current index in the tree is past the number of levels 
+            		 * 	( ie if the index is trying to to add a child on the bottom level of the tree )
+            		 * 	thus the array needs to grow in order to accommodate a new child to be added.
+            		 * 	If this is the case it will increase array length by 2^(current level + 1)
+            		 * 
+            		 */
+    				addToArray((int) Math.pow(BASE_NUMBER, getNumberOfLevels()));
         		}
 
+        		if(arrayOfNodes[i] == null) {
+        			arrayOfNodes[i] = procToAdd;
+        		}
         	}
-        	
-        	
         }
         
     } // end of enqueue()
@@ -135,7 +159,7 @@ public class BinarySearchTreeRQ implements Runqueue {
     public int precedingProcessTime(String procLabel) {
         // Implement me
 
-        return -1; // placeholder, modify this
+        return FAIL_VALUE; // placeholder, modify this
     } // end of precedingProcessTime()
 
 
@@ -143,7 +167,7 @@ public class BinarySearchTreeRQ implements Runqueue {
     public int succeedingProcessTime(String procLabel) {
         // Implement me
 
-        return -1; // placeholder, modify this
+        return FAIL_VALUE; // placeholder, modify this
     } // end of precedingProcessTime()
 
 
@@ -156,41 +180,59 @@ public class BinarySearchTreeRQ implements Runqueue {
     
     /////// Custom methods ///////
 
+    public void addToArray(int count) {
+    	int newArraySize = arrayOfNodes.length + count;
+		System.out.println("increaing array from " + arrayOfNodes.length + " to: " + newArraySize);
+		Proc[] tempArray = new Proc[newArraySize];
+		for (int i = 0; i < arrayOfNodes.length; i++) {
+			// copies array
+			tempArray[i] = arrayOfNodes[i];
+		}
+		// sets the updated array
+		arrayOfNodes = tempArray;
+	}
+    
     private int getIndexFor(Proc procToFind) {
-    	//essentialy doing the whole divide and conquer approach 
+    	//essentially doing the whole divide and conquer approach 
+    	
     	for (int i = TREE_ROOT_INDEX; i < arrayOfNodes.length; i++) {
     		if (arrayOfNodes[i] != null) {
     			if(procToFind.getVt() < arrayOfNodes[i].getVt()) {
-    				i *= 2; // will to to the left child of the parent. 
+    				i *= LEFT_CHILD_MULTIPLIER; // will to to the left child of the parent. 
     			}else if(procToFind.getVt() >= arrayOfNodes[i].getVt()){
-    				//need to ensure that it isnt the node we actualy want.
+    				//need to ensure that it isn't the node we actually want.
     				if(arrayOfNodes[i].equals(procToFind)) {
         				return i;
         			}
-    				i = (i * 2) + 1; // will get the right child of the parent
+    				i = (i * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER; // will get the right child of the parent
     			}
     			if(arrayOfNodes[i].equals(procToFind)) {
     				return i;
     			}
     		}
     	}
-		return -1;
+		return FAIL_VALUE;
 	}
     
     public Proc[] findChildren(Proc parent) {
     	
+    	int parentIndex = getIndexFor(parent);
+    	
 		// left node will always be index parent * 2
-		Proc leftChild = arrayOfNodes[getIndexFor(parent) * 2];
+		Proc leftChild = arrayOfNodes[parentIndex * LEFT_CHILD_MULTIPLIER];
 		// right node will always be index parent * 2 + 1
-		Proc rightChild = arrayOfNodes[getIndexFor(parent) * 2 + 1];
+		Proc rightChild = arrayOfNodes[(parentIndex * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER];
 		Proc[] retProcArray = new Proc[2];
-		retProcArray[0] = leftChild;
-		retProcArray[1] = rightChild;
+		retProcArray[LEFT] = leftChild;
+		retProcArray[RIGHT] = rightChild;
+		//returns an array of [left child Proc, right child proc]
 		return retProcArray;
 	} // end of findParent
     
     private int getNumberOfLevels() {
-		return (int) (Math.log(arrayOfNodes.length) / Math.log(2));
+    	//This method simply gets the number of levels the tree has by performing 
+    	//logarithms based on the number of proc/nodes the tree has
+		return (int) (Math.log(arrayOfNodes.length) / Math.log(BASE_NUMBER));
     }
    
 	
