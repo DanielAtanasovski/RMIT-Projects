@@ -21,7 +21,7 @@ public class Proc {
      * @return the label
      */
     public String getLabel() {
-        return this.label;
+        return label;
     }
 
     /**
