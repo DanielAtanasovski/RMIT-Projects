@@ -120,17 +120,19 @@ public class OrderedArrayRQ implements Runqueue {
             // Move each element up in the list
             for (int i = 0; i < procCount; i++) {
                 if (deleted){
-                    if ((i - 1) != -1)
+                    if ((i - 1) != -1) // Check we aren't getting the -1 element
                         processes[i - 1] = processes[i];
                 }
 
+                // Found the process, now move up following elements
                 if (processes[i].getLabel().equals(procLabel)){
                     deleted = true;
                 }
             }
-
-            procCount--;
         }
+
+        if (deleted)
+            procCount--;
 
         return deleted;
     } // end of removeProcess()
