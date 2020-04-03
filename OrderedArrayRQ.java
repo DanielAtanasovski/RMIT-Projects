@@ -84,13 +84,16 @@ public class OrderedArrayRQ implements Runqueue {
             retString = processes[0].getLabel();
 
             // Move each element up in the list
-            for (int i = 1; i < procCount; i++) {
-                processes[i - 1] = processes[i];
+            for (int i = 0; i < procCount; i++) {
+                if ((i - 1) != -1)
+                    processes[i - 1] = processes[i];
             }
+
+            // Reduce count
+            procCount--;
         }
 
-        // Reduce count
-        procCount--;
+        
 
         return retString;
     } // end of dequeue()
@@ -115,14 +118,18 @@ public class OrderedArrayRQ implements Runqueue {
         boolean deleted = false;
         if (procCount != 0){
             // Move each element up in the list
-            for (int i = 1; i < procCount; i++) {
-                if (deleted)
-                processes[i - 1] = processes[i];
+            for (int i = 0; i < procCount; i++) {
+                if (deleted){
+                    if ((i - 1) != -1)
+                        processes[i - 1] = processes[i];
+                }
 
                 if (processes[i].getLabel().equals(procLabel)){
                     deleted = true;
                 }
             }
+
+            procCount--;
         }
 
         return deleted;
@@ -131,18 +138,62 @@ public class OrderedArrayRQ implements Runqueue {
 
     @Override
     public int precedingProcessTime(String procLabel) {
-        // Implement me
+        int preTime = -1;
+        int foundProc = -1;
 
-        return -1; // placeholder, modify this
+        // Find the process
+        foundProc = getProcIndex(procLabel);
+
+        if (foundProc != -1){
+            // first in the list, so none before
+            if (foundProc == 0){
+                preTime = 0;
+            } else {
+                preTime = 0;
+                for (int i = 0; i < foundProc; i++) {
+                    preTime += processes[i].getVt();
+                }
+            }
+        }
+
+        return preTime;
     }// end of precedingProcessTime()
 
 
     @Override
     public int succeedingProcessTime(String procLabel) {
-        // Implement me
+        int sucTime = -1;
+        int foundProc = -1;
 
-        return -1; // placeholder, modify this
+        foundProc = getProcIndex(procLabel);
+
+        if (foundProc != -1) {
+            // Last element in the list, so none after
+            if (foundProc  == procCount - 1) {
+                sucTime = 0;
+            } else {
+                sucTime = 0;
+                for (int i = foundProc + 1; i < procCount; i++) {
+                    sucTime += processes[i].getVt();
+                }
+            }
+        }
+        
+        return sucTime;
     } // end of precedingProcessTime()
+
+    private int getProcIndex(String procLabel) {
+        int foundProc = -1;
+
+        for (int i = 0; i < procCount; i++) {
+            if (processes[i].getLabel().equalsIgnoreCase(procLabel)){
+                foundProc = i;
+                break;
+            }
+        }
+
+        return foundProc;
+    }
 
 
     @Override
