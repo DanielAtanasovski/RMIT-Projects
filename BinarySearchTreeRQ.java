@@ -102,119 +102,32 @@ public class BinarySearchTreeRQ implements Runqueue {
         if(arrayOfNodes.length == BASE_TREE_SIZE && arrayOfNodes[TREE_ROOT_INDEX] == null) {
         	arrayOfNodes[TREE_ROOT_INDEX] = procToAdd;
         }else {
-        	int retIndex = -1;
-//        	if (priorityQueueNumber >= arrayOfNodes.length - Math.pow(2, getNumberOfLevels() -1)) {
-//    			// increase array length by 2^(current level + 1)
-//    			addToArray((int) Math.pow(2, getNumberOfLevels()));
-//        	}
         	int i = TREE_ROOT_INDEX;
-        	while(i < arrayOfNodes.length) { //worse case in n^2, however should be closer to n log(n)
+        	
+        	while(i <= arrayOfNodes.length) { //worse case in n^2, however should be closer to n log(n)
 
-        		//Proc[] child = findChildren(i);
-//        		if(child[2] != null) {
-//        			Proc parent = arrayOfNodes[(int) Math.floor(i / 2)];
-//        			System.out.println("parent vt: " + parent.getVt());
-//        			if(procToAdd.getVt() < parent.getVt() && arrayOfNodes[i] == null) {
-//        				System.out.println("patching left");
-//        				arrayOfNodes[i*LEFT_CHILD_MULTIPLIER] = procToAdd;
-//        			}else if(procToAdd.getVt() >= parent.getVt() && arrayOfNodes[i] == null) {
-//        				System.out.println("patching right");
-//
-//        				arrayOfNodes[i*LEFT_CHILD_MULTIPLIER+1] = procToAdd;
-//        			}
-//        			break;
-//        		}
-        		System.out.println(i + " ARR LENGTH: " + arrayOfNodes.length);
-        		int parentProcIndex = i;
         		int leftChild = i* LEFT_CHILD_MULTIPLIER;
         		int rightChild = (i * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
-        		if(parentProcIndex != TREE_ROOT_INDEX) {
-        			parentProcIndex = (int) (i / 2);
-        		}
-        		
-        		boolean isValidLocation = true;
-        		System.out.println("right: " + rightChild + " left: " + leftChild);
-        		if(leftChild > arrayOfNodes.length || rightChild > arrayOfNodes.length) {
-        			//isValidLocation = false;
+
+        		if(leftChild >= arrayOfNodes.length || rightChild >= arrayOfNodes.length || i >= arrayOfNodes.length) {
         			addToArray((int) Math.pow(2, getNumberOfLevels()));
         		}
         		
-        		if(isValidLocation && i <= arrayOfNodes.length) {
-	        			if(procToAdd.getVt() < arrayOfNodes[i].getVt()) {
-	        				i = leftChild;
-	        			}else if(procToAdd.getVt() >= arrayOfNodes[i].getVt()) {
-	        				i = rightChild;
-	        			}
-	        			if(arrayOfNodes[i] == null) {
-	        				System.out.println(i + "is null");
-	        			}else {
-	        				System.out.println(arrayOfNodes[i].print());
-	        			}
-	        			if(arrayOfNodes[i] == null) {
-	        				arrayOfNodes[i] = procToAdd;
-	        				break;
-	        			}
+        		if(i <= arrayOfNodes.length) {
+        			if(procToAdd.getVt() < arrayOfNodes[i].getVt()) {
+        				i = leftChild;
+        			}else if(procToAdd.getVt() >= arrayOfNodes[i].getVt()) {
+        				i = rightChild;
+        			}
+        			if(arrayOfNodes[i] == null) {
+        				arrayOfNodes[i] = procToAdd;
+        				break;
+        			}
         		}
-        		
-        		
-        		
-//        		System.out.println("parent index: " + parentProcIndex);
-//        		System.out.println(arrayOfNodes[parentProcIndex].getVt() + "---");
-//        		if(child[LEFT] != null){
-//	        		if(procToAdd.getVt() < child[LEFT].getVt()) {
-//	        			System.out.println("1, going left, index: " + i + "ret " + retIndex);
-//	        			i *= LEFT_CHILD_MULTIPLIER;
-//	        		}
-//	        	}else if(i < arrayOfNodes.length) { 
-//	        		
-//	        		if(procToAdd.getVt() < arrayOfNodes[parentProcIndex].getVt()){
-//		        		System.out.println(" LEFT adding to index: " + i * LEFT_CHILD_MULTIPLIER);
-//		        		arrayOfNodes[i * LEFT_CHILD_MULTIPLIER] = procToAdd;
-//		        		break;
-//	        		}
-//	        	}
-//        		if (child[RIGHT] != null) {
-//	        		if(procToAdd.getVt() >= child[RIGHT].getVt()) {
-//	        			System.out.println("1, going right, index: " + i + "ret " + retIndex);
-//
-//	        			i = (i * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
-//	        		}
-//	        	}else if(i < arrayOfNodes.length){
-//	        		if(procToAdd.getVt() < arrayOfNodes[parentProcIndex].getVt()) {
-//		        		System.out.println("RIGHT adding to index: " + (i * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER);
-//		        		arrayOfNodes[(i * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER] = procToAdd;
-//		        		break;
-//	        		}
-//	        	}
-//        		if(child[2] != null){
-//	        			System.out.println("1.1, going left, index: " + i + "ret " + retIndex);
-//	        			i *= LEFT_CHILD_MULTIPLIER;
-//	        		
-//	        	}else if (child[2] != null) {
-//        				System.out.println("1.1, going RIGHT, index: " + i + "ret " + retIndex);
-//	        			i = (i * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
-//	        		
-//	        	}
-        		
-//        		if (i >= arrayOfNodes.length - Math.pow(BASE_NUMBER, getNumberOfLevels() -1)) {
-//        			/*	
-//        			 * 	If the current index in the tree is past the number of levels 
-//            		 * 	( ie if the index is trying to to add a child on the bottom level of the tree )
-//            		 * 	thus the array needs to grow in order to accommodate a new child to be added.
-//            		 * 	If this is the case it will increase array length by 2^(current level + 1)
-//            		 * 
-//            		 */
-//        			System.out.println("increasing array");
-//    				addToArray((int) Math.pow(BASE_NUMBER, getNumberOfLevels()));
-//    				break;
-//    				
-//        		}
-
-        	}
-    			//arrayOfNodes[retIndex] = procToAdd;
-    		}
-        
+        	}		
+    	}
         System.out.println("finnished adding");
+        System.out.println("arr size: " + arrayOfNodes.length);
         for(int i = TREE_ROOT_INDEX; i < arrayOfNodes.length; i++) { 
         	if(arrayOfNodes[i] != null) {
         	System.out.print(arrayOfNodes[i].getLabel() + " ");
@@ -238,16 +151,41 @@ public class BinarySearchTreeRQ implements Runqueue {
          * 	swap the left most child with the chosen node to delete, then delete it.
          * 
          * 	# complexity: O(n)
+         * 
          */
-    	//making the VT we are looking for smaller then the root vt, thus will go to the left.
-//    	int smallestVTFoundIndex = TREE_ROOT_INDEX;
-//    	Proc smallestProc = arrayOfNodes[TREE_ROOT_INDEX];
-//    	if(arrayOfNodes[TREE_ROOT_INDEX] != null && arrayOfNodes.length >=BASE_TREE_SIZE) {
-//    		recursivePreorder(TREE_ROOT_INDEX);
-//        	
+    	
+//    	System.out.println("GOT HERE");
+//        if(arrayOfNodes.length == BASE_TREE_SIZE && arrayOfNodes[TREE_ROOT_INDEX] != null) {
+//        	arrayOfNodes[TREE_ROOT_INDEX] = null;
+//        	System.out.println("broke tree");
+//        }else {
+//        	int i = TREE_ROOT_INDEX;
+//        	while(i <= arrayOfNodes.length) { //worse case in n^2, however should be closer to n log(n)
+//        		Proc smallestProc = null;
+//        		Proc previosProc = null;
+//        		int leftChild = i* LEFT_CHILD_MULTIPLIER;
+//        		int rightChild = (i * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
+//        		
+//        		if(i <= arrayOfNodes.length) {
+//        			//keep stepping to the left of the tree.
+//        			Proc[] child = findChildren(i);
+//        			System.out.println(child[LEFT].print());
+//        			if(child[LEFT] != null) {
+//	        			if(child[LEFT].getVt() <= arrayOfNodes[i].getVt()) {
+//	        				previosProc = arrayOfNodes[i];
+//	        				smallestProc = child[LEFT];
+//	        				i = leftChild;
+//	        			}
+//        			}
+//        		}else {
+//        			System.out.println(smallestProc.print());
+//        			break;
+//        		}
+//        	}		
 //    	}
-    		
-        return getLeft(); // placeholder, modify this
+    	System.out.println("got here");
+    	System.out.println(" got SMALLEST " + getSmallestProcPriority().print());
+        return " "; // placeholder, modify this
     } // end of dequeue()
 
 
@@ -287,7 +225,7 @@ public class BinarySearchTreeRQ implements Runqueue {
     public void printAllProcesses(PrintWriter os) {
     	recursivePreOrderPrinter(1, os);
     	os.print("\n");
-    	os.close();
+    	os.flush();	
     } // end of printAllProcess()
     
     
@@ -297,33 +235,114 @@ public class BinarySearchTreeRQ implements Runqueue {
 			os.print(arrayOfNodes[currentProcIndex].getLabel().toString() + " ");
 			recursivePreOrderPrinter(currentProcIndex * LEFT_CHILD_MULTIPLIER, os);
 			recursivePreOrderPrinter((currentProcIndex * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER, os);
-			
 		}
 	}
     
-    private String getLeft() {
-    	int retProc = -1;
-    	String retString = "None";
-    	Proc firstFoundSmallestPocVT = null;
-    	Proc foundSmallestPocVT = null;
-    	for(int i = TREE_ROOT_INDEX; i < arrayOfNodes.length; i++) { 
-
-    		Proc[] child = findChildren(i);
-    		if(child[LEFT] != null) {
-    			retProc = i;
-    			firstFoundSmallestPocVT = child[LEFT];
-    			foundSmallestPocVT = child[LEFT];
-        		i *= LEFT_CHILD_MULTIPLIER;
-    		}
-    	}
-    	//we have index of smallest Proc,
-    	// need to see if there are any smilar ones.
-    	foundSmallestPocVT = recursivePreorder(retProc, firstFoundSmallestPocVT);
-    	retString = foundSmallestPocVT.getLabel();
-    	int indexOfProcToDequeue = getIndexFor(foundSmallestPocVT);
-    	arrayOfNodes[indexOfProcToDequeue] = null;
-    	return retString;
+    private Proc getSmallestProcPriority() {
+    	/*
+    	 * the smallest Proc in this tree will always be on the left most side, thus can find a multiple of 2.
+    	 */
+    	 if(arrayOfNodes.length == BASE_TREE_SIZE && arrayOfNodes[TREE_ROOT_INDEX] != null) {
+         	return arrayOfNodes[TREE_ROOT_INDEX];
+         }else {
+	    	int smallestProcIndex = 1; 
+	    	int treeLevels = getNumberOfLevels() - TREE_ROOT_INDEX;
+	    	int tempIndex = 1;
+	    	for(int i = 0; i <= treeLevels; i ++) {
+	    		tempIndex = (int) Math.pow(BASE_NUMBER, i);
+	    		if(arrayOfNodes[tempIndex] != null) {
+	    			smallestProcIndex = tempIndex;
+	    		}
+	    		
+	    	}
+	    	Proc smallestProc = arrayOfNodes[smallestProcIndex];
+	    	System.out.println("index: " + smallestProcIndex + " level " + getNumberOfLevels());
+	    	System.out.println("LOWEST : " + smallestProc.print());
+	    	int i = (smallestProcIndex * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
+        	while(i<= arrayOfNodes.length) { //worse case in n^2, however should be closer to n log(n)
+        	System.out.println(".");
+        		int leftChild = i* LEFT_CHILD_MULTIPLIER;
+        		int rightChild = (i * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
+        		System.out.println("i: " + arrayOfNodes.length + " L: " + leftChild + " R: " + rightChild);
+        		if(i <= arrayOfNodes.length) {
+        			System.out.println("-");
+        			
+        			if(arrayOfNodes[i] != null && smallestProc.getVt() < arrayOfNodes[i].getVt()) {
+        				System.out.println("L");
+        				i = leftChild;
+        			}else if(arrayOfNodes[i] != null && smallestProc.getVt() >= arrayOfNodes[i].getVt()) {
+        				System.out.println("R");
+        				if(smallestProc.getVt() == arrayOfNodes[i].getVt() && 
+        						smallestProc.getPriority() < arrayOfNodes[i].getPriority()) {
+        					System.out.println("new lowest at indexSSSSS : " + i);
+        					System.out.println(arrayOfNodes[i].print());
+        					System.out.println("----");
+        					smallestProcIndex = i;
+        					smallestProc = arrayOfNodes[i];
+        				}
+        				i = rightChild;
+        				continue;
+        			}
+        			if(arrayOfNodes[i] != null && smallestProc.getVt() == arrayOfNodes[i].getVt() && 
+    					smallestProc.getPriority() < arrayOfNodes[i].getPriority()) {
+    					System.out.println("new lowest at index : " + i);
+    					System.out.println(arrayOfNodes[i].print());
+    					System.out.println("----");
+    					smallestProcIndex = i;
+    					smallestProc = arrayOfNodes[i];
+    					i = rightChild -1;
+    					continue;
+    				}
+        			
+        			if(arrayOfNodes[i] == null) {
+        				break;
+        			}
+        			
+        		}else {
+        			break;
+        		}
+        	}
+	    		
+	    		
+	    		
+	    		
+	    		
+	    		
+	    		
+	    		
+	    		
+//	    		System.out.println("ret: " + ret++);
+//	    		if(arrayOfNodes[index] == null) {
+//	    			System.out.println("is null going left");
+//	    			index = (index * LEFT_CHILD_MULTIPLIER);
+//	    			if(arrayOfNodes[smallestProcIndex].getPriority() < arrayOfNodes[index].getPriority()) {
+//			    		System.out.println("l index: " + index);
+//			    		if(arrayOfNodes[smallestProcIndex].getPriority() < arrayOfNodes[index].getPriority()) {
+//				    		smallestProc = arrayOfNodes[index];
+//			    			System.out.println("left-------" + smallestProc.print());
+//			    		}
+//		    		}
+//	    		}else if(arrayOfNodes[smallestProcIndex].getVt() >= arrayOfNodes[index].getVt()) {
+//		    		System.out.println("found new proc ON RIGHT: " + arrayOfNodes[index].print() + "\n compaird to: " + arrayOfNodes[smallestProcIndex].print());
+//	    			if(arrayOfNodes[smallestProcIndex].getPriority() < arrayOfNodes[index].getPriority()) {
+//		    		smallestProc = arrayOfNodes[index];
+//	    			System.out.println("right-------" + smallestProc.print());
+//	    			}
+//	    		}
+//	    		}else if(arrayOfNodes[smallestProcIndex].getPriority() < arrayOfNodes[index].getPriority()) {
+//		    		index = (index * LEFT_CHILD_MULTIPLIER);
+//		    		System.out.println("l index: " + index);
+//		    		if(arrayOfNodes[smallestProcIndex].getPriority() < arrayOfNodes[index].getPriority()) {
+//			    		smallestProc = arrayOfNodes[index];
+//		    			System.out.println("left-------" + smallestProc.print());
+//		    		}
+//	    		}
+	    	
+	    	return smallestProc;
+         }
     }
+    
+    
     
     
     private Proc recursivePreorder(int currProcIndex, Proc smallestProcVT) {
@@ -383,19 +402,22 @@ public class BinarySearchTreeRQ implements Runqueue {
 	}
     
     private Proc[] findChildren(int currProc) {
-		Proc[] retProcArray = new Proc[3];
-		int parent = (int) Math.floor(currProc / 2);
-    	int parentIndex = parent;
-
-		// left node will always be index parent * 2
-//    	if(parent == null) {
-//    		retProcArray[2] = new Proc("PATCH", 0, 0);
-//    		return retProcArray;
-//    	}
-
-		Proc leftChild = arrayOfNodes[parentIndex * LEFT_CHILD_MULTIPLIER];
+		Proc[] retProcArray = new Proc[2];
+    	int parentIndex = (int) Math.floor(currProc / 2);
+    	Proc leftChild = null;
+    	Proc rightChild = null;
+    	int leftChildIndex = parentIndex * LEFT_CHILD_MULTIPLIER;
+    	int rightChildIndex = (parentIndex * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
+    	
+    	if(leftChildIndex < arrayOfNodes.length) {
+    		leftChild = arrayOfNodes[leftChildIndex];
+    	}
+    		
 		// right node will always be index parent * 2 + 1
-		Proc rightChild = arrayOfNodes[(parentIndex * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER];
+    	if(rightChildIndex < arrayOfNodes.length) {
+    		rightChild = arrayOfNodes[rightChildIndex];
+    	}
+    	
 		retProcArray[LEFT] = leftChild;
 		retProcArray[RIGHT] = rightChild;
 		//returns an array of [left child Proc, right child proc]
