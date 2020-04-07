@@ -283,7 +283,7 @@ public class BinarySearchTreeRQ implements Runqueue {
         				i = rightChild;
         				continue;
         			}
-        			if(arrayOfNodes[i] != null && smallestProc.getVt() == arrayOfNodes[i].getVt() && 
+        			if(i <= arrayOfNodes.length && arrayOfNodes[i] != null && smallestProc.getVt() == arrayOfNodes[i].getVt() && 
     					smallestProc.getPriority() < arrayOfNodes[i].getPriority()) {
     					System.out.println("new lowest at index : " + i);
     					System.out.println(arrayOfNodes[i].print());
@@ -294,7 +294,7 @@ public class BinarySearchTreeRQ implements Runqueue {
     					continue;
     				}
         			
-        			if(arrayOfNodes[i] == null) {
+        			if(i > arrayOfNodes.length || arrayOfNodes[i] == null) {
         				break;
         			}
         			
@@ -302,43 +302,99 @@ public class BinarySearchTreeRQ implements Runqueue {
         			break;
         		}
         	}
+	    	System.out.println("---------------------------------------------------");
 	    		
-	    		
-	    		
-	    		
-	    		
-	    		
-	    		
-	    		
-	    		
-//	    		System.out.println("ret: " + ret++);
-//	    		if(arrayOfNodes[index] == null) {
-//	    			System.out.println("is null going left");
-//	    			index = (index * LEFT_CHILD_MULTIPLIER);
-//	    			if(arrayOfNodes[smallestProcIndex].getPriority() < arrayOfNodes[index].getPriority()) {
-//			    		System.out.println("l index: " + index);
-//			    		if(arrayOfNodes[smallestProcIndex].getPriority() < arrayOfNodes[index].getPriority()) {
-//				    		smallestProc = arrayOfNodes[index];
-//			    			System.out.println("left-------" + smallestProc.print());
-//			    		}
-//		    		}
-//	    		}else if(arrayOfNodes[smallestProcIndex].getVt() >= arrayOfNodes[index].getVt()) {
-//		    		System.out.println("found new proc ON RIGHT: " + arrayOfNodes[index].print() + "\n compaird to: " + arrayOfNodes[smallestProcIndex].print());
-//	    			if(arrayOfNodes[smallestProcIndex].getPriority() < arrayOfNodes[index].getPriority()) {
-//		    		smallestProc = arrayOfNodes[index];
-//	    			System.out.println("right-------" + smallestProc.print());
-//	    			}
-//	    		}
-//	    		}else if(arrayOfNodes[smallestProcIndex].getPriority() < arrayOfNodes[index].getPriority()) {
-//		    		index = (index * LEFT_CHILD_MULTIPLIER);
-//		    		System.out.println("l index: " + index);
-//		    		if(arrayOfNodes[smallestProcIndex].getPriority() < arrayOfNodes[index].getPriority()) {
-//			    		smallestProc = arrayOfNodes[index];
-//		    			System.out.println("left-------" + smallestProc.print());
-//		    		}
-//	    		}
+        	Proc tempsmallestProc = smallestProc;
+        	System.out.println("starting index: " + smallestProcIndex);
+        	System.out.println("right index: " + ((smallestProcIndex * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER));
+        	int tempSmallest = smallestProcIndex;
+	    	if((smallestProcIndex * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER < arrayOfNodes.length &&
+	    			arrayOfNodes[(smallestProcIndex * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER] != null){
+		    	i = (smallestProcIndex * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
+	        	while(i<= arrayOfNodes.length) { //worse case in n^2, however should be closer to n log(n)
+			    	tempSmallest = i;
+
+	        		int leftChild = i* LEFT_CHILD_MULTIPLIER;
+	        		int rightChild = (i * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
+	        		System.out.println("index: " + i);
+	        		if(i <= arrayOfNodes.length) {
+	        			if(arrayOfNodes[i] != null && smallestProc.getVt() < arrayOfNodes[i].getVt()) {
+	        				System.out.println("L: " + "len: " + arrayOfNodes.length + " index: " + i + " log: " + arrayOfNodes[i].print());
+
+	        				i = leftChild;
+
+	        			}else if(arrayOfNodes[i] != null && smallestProc.getVt() >= arrayOfNodes[i].getVt()) {
+	        				System.out.println("R: " + "len: " + arrayOfNodes.length + " index: " + i + " log: " + arrayOfNodes[i].print());
+
+		        			i = rightChild;
+
+	        			}
+	        			if(i > arrayOfNodes.length || arrayOfNodes[i] == null) {
+	        				
+	        				System.out.println("breaking");
+	        				break;
+	        			}
+	        			
+	        		}else {
+        				System.out.println("breaking final");
+
+	        			break;
+	        		}
+	        	}
+	    	}
+	    	System.out.println("ended index : " + i + " arr size: " + arrayOfNodes.length);
 	    	
-	    	return smallestProc;
+	    	if(i > arrayOfNodes.length) {
+	    		i = (int) Math.floor(i / 2);
+	    	}
+	    	System.out.println("found smallest node: " + arrayOfNodes[smallestProcIndex].print());
+	    	if(arrayOfNodes[i] != null) {
+	    		System.out.println("found to swap: " + arrayOfNodes[i].print());
+	    	}
+    		System.out.println("found to swapAAAAA: " + arrayOfNodes[tempSmallest].print());
+    		System.out.println("==============================================");
+    		int temp = 0;
+    		int temp2 = 0; //right child
+    		Proc tempProc = null;
+    		Proc tempProc2 = null;
+    		int temprearange = smallestProcIndex;
+    		
+    		while(temprearange <= arrayOfNodes.length && findChildren(tempSmallest)[RIGHT] != null && findChildren(temprearange)[LEFT] == null) {
+    			int rightChild = (temprearange * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
+    			int leftChild = (temprearange * LEFT_CHILD_MULTIPLIER);
+    			if(rightChild > arrayOfNodes.length) {
+    				break;
+    			}
+    			System.out.println("first " + temprearange);
+    			System.out.println("second " + rightChild);
+
+    			tempProc = arrayOfNodes[temprearange];
+    			tempProc2 = arrayOfNodes[rightChild];
+    			//check if the parent nodes left child is null or not
+    			System.out.println("init:" + (int) Math.floor(temprearange / 2));
+    			System.out.println("place: " + ((int) (( Math.floor(temprearange / 2)))*2));
+    			if(arrayOfNodes[((int) (( Math.floor(temprearange / 2)))*2)] == null) {
+    				System.out.println("SWAPING LEFT");
+    				arrayOfNodes[((int) (( Math.floor(temprearange / 2)))*2)] = arrayOfNodes[leftChild];
+    			}
+    			System.out.println(temprearange);
+    			System.out.println("1" + tempProc.print());
+    			System.out.println("2" + tempProc2.print());
+       			arrayOfNodes[rightChild] = tempProc;
+    			arrayOfNodes[temprearange] = tempProc2;
+ 
+    			
+    			temprearange = rightChild;
+
+    			
+    			//rearange
+    		}
+	    		
+	    		
+	    		
+	    		
+	    		
+	    	return tempsmallestProc;
          }
     }
     
@@ -403,11 +459,10 @@ public class BinarySearchTreeRQ implements Runqueue {
     
     private Proc[] findChildren(int currProc) {
 		Proc[] retProcArray = new Proc[2];
-    	int parentIndex = (int) Math.floor(currProc / 2);
     	Proc leftChild = null;
     	Proc rightChild = null;
-    	int leftChildIndex = parentIndex * LEFT_CHILD_MULTIPLIER;
-    	int rightChildIndex = (parentIndex * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
+    	int leftChildIndex = currProc * LEFT_CHILD_MULTIPLIER;
+    	int rightChildIndex = (currProc * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
     	
     	if(leftChildIndex < arrayOfNodes.length) {
     		leftChild = arrayOfNodes[leftChildIndex];
