@@ -54,6 +54,7 @@ public class BinarySearchTreeRQ implements Runqueue {
 	
 	
 	private Proc[] arrayOfNodes;
+	private Proc[] tempRebalArray; //holds nodes to be re-added in after deletion to make tree balance again.
 	private int priorityQueueNumber = 0;
 
     /**
@@ -78,7 +79,7 @@ public class BinarySearchTreeRQ implements Runqueue {
 
     public BinarySearchTreeRQ() {
         arrayOfNodes = new Proc[BASE_TREE_SIZE];
-
+        tempRebalArray = new Proc[0];
     }  // end of BinarySearchTreeRQ()
 
 
@@ -97,9 +98,51 @@ public class BinarySearchTreeRQ implements Runqueue {
     	
         Proc procToAdd = new Proc(procLabel, vt, priorityQueueNumber);
         priorityQueueNumber++;
+        addToTree(procToAdd);
+//        //see if the tree doesn't even have a root set yet
+//        if(arrayOfNodes.length == BASE_TREE_SIZE && arrayOfNodes[TREE_ROOT_INDEX] == null) {
+//        	arrayOfNodes[TREE_ROOT_INDEX] = procToAdd;
+//        }else {
+//        	int i = TREE_ROOT_INDEX;
+//        	
+//        	while(i <= arrayOfNodes.length) { //worse case in n^2, however should be closer to n log(n)
+//
+//        		int leftChild = i* LEFT_CHILD_MULTIPLIER;
+//        		int rightChild = (i * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
+//
+//        		if(leftChild >= arrayOfNodes.length || rightChild >= arrayOfNodes.length || i >= arrayOfNodes.length) {
+//        			addToArray((int) Math.pow(2, getNumberOfLevels()));
+//        		}
+//        		
+//        		if(i <= arrayOfNodes.length) {
+//        			if(procToAdd.getVt() < arrayOfNodes[i].getVt()) {
+//        				i = leftChild;
+//        			}else if(procToAdd.getVt() >= arrayOfNodes[i].getVt()) {
+//        				i = rightChild;
+//        			}
+//        			if(arrayOfNodes[i] == null) {
+//        				arrayOfNodes[i] = procToAdd;
+//        				break;
+//        			}
+//        		}
+//        	}		
+//    	}
+//        
+//        //can delete below
+//        System.out.println("finnished adding");
+//        System.out.println("arr size: " + arrayOfNodes.length);
+//        for(int i = TREE_ROOT_INDEX; i < arrayOfNodes.length; i++) { 
+//        	if(arrayOfNodes[i] != null) {
+//        	System.out.print(arrayOfNodes[i].getLabel() + " ");
+//        	}else {
+//        		System.out.print(" ? ");
+//        	}
+//        }
+    } // end of enqueue()
 
-        //see if the tree doesn't even have a root set yet
-        if(arrayOfNodes.length == BASE_TREE_SIZE && arrayOfNodes[TREE_ROOT_INDEX] == null) {
+
+    private void addToTree(Proc procToAdd) {
+    	if(arrayOfNodes.length == BASE_TREE_SIZE && arrayOfNodes[TREE_ROOT_INDEX] == null) {
         	arrayOfNodes[TREE_ROOT_INDEX] = procToAdd;
         }else {
         	int i = TREE_ROOT_INDEX;
@@ -126,6 +169,8 @@ public class BinarySearchTreeRQ implements Runqueue {
         		}
         	}		
     	}
+        
+        //can delete below
         System.out.println("finnished adding");
         System.out.println("arr size: " + arrayOfNodes.length);
         for(int i = TREE_ROOT_INDEX; i < arrayOfNodes.length; i++) { 
@@ -135,9 +180,9 @@ public class BinarySearchTreeRQ implements Runqueue {
         		System.out.print(" ? ");
         	}
         }
-    } // end of enqueue()
-
-
+    }
+    
+    
     @Override
     public String dequeue() {
         /*
@@ -353,46 +398,51 @@ public class BinarySearchTreeRQ implements Runqueue {
 	    	}
     		System.out.println("found to swapAAAAA: " + arrayOfNodes[tempSmallest].print());
     		System.out.println("==============================================");
-    		int temp = 0;
-    		int temp2 = 0; //right child
+
     		Proc tempProc = null;
     		Proc tempProc2 = null;
     		int temprearange = smallestProcIndex;
     		
-    		while(temprearange <= arrayOfNodes.length && findChildren(tempSmallest)[RIGHT] != null && findChildren(temprearange)[LEFT] == null) {
-    			int rightChild = (temprearange * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
-    			int leftChild = (temprearange * LEFT_CHILD_MULTIPLIER);
-    			if(rightChild > arrayOfNodes.length) {
-    				break;
-    			}
-    			System.out.println("first " + temprearange);
-    			System.out.println("second " + rightChild);
-
-    			tempProc = arrayOfNodes[temprearange];
-    			tempProc2 = arrayOfNodes[rightChild];
-    			//check if the parent nodes left child is null or not
-    			System.out.println("init:" + (int) Math.floor(temprearange / 2));
-    			System.out.println("place: " + ((int) (( Math.floor(temprearange / 2)))*2));
-    			if(arrayOfNodes[((int) (( Math.floor(temprearange / 2)))*2)] == null) {
-    				System.out.println("SWAPING LEFT");
-    				arrayOfNodes[((int) (( Math.floor(temprearange / 2)))*2)] = arrayOfNodes[leftChild];
-    			}
-    			System.out.println(temprearange);
-    			System.out.println("1" + tempProc.print());
-    			System.out.println("2" + tempProc2.print());
-       			arrayOfNodes[rightChild] = tempProc;
-    			arrayOfNodes[temprearange] = tempProc2;
- 
+    		
+			int rightChild = (temprearange * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
+			
+			
+			tempProc = arrayOfNodes[temprearange];
+			tempProc2 = arrayOfNodes[rightChild];
+			//check if the parent nodes left child is null or not
     			
-    			temprearange = rightChild;
-
     			
-    			//rearange
-    		}
-	    		
-	    		
-	    		
-	    		
+       		arrayOfNodes[rightChild] = tempProc;
+    		arrayOfNodes[temprearange] = tempProc2;
+
+	    	Proc procToDelete = arrayOfNodes[rightChild];
+
+	    	recursivePreorderAddToArray(rightChild);
+	    	//arrayOfNodes[rightChild] = null;
+	    	
+	    	for(int j = 0; j < tempRebalArray.length; j++) {
+	    		//early termination
+	    		boolean swapped = false;
+	        	for(int l = 0; l < tempRebalArray.length; l++) {
+	        		Proc temp = null;
+	        		if(tempRebalArray[j].getPriority() > tempRebalArray[l].getPriority()) {
+	        			temp = tempRebalArray[l];
+	        			tempRebalArray[l] = tempRebalArray[j];
+	        			tempRebalArray[j] = tempRebalArray[l];
+	        			swapped = true;
+	        		}
+	        	}
+	        	if(!swapped) {
+	        		break;
+	        	}
+	        }
+	        System.out.println(" ////////////////////////////////////////");
+	        for(int l = 0; l < tempRebalArray.length; l++) {
+	        	if(!tempRebalArray[l].equals(procToDelete)) {
+		        	addToTree(tempRebalArray[l]);
+	        	}
+	        }
+	        tempRebalArray = new Proc[0];
 	    		
 	    	return tempsmallestProc;
          }
@@ -401,20 +451,14 @@ public class BinarySearchTreeRQ implements Runqueue {
     
     
     
-    private Proc recursivePreorder(int currProcIndex, Proc smallestProcVT) {
-    	Proc retProc = smallestProcVT;
+    private void recursivePreorderAddToArray(int currProcIndex) {
     	if (currProcIndex < arrayOfNodes.length && arrayOfNodes[currProcIndex] != null) {
-			//writer.print(arrayOfNodes[currentNode].toString() + " ");
     		Proc tempProc = arrayOfNodes[currProcIndex];
-    		if(smallestProcVT.getVt() > tempProc.getVt()) {
-    			smallestProcVT = tempProc;
-    		}else if(smallestProcVT.getVt() == tempProc.getVt() && smallestProcVT.getPriority() > tempProc.getPriority()) {
-    			smallestProcVT = tempProc;
-    		}
-    		retProc = recursivePreorder(currProcIndex * LEFT_CHILD_MULTIPLIER, smallestProcVT);
-    		retProc = recursivePreorder(currProcIndex * LEFT_CHILD_MULTIPLIER + LEFT_TO_RIGHT_MULTIPLIER, smallestProcVT);
+    		arrayOfNodes[currProcIndex] = null; //delete the node in the list
+    		addToRebalArray(tempProc);
+    		recursivePreorderAddToArray(currProcIndex * LEFT_CHILD_MULTIPLIER);
+    		recursivePreorderAddToArray(currProcIndex * LEFT_CHILD_MULTIPLIER + LEFT_TO_RIGHT_MULTIPLIER);
 		}
-    	return retProc;
     }
     
     private void addToArray(int count) {
@@ -428,6 +472,27 @@ public class BinarySearchTreeRQ implements Runqueue {
 		}
 		// sets the updated array
 		arrayOfNodes = tempArray;
+	}
+    
+    
+    
+    private void addToRebalArray(Proc procToReAdd) {
+    	int newArraySize = (tempRebalArray.length + 1);
+    	System.out.println("TEMP ARRAY SIZE D : " + newArraySize );
+		Proc[] tempArray = new Proc[newArraySize];
+		if(tempRebalArray.length == 0) {
+			tempRebalArray = tempArray;
+		}
+		for (int i = 0; i < tempRebalArray.length; i++) {
+			
+
+			// copies array
+			tempArray[i] = tempRebalArray[i];
+		}
+		// sets the updated array
+		tempRebalArray = tempArray;
+		tempRebalArray[newArraySize -1] = procToReAdd;
+
 	}
     
     private int getIndexFor(Proc procToFind) {
