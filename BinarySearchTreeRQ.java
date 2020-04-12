@@ -203,7 +203,7 @@ public class BinarySearchTreeRQ implements Runqueue {
     	 * the smallest Proc in this tree will always be on the left most side, thus can find a multiple of 2.
     	 */
     	String retVal = "";
-    	if(arrayOfNodes.length == BASE_TREE_SIZE && arrayOfNodes[TREE_ROOT_INDEX] == null) {
+    	if(arrayOfNodes.length <= BASE_TREE_SIZE && arrayOfNodes[TREE_ROOT_INDEX] == null) {
     		retVal = "";
     	}else if(arrayOfNodes.length == BASE_TREE_SIZE && arrayOfNodes[TREE_ROOT_INDEX] != null) {
     		System.out.println("b");
@@ -365,7 +365,8 @@ public class BinarySearchTreeRQ implements Runqueue {
 		        tempRebalArray = new Proc[0];
 			}else {
 				arrayOfNodes[temprearange] = null;
-				
+		    	//dynamiclyShrinkArray();
+
 			}
 			if(tempsmallestProc == null) {
 				retVal = "";
@@ -374,6 +375,8 @@ public class BinarySearchTreeRQ implements Runqueue {
 				retVal = tempsmallestProc.getLabel();
 			}
          }
+    	dynamiclyShrinkArray();
+    	System.out.println("\\\\\\\\\\");
     	return retVal;
     } // end of dequeue()
 
@@ -803,7 +806,7 @@ public class BinarySearchTreeRQ implements Runqueue {
     
     private int getCurrentLevel(int index) {
     	
-    	//This method simply gets the number of levels the tree has by performing 
+    	//This method simpl-y gets the number of levels the tree has by performing 
     	//logarithms based on the number of proc/nodes the tree has
     	System.out.println("curr level: " +(int) (Math.log(index) / Math.log(BASE_NUMBER)));
 		return (int) (Math.log(index) / Math.log(BASE_NUMBER));
@@ -818,6 +821,49 @@ public class BinarySearchTreeRQ implements Runqueue {
     		}
     	}
     	return procToReturn;
+    }
+    
+    private void dynamiclyShrinkArray() {
+    	int levels = getNumberOfLevels();
+    	int startIndex = (int) Math.pow(BASE_NUMBER, levels);
+    	int endIndex = (startIndex*BASE_NUMBER) - 1;
+    	System.out.println("start index: " + startIndex);
+    	/*start looking at the bottom levels then progress up. since the bottom levels are
+    	 * most likely to be empty, thus can remove a level.
+    	 * 
+    	 * Complexity: O(n^2)
+    	*/ 
+    	boolean canShrink = true;
+    	for(int i = levels; i > 0; i--) {
+    		for(int j = startIndex; j<= endIndex; j++) {
+    			System.out.println("checking for null at pos: " + j);
+    			if(j < arrayOfNodes.length && arrayOfNodes[j] != null) {
+    				canShrink = false;
+    				break;
+    			}
+    		}
+    		if(!canShrink) {
+    			/*if the the lower level can't be shrunk then stop, as the level above 
+    			 * can not be shrunk, as it is the parent. Thus break early.
+    			 */
+    			break;
+    		}
+    	}
+    	if(canShrink) {
+    		System.out.println("end index: " + endIndex);
+    		System.out.println("aerr sixe: " + arrayOfNodes.length);
+    		int tempArraySize = endIndex;
+    		Proc[] tempArray = new Proc[arrayOfNodes.length - (startIndex/BASE_NUMBER)];
+    		if(tempArray.length == TREE_ROOT_INDEX) {
+    			tempArray = new Proc[BASE_TREE_SIZE];
+    		}
+    		for(int i = TREE_ROOT_INDEX; i < tempArray.length; i ++) {
+    			 tempArray[i] = arrayOfNodes[i]; 
+    		}
+    		arrayOfNodes = tempArray;
+    		System.out.println("NEW TEMPORARY ARRAY IS: " + tempArray.length);
+    	}
+    	
     }
     
 } // end of class BinarySearchTreeRQ
