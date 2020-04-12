@@ -142,7 +142,7 @@ public class BinarySearchTreeRQ implements Runqueue {
 
 
     private void addToTree(Proc procToAdd) {
-    	if(arrayOfNodes.length == BASE_TREE_SIZE && arrayOfNodes[TREE_ROOT_INDEX] == null) {
+    	if(arrayOfNodes[TREE_ROOT_INDEX] == null) {
         	arrayOfNodes[TREE_ROOT_INDEX] = procToAdd;
         }else {
         	int i = TREE_ROOT_INDEX;
@@ -237,32 +237,91 @@ public class BinarySearchTreeRQ implements Runqueue {
     @Override
     public boolean findProcess(String procLabel) {
         // Implement me
-
+    	// complexity is O(n-1)
+    	for(int i = TREE_ROOT_INDEX; i < arrayOfNodes.length; i++) {
+    		if(arrayOfNodes[i] != null && arrayOfNodes[i].getLabel().equals(procLabel)){
+    			return true;
+    		}
+    	}
         return false; // placeholder, modify this
     } // end of findProcess()
 
 
     @Override
     public boolean removeProcess(String procLabel) {
-        // Implement me
+    	// complexity is O(n-1)
+    	// Assignment spec sheet does not specify FIFO, thus the fist proc found with the specified procLabel will be removed.
+    	for(int i = TREE_ROOT_INDEX; i < arrayOfNodes.length; i++) {
+    		if(arrayOfNodes[i] != null && arrayOfNodes[i].getLabel().equals(procLabel)){
+    	    	recursivePreorderAddToArray(i);
+    	    	for(int l = 0; l < tempRebalArray.length; l++) {
+//    	    		if(tempRebalArray[l]!= null && arrayOfNodes[i]!= null &&!arrayOfNodes[i].equals(tempRebalArray[l])) {
+//    	    			System.out.println("....adding to array");
+    	    		if(tempRebalArray[l] != null && !tempRebalArray[l].getLabel().equals(procLabel)){
+        	    		System.out.println("->" + tempRebalArray[l].print());
+    	    			addToTree(tempRebalArray[l]);
+    	    		}
+//    	    		}
+    	    	}
+    	        tempRebalArray = new Proc[0];
+    	    	return true;
+    	    }
+    	}
+    	
+
 
         return false; // placeholder, modify this
     } // end of removeProcess()
 
+    
 
     @Override
     public int precedingProcessTime(String procLabel) {
         // Implement me
-
-        return FAIL_VALUE; // placeholder, modify this
+    	Proc foundProc = getProcByLabel(procLabel);
+    	if(foundProc == null) {
+    		return FAIL_VALUE;
+    	}
+    	int foundProcIndex = getIndexFor(foundProc);
+    	int topParent = foundProcIndex;
+    	getCurrentLevel(foundProcIndex);
+    	System.out.println("[][]: " + foundProc.print());
+    	do {
+    		topParent = (int) Math.floor(topParent / 2);
+    	}while(topParent < arrayOfNodes.length && arrayOfNodes[(int) Math.floor(topParent / 2)] != null 
+    			&& getCurrentLevel(topParent) == getCurrentLevel(topParent -1));
+    			
+    	
+    	System.out.println("<----> " + arrayOfNodes[topParent].print());
+    	int retPvVal = 0;
+    	retPvVal = recursivePreorderGetPrev(topParent, foundProc, retPvVal);
+    	System.out.println("RET VALUE: " + retPvVal);
+        return retPvVal; // placeholder, modify this
     } // end of precedingProcessTime()
 
 
     @Override
     public int succeedingProcessTime(String procLabel) {
-        // Implement me
-
-        return FAIL_VALUE; // placeholder, modify this
+    	 // Implement me
+    	Proc foundProc = getProcByLabel(procLabel);
+    	if(foundProc == null) {
+    		return FAIL_VALUE;
+    	}
+    	int foundProcIndex = getIndexFor(foundProc);
+    	int topParent = foundProcIndex;
+    	getCurrentLevel(foundProcIndex);
+    	System.out.println("[][]: " + foundProc.print());
+    	do {
+    		topParent = ((int) Math.floor(topParent / 2));
+    	}while(topParent < arrayOfNodes.length && arrayOfNodes[(int) Math.floor(topParent / 2)] != null 
+    			&& getCurrentLevel(topParent) == getCurrentLevel(topParent +1));
+    			
+    	
+    	System.out.println("<----> " + arrayOfNodes[topParent].print());
+    	int retPvVal = 0;
+    	retPvVal = recursivePreorderGetPost(topParent, foundProc, retPvVal);
+    	System.out.println("RET VALUE: " + retPvVal);
+        return retPvVal; // placeholder, modify this
     } // end of precedingProcessTime()
 
 
@@ -275,6 +334,8 @@ public class BinarySearchTreeRQ implements Runqueue {
     
     
     /////// Custom methods ///////
+    
+    
     private void recursivePreOrderPrinter(int currentProcIndex, PrintWriter os) {
 		if (currentProcIndex < arrayOfNodes.length && arrayOfNodes[currentProcIndex] != null) {
 			os.print(arrayOfNodes[currentProcIndex].getLabel().toString() + " ");
@@ -452,6 +513,7 @@ public class BinarySearchTreeRQ implements Runqueue {
     
     
     private void recursivePreorderAddToArray(int currProcIndex) {
+    	// complexity is O(n)
     	if (currProcIndex < arrayOfNodes.length && arrayOfNodes[currProcIndex] != null) {
     		Proc tempProc = arrayOfNodes[currProcIndex];
     		arrayOfNodes[currProcIndex] = null; //delete the node in the list
@@ -459,6 +521,42 @@ public class BinarySearchTreeRQ implements Runqueue {
     		recursivePreorderAddToArray(currProcIndex * LEFT_CHILD_MULTIPLIER);
     		recursivePreorderAddToArray(currProcIndex * LEFT_CHILD_MULTIPLIER + LEFT_TO_RIGHT_MULTIPLIER);
 		}
+    }
+    
+    private int recursivePreorderGetPrev(int currProcIndex, Proc selectedProc, int retVal) {
+    	// complexity is O(n)
+    	System.out.println("----,> + " + retVal);
+    	if (currProcIndex < arrayOfNodes.length && arrayOfNodes[currProcIndex] != null) {
+    		if(arrayOfNodes[currProcIndex].getVt() < selectedProc.getVt() || 
+    				(arrayOfNodes[currProcIndex].getVt() == selectedProc.getVt() 
+    				&& arrayOfNodes[currProcIndex].getPriority() < selectedProc.getPriority())) {
+    			retVal+= arrayOfNodes[currProcIndex].getVt();
+    		}
+    		System.out.println("())()() + " + arrayOfNodes[currProcIndex].print());
+    		retVal = recursivePreorderGetPrev(currProcIndex * LEFT_CHILD_MULTIPLIER, selectedProc, retVal);
+    		retVal = recursivePreorderGetPrev(currProcIndex * LEFT_CHILD_MULTIPLIER + LEFT_TO_RIGHT_MULTIPLIER, selectedProc, retVal);
+		}
+    	System.out.println("----,> + " + retVal);
+
+    	return retVal;
+    }
+    
+    private int recursivePreorderGetPost(int currProcIndex, Proc selectedProc, int retVal) {
+    	// complexity is O(n)
+    	System.out.println("----,> + " + retVal);
+    	if (currProcIndex < arrayOfNodes.length && arrayOfNodes[currProcIndex] != null) {
+    		if(arrayOfNodes[currProcIndex].getVt() > selectedProc.getVt() || 
+    				(arrayOfNodes[currProcIndex].getVt() == selectedProc.getVt() 
+    				&& arrayOfNodes[currProcIndex].getPriority() > selectedProc.getPriority())) {
+    			retVal+= arrayOfNodes[currProcIndex].getVt();
+    		}
+    		System.out.println("())()() + " + arrayOfNodes[currProcIndex].print());
+    		retVal = recursivePreorderGetPost(currProcIndex * LEFT_CHILD_MULTIPLIER, selectedProc, retVal);
+    		retVal = recursivePreorderGetPost(currProcIndex * LEFT_CHILD_MULTIPLIER + LEFT_TO_RIGHT_MULTIPLIER, selectedProc, retVal);
+		}
+    	System.out.println("----,> + " + retVal);
+
+    	return retVal;
     }
     
     private void addToArray(int count) {
@@ -485,15 +583,19 @@ public class BinarySearchTreeRQ implements Runqueue {
 		}
 		for (int i = 0; i < tempRebalArray.length; i++) {
 			
-
+			
 			// copies array
 			tempArray[i] = tempRebalArray[i];
+			if(tempArray[i] != null)
+				System.out.println("----> " + tempArray[i].print());
 		}
 		// sets the updated array
 		tempRebalArray = tempArray;
 		tempRebalArray[newArraySize -1] = procToReAdd;
 
 	}
+    
+    
     
     private int getIndexFor(Proc procToFind) {
     	//essentially doing the whole divide and conquer approach 
@@ -513,7 +615,7 @@ public class BinarySearchTreeRQ implements Runqueue {
 
     				i = (i * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER; // will get the right child of the parent
     			}
-    			if(arrayOfNodes[i].equals(procToFind)) {
+    			if(i < arrayOfNodes.length && arrayOfNodes[i] != null && arrayOfNodes[i].equals(procToFind)) {
     				return i;
     			}
     		}
@@ -561,5 +663,14 @@ public class BinarySearchTreeRQ implements Runqueue {
     }
    
 	
+    private Proc getProcByLabel(String label) {
+    	Proc procToReturn = null;
+    	for(int i = TREE_ROOT_INDEX; i < arrayOfNodes.length; i++) {
+    		if(arrayOfNodes[i] != null && arrayOfNodes[i].getLabel().equals(label)) {
+    			procToReturn = arrayOfNodes[i];
+    		}
+    	}
+    	return procToReturn;
+    }
     
 } // end of class BinarySearchTreeRQ
