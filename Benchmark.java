@@ -12,7 +12,7 @@ public class Benchmark {
     /** Amount of times to test each implementation to get the average time */
     private static final int avgCount = 3;
     /** Value to divide nano time to convert to seconds */
-    private static final double divisor = 1E9;
+    private static final double divisor = 1_000_000_000;
 
     /**
      * Main method.
@@ -159,9 +159,9 @@ public class Benchmark {
      * @return void
      */
     public static void runImpl(Runqueue impl, String type, List<Proc> processes) {
-        double[] averages = new double[avgCount];
         System.out.println("## Beginning " + type +" Test of " + impl.getClass().getName() + " ##");
 
+        double[] averages = new double[avgCount];
         // Perform Test up to the amount needed for average
         for (int i = 0; i < avgCount; i++) {
             long time = 0;
@@ -179,8 +179,9 @@ public class Benchmark {
                     break;
             }
 
-            double seconds = time / divisor;
-            System.out.printf("Test: %d Time: %f %n", i + 1, seconds);
+            double seconds = (double) time / divisor;
+            averages[i] = seconds;
+            System.out.printf("Test: %d Time: %f seconds %n", i + 1, seconds);
         }
 
         // Calculate Total Average
@@ -189,7 +190,7 @@ public class Benchmark {
             averageSum += averages[i];
         }
         Double average = averageSum / avgCount;
-        System.out.println("## Completed " + type + " Test of " + impl.getClass().getName() + "With an avg time of " + average +" ## \n");
+        System.out.println("## Completed " + type + " Test of " + impl.getClass().getName() + "With an avg time of " + average +" seconds ## \n");
     }
 
     /**
