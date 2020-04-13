@@ -10,7 +10,7 @@ public class Benchmark {
     /** File path of file filled with processes */
     private static final String processFilePath = "processes.txt";
     /** Amount of times to test each implementation to get the average time */
-    private static final int avgCount = 3;
+    private static final int avgCount = 5;
     /** Value to divide nano time to convert to seconds */
     private static final double divisor = 1_000_000_000;
 
