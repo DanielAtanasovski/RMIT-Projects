@@ -40,14 +40,13 @@ public class Benchmark {
 
         // Error Checking
         if (type != "")
-            if ( !(type.equals("en")) && !(type.equals("de")) && !(type.equals("pt")) )
+            if (!(type.equals("en")) && !(type.equals("de")) && !(type.equals("pt")))
                 fail("Invalid Type");
 
         if (impl != "")
-            if ( !(impl.equals("a")) && !(impl.equals("l")) && !(impl.equals("b")) 
-                && !(impl.equals("array")) && !(impl.equals("linkedlist")) && !(impl.equals("tree")) )
+            if (!(impl.equals("a")) && !(impl.equals("l")) && !(impl.equals("b")) && !(impl.equals("array"))
+                    && !(impl.equals("linkedlist")) && !(impl.equals("tree")))
                 fail("Invalid Implementation");
-            
 
         System.out.println("## Begin Benchmark ##");
 
@@ -117,12 +116,13 @@ public class Benchmark {
 
     /**
      * Begins the benchmark by determining what to test
-     * @param impl Implementation to test
-     * @param type Type to test
+     * 
+     * @param impl      Implementation to test
+     * @param type      Type to test
      * @param processes list of processes
      */
     public static void run(String impl, String type, List<Proc> processes) {
-        if (impl.equals("") && type.equals("")){
+        if (impl.equals("") && type.equals("")) {
             // Testing all implementation & Types
             runAll(processes);
         } else if (impl.equals("")) {
@@ -154,14 +154,30 @@ public class Benchmark {
 
     /**
      * Tests a particular Implementation and type
-     * @param impl Implementation
+     * 
+     * @param impl  Implementation
      * @param times Times to test to determine average
      * @return void
      */
     public static void runImpl(Runqueue impl, String type, List<Proc> processes) {
-        System.out.println("## Beginning " + type +" Test of " + impl.getClass().getName() + " ##");
+        System.out.println("## Beginning " + type + " Test of " + impl.getClass().getName() + " ##");
 
         double[] averages = new double[avgCount];
+        // Gonna Setup a filled queue for the dequeue and preceding tests
+        // to save time enqueuing every loop for slow implementations.
+        // (Looking at you OrderedArray)
+        Runqueue filledImpl = null;
+        try {
+            filledImpl = impl.getClass().newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            fail(e.getMessage());
+        }
+
+        for (int i = 0; i < processes.size(); i++) {
+            filledImpl.enqueue(processes.get(i).getLabel(), processes.get(i).getVt());
+        }
+
+
         // Perform Test up to the amount needed for average
         for (int i = 0; i < avgCount; i++) {
             long time = 0;
@@ -172,10 +188,10 @@ public class Benchmark {
                     time = runEn(impl, processes);
                     break;
                 case "de":
-                    time = runDe(impl, processes);
+                    time = runDe(filledImpl, processes);
                     break;
                 case "pt":
-                    time = runPt(impl, processes);
+                    time = runPt(filledImpl, processes);
                     break;
             }
 
@@ -222,11 +238,6 @@ public class Benchmark {
      * @return time taken
      */
     public static long runDe(Runqueue impl, List<Proc> processes) {
-        // Fill runqueue
-        for (int i = 0; i < processes.size(); i++) {
-            impl.enqueue(processes.get(i).getLabel(), processes.get(i).getVt());
-        }
-
         // Test
         long startTime = System.nanoTime();
         for (int i = 0; i < processes.size(); i++) {
@@ -245,12 +256,6 @@ public class Benchmark {
     public static long runPt(Runqueue impl, List<Proc> processes) {
         // Not sure about this one
         // assuming i just call pt on each index of the runqueue?
-
-        // Fill Runqueue
-        for (int i = 0; i < processes.size(); i++) {
-            impl.enqueue(processes.get(i).getLabel(), processes.get(i).getVt());
-        }
-
         // Test
         long startTime = System.nanoTime();
         for (int i = 0; i < processes.size(); i++) {
