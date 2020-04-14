@@ -221,7 +221,7 @@ public class BinarySearchTreeRQ implements Runqueue {
 	    		
 	    	}
 	    	Proc smallestProc = arrayOfNodes[smallestProcIndex];
-	    	System.out.println("index: " + smallestProcIndex + " level " + getNumberOfLevels());
+	    	System.out.println("index: " + smallestProcIndex + " level " + getNumberOfLevels() + "num: " + arrayOfNodes.length);
 	    	System.out.println("LOWEST : " + smallestProc.print());
 	    	int i = (smallestProcIndex * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER;
         	while(i<= arrayOfNodes.length) { //worse case in n^2, however should be closer to n log(n)
@@ -455,6 +455,8 @@ public class BinarySearchTreeRQ implements Runqueue {
     		return FAIL_VALUE;
     	}
     	int foundProcIndex = getIndexFor(foundProc);
+    	System.out.println("-------" + foundProcIndex);
+
     	int topParent = foundProcIndex;
     	getCurrentLevel(foundProcIndex);
     	System.out.println("[][]: " + foundProc.print());
@@ -463,8 +465,8 @@ public class BinarySearchTreeRQ implements Runqueue {
     		topParent = ((int) Math.floor(topParent / 2));
     	}
     			
-    	
-    	System.out.println("<----> " + arrayOfNodes[topParent].print());
+    	System.out.println(foundProcIndex);
+    	System.out.println("\\\\\\" + foundProcIndex + "<----> " + arrayOfNodes[topParent].print());
     	int retPvVal = 0;
     	retPvVal = recursivePreorderGetPost(topParent, foundProc, retPvVal);
     	System.out.println("RET VALUE: " + retPvVal);
@@ -752,23 +754,20 @@ public class BinarySearchTreeRQ implements Runqueue {
     	if (procToFind == null) {
     		return -1;
     	}
-    	for (int i = TREE_ROOT_INDEX; i < arrayOfNodes.length; i++) {
-    		if (arrayOfNodes[i] != null) {
-    			if(procToFind.getVt() < arrayOfNodes[i].getVt()) {
-    				i *= LEFT_CHILD_MULTIPLIER; // will to to the left child of the parent. 
-    			}else if(procToFind.getVt() >= arrayOfNodes[i].getVt()){
-    				//need to ensure that it isn't the node we actually want.
-    				if(arrayOfNodes[i].equals(procToFind)) {
-        				return i;
-        			}
-    				
-
-    				i = (i * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER; // will get the right child of the parent
-    			}
-    			if(i < arrayOfNodes.length && arrayOfNodes[i] != null && arrayOfNodes[i].equals(procToFind)) {
+    	for (int i = TREE_ROOT_INDEX; i < arrayOfNodes.length;) {
+			if(arrayOfNodes[i] != null && procToFind.getVt() < arrayOfNodes[i].getVt()) {
+				i *= LEFT_CHILD_MULTIPLIER; // will to to the left child of the parent. 
+			}else if(arrayOfNodes[i] != null && procToFind.getVt() >= arrayOfNodes[i].getVt()){
+				//need to ensure that it isn't the node we actually want.
+				if(arrayOfNodes[i].equals(procToFind)) {
     				return i;
     			}
-    		}
+				i = (i * LEFT_CHILD_MULTIPLIER) + LEFT_TO_RIGHT_MULTIPLIER; // will get the right child of the parent
+			}
+			if(i < arrayOfNodes.length && arrayOfNodes[i] != null && arrayOfNodes[i].equals(procToFind)) {
+				return i;
+			}
+
     	}
     	System.out.println("failed");
 		return FAIL_VALUE;
@@ -826,8 +825,10 @@ public class BinarySearchTreeRQ implements Runqueue {
     private void dynamiclyShrinkArray() {
     	int levels = getNumberOfLevels();
     	int startIndex = (int) Math.pow(BASE_NUMBER, levels);
-    	int endIndex = (startIndex*BASE_NUMBER) - 1;
-    	System.out.println("start index: " + startIndex);
+    	int endIndex = (int)(startIndex/BASE_NUMBER);
+    	System.out.println("||| : " + arrayOfNodes.length);
+		System.out.println("end index: " + endIndex);
+		System.out.println("start index: " + startIndex);
     	/*start looking at the bottom levels then progress up. since the bottom levels are
     	 * most likely to be empty, thus can remove a level.
     	 * 
@@ -835,25 +836,32 @@ public class BinarySearchTreeRQ implements Runqueue {
     	*/ 
     	boolean canShrink = true;
     	for(int i = levels; i > 0; i--) {
-    		for(int j = startIndex; j<= endIndex; j++) {
+    		for(int j = startIndex-1; j > endIndex; j--) {
+    			
+
     			System.out.println("checking for null at pos: " + j);
+    			if(arrayOfNodes[j] == null) {
+    				System.out.println("? ");
+    			}else {
+    				System.out.println("valueL: " + arrayOfNodes[j].print());
+    			}
     			if(j < arrayOfNodes.length && arrayOfNodes[j] != null) {
     				canShrink = false;
-    				break;
+    				//break;
     			}
     		}
-    		if(!canShrink) {
-    			/*if the the lower level can't be shrunk then stop, as the level above 
-    			 * can not be shrunk, as it is the parent. Thus break early.
-    			 */
-    			break;
-    		}
+//    		if(canShrink) {
+//    			/*if the the lower level can't be shrunk then stop, as the level above 
+//    			 * can not be shrunk, as it is the parent. Thus break early.
+//    			 */
+//    			break;
+//    		}
     	}
     	if(canShrink) {
     		System.out.println("end index: " + endIndex);
     		System.out.println("aerr sixe: " + arrayOfNodes.length);
     		int tempArraySize = endIndex;
-    		Proc[] tempArray = new Proc[arrayOfNodes.length - (startIndex/BASE_NUMBER)];
+    		Proc[] tempArray = new Proc[arrayOfNodes.length - (int)(startIndex/BASE_NUMBER)];
     		if(tempArray.length == TREE_ROOT_INDEX) {
     			tempArray = new Proc[BASE_TREE_SIZE];
     		}
