@@ -230,7 +230,7 @@ public class BinarySearchTreeRQ implements Runqueue {
 	        	}
 	    	}	    	
 	    	if(i > arrayOfNodes.length) {
-	    		i = (int) Math.floor(i / 2);
+	    		i = (int) Math.floor(i / BASE_NUMBER);
 	    	}
     		Proc tempProc = null;
     		Proc tempProc2 = null;
@@ -342,9 +342,9 @@ public class BinarySearchTreeRQ implements Runqueue {
     	int foundProcIndex = getIndexFor(foundProc);
     	int topParent = foundProcIndex;
     	getCurrentLevel(foundProcIndex);
-    	while(topParent < arrayOfNodes.length && arrayOfNodes[(int) Math.floor(topParent / 2)] != null 
+    	while(topParent < arrayOfNodes.length && arrayOfNodes[(int) Math.floor(topParent / BASE_NUMBER)] != null 
     			&& getCurrentLevel(topParent) == getCurrentLevel(topParent -1)){
-    		topParent = (int) Math.floor(topParent / 2);
+    		topParent = (int) Math.floor(topParent / BASE_NUMBER);
     	}
     			
     	
@@ -365,9 +365,9 @@ public class BinarySearchTreeRQ implements Runqueue {
 
     	int topParent = foundProcIndex;
     	getCurrentLevel(foundProcIndex);
-    	while(topParent < arrayOfNodes.length && arrayOfNodes[(int) Math.floor(topParent / 2)] != null 
+    	while(topParent < arrayOfNodes.length && arrayOfNodes[(int) Math.floor(topParent / BASE_NUMBER)] != null 
     			&& getCurrentLevel(topParent) == getCurrentLevel(topParent +1)) {
-    		topParent = ((int) Math.floor(topParent / 2));
+    		topParent = ((int) Math.floor(topParent / BASE_NUMBER));
     	}
     			
     	int retPvVal = 0;
@@ -378,7 +378,7 @@ public class BinarySearchTreeRQ implements Runqueue {
 
     @Override
     public void printAllProcesses(PrintWriter os) {
-    	recursivePreOrderPrinter(1, os);
+    	recursivePreOrderPrinter(TREE_ROOT_INDEX, os);
     	os.print("\n");
     	os.flush();	
     } // end of printAllProcess()
@@ -473,7 +473,7 @@ public class BinarySearchTreeRQ implements Runqueue {
 	    	}
 	    	
 	    	if(i > arrayOfNodes.length) {
-	    		i = (int) Math.floor(i / 2);
+	    		i = (int) Math.floor(i / BASE_NUMBER);
 	    	}
 
     		Proc tempProc = null;
@@ -569,8 +569,8 @@ public class BinarySearchTreeRQ implements Runqueue {
     	return retVal;
     }
     
-    private void addToArray(int count) {
-    	int newArraySize = arrayOfNodes.length + count;
+    private void addToArray(long count) {
+    	long newArraySize = arrayOfNodes.length + count;
 		Proc[] tempArray = new Proc[newArraySize];
 		for (int i = 0; i < arrayOfNodes.length; i++) {
 
@@ -606,7 +606,7 @@ public class BinarySearchTreeRQ implements Runqueue {
     private int getIndexFor(Proc procToFind) {
     	//essentially doing the whole divide and conquer approach 
     	if (procToFind == null) {
-    		return -1;
+    		return FAIL_VALUE;
     	}
     	for (int i = TREE_ROOT_INDEX; i < arrayOfNodes.length;) {
 			if(arrayOfNodes[i] != null && procToFind.getVt() < arrayOfNodes[i].getVt()) {
