@@ -569,8 +569,8 @@ public class BinarySearchTreeRQ implements Runqueue {
     	return retVal;
     }
     
-    private void addToArray(long count) {
-    	long newArraySize = arrayOfNodes.length + count;
+    private void addToArray(int count) {
+    	int newArraySize = arrayOfNodes.length + count;
 		Proc[] tempArray = new Proc[newArraySize];
 		for (int i = 0; i < arrayOfNodes.length; i++) {
 
