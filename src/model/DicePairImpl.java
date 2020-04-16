@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Objects;
+import java.util.Random;
 
 import model.interfaces.DicePair;
 import model.interfaces.Die;
@@ -11,12 +12,9 @@ public class DicePairImpl implements DicePair{
 	private Die die2;
 	
 	public DicePairImpl()  {
-		// TODO: Random
-	}
-
-	public DicePairImpl(int value, int numFaces) throws IllegalArgumentException {
-		die1 = new DieImpl(1, 2, Die.NUM_FACES);
-		die2 = new DieImpl(2, 5, Die.NUM_FACES);
+		Random random = new Random();
+		die1 = new DieImpl(1, random.nextInt(Die.NUM_FACES - 1) + 1, Die.NUM_FACES);
+		die2 = new DieImpl(1, random.nextInt(Die.NUM_FACES - 1) + 1, Die.NUM_FACES);
 	}
 	
 	@Override
