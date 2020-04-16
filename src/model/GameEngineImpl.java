@@ -41,7 +41,7 @@ public class GameEngineImpl implements GameEngine {
 			// Update second die
 			if (currentDelay2 < finalDelay1){
 				die2 = dieUpdate();
-				currentDelay1 += delayIncrement1;
+				currentDelay2 += delayIncrement2;
 				playerUpdate(player,die2);
 				doneRolling = false;
 			}
@@ -92,7 +92,7 @@ public class GameEngineImpl implements GameEngine {
 			// Update second die
 			if (currentDelay2 < finalDelay1){
 				die2 = dieUpdate();
-				currentDelay1 += delayIncrement1;
+				currentDelay2 += delayIncrement2;
 				houseUpdate(die2);
 				doneRolling = false;
 			}
