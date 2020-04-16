@@ -35,7 +35,16 @@ public class GameEngineImpl implements GameEngine {
 
 	@Override
 	public void addPlayer(Player player) {
-		// TODO Check if player is in list already?
+		// Check if player exists in the list
+		for (Player p : playerList) {
+			if (p.getPlayerId().equals(player.getPlayerId())){
+				// Found the duplicate, replace it
+				int i = playerList.indexOf(p);
+				playerList.set(i, player);
+				return;
+			}
+		}
+		// Assuming no duplicate
 		playerList.add(player);
 	}
 
