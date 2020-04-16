@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import model.interfaces.DicePair;
+import model.interfaces.Die;
 import model.interfaces.GameEngine;
 import model.interfaces.Player;
 import view.interfaces.GameEngineCallback;
@@ -16,15 +17,120 @@ public class GameEngineImpl implements GameEngine {
 	@Override
 	public void rollPlayer(Player player, int initialDelay1, int finalDelay1, int delayIncrement1, int initialDelay2,
 			int finalDelay2, int delayIncrement2) {
-		// TODO Auto-generated method stub
-		
+		// Delays
+		boolean doneRolling = false;
+		int currentDelay1 = initialDelay1;
+		int currentDelay2 = initialDelay2;
+
+		// Initialise Die
+		Die die1 = new DicePairImpl().getDie1();
+		Die die2 = new DicePairImpl().getDie1();
+
+		// Rolling
+		while (!doneRolling) {
+			doneRolling = true;
+
+			// Update first die
+			if (currentDelay1 < finalDelay1){
+				die1 = dieUpdate();
+				currentDelay1 += delayIncrement1;
+				playerUpdate(player, die1);
+				doneRolling = false;
+			}
+
+			// Update second die
+			if (currentDelay2 < finalDelay1){
+				die2 = dieUpdate();
+				currentDelay1 += delayIncrement1;
+				playerUpdate(player,die2);
+				doneRolling = false;
+			}
+		}
+
+		// Completed Rolls for this player, send updates
+		DicePair playerDice = new DicePairImpl(die1, die2);
+		player.setResult(playerDice);
+		playerResult(player, playerDice);
+	}
+
+	private void playerUpdate(Player player, Die die) {
+		for (GameEngineCallback g: gameEngineCallbackList) {
+			g.playerDieUpdate(player, die, this);
+		}
+	}
+
+	private void playerResult(Player player, DicePair dice) {
+		for (GameEngineCallback g : gameEngineCallbackList){
+			g.playerResult(player, dice,this);
+		}
 	}
 
 	@Override
 	public void rollHouse(int initialDelay1, int finalDelay1, int delayIncrement1, int initialDelay2, int finalDelay2,
 			int delayIncrement2) {
-		// TODO Auto-generated method stub
-		
+		// Delays
+		boolean doneRolling = false;
+		int currentDelay1 = initialDelay1;
+		int currentDelay2 = initialDelay2;
+
+		// Initialise Die
+		Die die1 = new DicePairImpl().getDie1();
+		Die die2 = new DicePairImpl().getDie1();
+
+		// Rolling
+		while (!doneRolling) {
+			doneRolling = true;
+
+			// Update first die
+			if (currentDelay1 < finalDelay1){
+				die1 = dieUpdate();
+				currentDelay1 += delayIncrement1;
+				houseUpdate(die1);
+				doneRolling = false;
+			}
+
+			// Update second die
+			if (currentDelay2 < finalDelay1){
+				die2 = dieUpdate();
+				currentDelay1 += delayIncrement1;
+				houseUpdate(die2);
+				doneRolling = false;
+			}
+		}
+		// Completed Rolls for house, send updates
+		DicePair houseDice = new DicePairImpl(die1, die2);
+		updateHousePlayers(houseDice);
+		houseResult(houseDice);
+		resetPlayers();
+	}
+
+	private void houseUpdate(Die die) {
+		for (GameEngineCallback g: gameEngineCallbackList) {
+			g.houseDieUpdate(die, this);
+		}
+	}
+
+	private void houseResult(DicePair dicePair) {
+		for (GameEngineCallback gameEngineCallback: gameEngineCallbackList) {
+			gameEngineCallback.houseResult(dicePair, this);
+		}
+	}
+
+	private void updateHousePlayers(DicePair houseResult) {
+		for (Player player : playerList){
+			applyWinLoss(player, houseResult);
+		}
+	}
+
+	private void resetPlayers() {
+		for (Player player: playerList) {
+			player.resetBet();
+		}
+	}
+
+	private Die dieUpdate() {
+		Die die = new DicePairImpl().getDie1();
+		return die;
 	}
 
 	@Override

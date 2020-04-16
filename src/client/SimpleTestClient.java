@@ -27,7 +27,7 @@ public class SimpleTestClient
       // call method in Validator.jar to test *structural* correctness
       // just passing this does not mean it actually works .. you need to test yourself!
       // pass false if you want to show minimal logging (pass/fail) .. (i.e. ONLY once it passes)
-      Validator.validate(false);
+      Validator.validate(true);
 
       // create two test players (NOTE: you will need to implement the 3 arg contructor in SimplePlayer)
       Player[] players = new Player[] { new SimplePlayer("1", "The Roller", 5000), new SimplePlayer(
