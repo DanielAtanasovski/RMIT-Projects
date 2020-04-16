@@ -13,8 +13,19 @@ public class DicePairImpl implements DicePair{
 	
 	public DicePairImpl()  {
 		Random random = new Random();
-		die1 = new DieImpl(1, random.nextInt(Die.NUM_FACES - 1) + 1, Die.NUM_FACES);
-		die2 = new DieImpl(1, random.nextInt(Die.NUM_FACES - 1) + 1, Die.NUM_FACES);
+		die1 = new DieImpl(1, random.nextInt(Die.NUM_FACES) + 1, Die.NUM_FACES);
+		die2 = new DieImpl(1, random.nextInt(Die.NUM_FACES) + 1, Die.NUM_FACES);
+	}
+
+	// Allowing a two argument constructor so that we may have the correct
+	// dice rolls because of the limitation imposed by argument of PlayerResult() requiring a
+	// dice pair, making it impossible to generate individual random values with current
+	// constructor.
+	// Suggested (and allowed) by casper on discussion forums
+	// https://rmit.instructure.com/courses/67438/discussion_topics/642302
+	public DicePairImpl(Die die1, Die die2) {
+		this.die1 = die1;
+		this.die2 = die2;
 	}
 	
 	@Override
