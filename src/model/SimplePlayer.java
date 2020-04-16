@@ -7,6 +7,8 @@ public class SimplePlayer implements Player {
 	private String playerID;
 	private String playerName;
 	private int points;
+	private int bet;
+	private DicePair diceResult;
 
 	public SimplePlayer(String playerID, String playerName, int initialPoints) {
 		this.playerID = playerID;
@@ -41,32 +43,29 @@ public class SimplePlayer implements Player {
 
 	@Override
 	public boolean setBet(int bet) {
-		// TODO Auto-generated method stub
+		if (bet > 0 && points >= bet){
+			this.bet = bet;
+			points -= bet;
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public int getBet() {
-		// TODO Auto-generated method stub
-		return 0;
+		return bet;
 	}
 
 	@Override
 	public void resetBet() {
-		// TODO Auto-generated method stub
-		
+		points += bet;
+		bet = 0;
 	}
 
 	@Override
-	public DicePair getResult() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public DicePair getResult() { return diceResult; }
 
 	@Override
-	public void setResult(DicePair rollResult) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void setResult(DicePair rollResult) { diceResult = rollResult; }
 
 }
