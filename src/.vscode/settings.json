@@ -1,8 +1,0 @@
-{
-    "java.dependency.syncWithFolderExplorer": true,
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "d:\\Projects\\Java\\DiceGame\\lib\\Validator.jar"
-    ],
-    "java.dependency.packagePresentation": "hierarchical"
-}
