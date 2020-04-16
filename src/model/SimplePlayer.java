@@ -45,7 +45,6 @@ public class SimplePlayer implements Player {
 	public boolean setBet(int bet) {
 		if (bet > 0 && points >= bet){
 			this.bet = bet;
-			points -= bet;
 			return true;
 		}
 		return false;
