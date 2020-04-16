@@ -46,13 +46,13 @@ public class GameEngineCallbackImpl implements GameEngineCallback
 	@Override
 	public void houseDieUpdate(Die die, GameEngine gameEngine) {
 		// TODO Auto-generated method stub
-
+		logger.log(Level.FINE, "Intermediate data to log .. String.format() is good here!");
 	}
 
 	@Override
 	public void houseResult(DicePair result, GameEngine gameEngine) {
 		// TODO Auto-generated method stub
-
+		logger.log(Level.INFO, "Result data to log .. String.format() is good here!");
 	}
 
 	// TODO implement rest of interface
