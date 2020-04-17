@@ -14,6 +14,9 @@ public class GameEngineImpl implements GameEngine {
 	private ArrayList<Player> playerList = new ArrayList<Player>();
 	private ArrayList<GameEngineCallback> gameEngineCallbackList = new ArrayList<GameEngineCallback>();
 
+	// Win Multiplier (So the player gets a return on winning, otherwise no point to game)
+	private final int winMultiplier = 2;
+
 	@Override
 	public void rollPlayer(Player player, int initialDelay1, int finalDelay1, int delayIncrement1, int initialDelay2,
 			int finalDelay2, int delayIncrement2) {
@@ -135,8 +138,17 @@ public class GameEngineImpl implements GameEngine {
 
 	@Override
 	public void applyWinLoss(Player player, DicePair houseResult) {
-		// TODO Auto-generated method stub
-		
+		if (player.getResult().getTotal() > houseResult.getTotal()){
+			// Win
+			// (Assuming points bet is doubled and added back to points, otherwise there is no way to get points!)
+			player.setPoints(player.getPoints() + (player.getBet() * winMultiplier));
+		} else if (player.getResult().getTotal() < houseResult.getTotal()) {
+			// Loss
+			player.setPoints(player.getPoints() - player.getBet());
+		} else {
+			// Draw
+			player.setPoints(player.getPoints());
+		}
 	}
 
 	@Override
