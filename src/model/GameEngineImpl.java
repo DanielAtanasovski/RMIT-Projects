@@ -20,38 +20,12 @@ public class GameEngineImpl implements GameEngine {
 	@Override
 	public void rollPlayer(Player player, int initialDelay1, int finalDelay1, int delayIncrement1, int initialDelay2,
 			int finalDelay2, int delayIncrement2) {
-		// Delays
-		boolean doneRolling = false;
-		int currentDelay1 = initialDelay1;
-		int currentDelay2 = initialDelay2;
 
-		// Initialise Die
-		Die die1 = new DicePairImpl().getDie1();
-		Die die2 = new DicePairImpl().getDie1();
+		// Roll dice
+		DicePair playerDice = roll(initialDelay1, finalDelay1, delayIncrement1, initialDelay2,
+				finalDelay2, delayIncrement2, player);
 
-		// Rolling
-		while (!doneRolling) {
-			doneRolling = true;
-
-			// Update first die
-			if (currentDelay1 < finalDelay1){
-				die1 = dieUpdate();
-				currentDelay1 += delayIncrement1;
-				playerUpdate(player, die1);
-				doneRolling = false;
-			}
-
-			// Update second die
-			if (currentDelay2 < finalDelay1){
-				die2 = dieUpdate();
-				currentDelay2 += delayIncrement2;
-				playerUpdate(player,die2);
-				doneRolling = false;
-			}
-		}
-
-		// Completed Rolls for this player, send updates
-		DicePair playerDice = new DicePairImpl(die1, die2);
+		// Send updates
 		player.setResult(playerDice);
 		playerResult(player, playerDice);
 	}
@@ -68,40 +42,65 @@ public class GameEngineImpl implements GameEngine {
 		}
 	}
 
-	@Override
-	public void rollHouse(int initialDelay1, int finalDelay1, int delayIncrement1, int initialDelay2, int finalDelay2,
-			int delayIncrement2) {
+	private DicePair roll(int initialDelay1, int finalDelay1, int delayIncrement1, int initialDelay2, int finalDelay2,
+						  int delayIncrement2, Player player) {
+		// Dice
+		Die die1 = new DicePairImpl().getDie1();
+		Die die2 = new DicePairImpl().getDie2();
+
 		// Delays
-		boolean doneRolling = false;
 		int currentDelay1 = initialDelay1;
 		int currentDelay2 = initialDelay2;
 
-		// Initialise Die
-		Die die1 = new DicePairImpl().getDie1();
-		Die die2 = new DicePairImpl().getDie1();
-
-		// Rolling
+		// Roll the dice
+		boolean doneRolling = false;
 		while (!doneRolling) {
 			doneRolling = true;
 
 			// Update first die
 			if (currentDelay1 < finalDelay1){
-				die1 = dieUpdate();
+				// Update value
+				die1 = dieUpdate(die1);
+				// Increase Delay
 				currentDelay1 += delayIncrement1;
-				houseUpdate(die1);
+				// Callback
+				if (player != null)
+					playerUpdate(player, die1);
+				else
+					houseUpdate(die1);
+				// Ensure another loop
 				doneRolling = false;
 			}
 
 			// Update second die
-			if (currentDelay2 < finalDelay1){
-				die2 = dieUpdate();
+			if (currentDelay2 < finalDelay2){
+				// Update value
+				die2 = dieUpdate(die2);
+				// Increase Delay
 				currentDelay2 += delayIncrement2;
-				houseUpdate(die2);
+				// Callback
+				if (player != null)
+					playerUpdate(player, die2);
+				else
+					houseUpdate(die2);
+				// Ensure another loop
 				doneRolling = false;
 			}
 		}
-		// Completed Rolls for house, send updates
-		DicePair houseDice = new DicePairImpl(die1, die2);
+
+		// Return a new dice pair with rolled dice
+		return new DicePairImpl(die1, die2);
+	}
+
+	@Override
+	public void rollHouse(int initialDelay1, int finalDelay1, int delayIncrement1, int initialDelay2, int finalDelay2,
+			int delayIncrement2) {
+
+		// Roll dice
+		DicePair houseDice = roll(initialDelay1, finalDelay1, delayIncrement1, initialDelay2,
+				finalDelay2, delayIncrement2, null);
+
+		// Updates
 		updateHousePlayers(houseDice);
 		houseResult(houseDice);
 		resetPlayers();
@@ -131,8 +130,12 @@ public class GameEngineImpl implements GameEngine {
 		}
 	}
 
-	private Die dieUpdate() {
-		Die die = new DicePairImpl().getDie1();
+	private Die dieUpdate(Die die) {
+		Die newDie;
+		if (die.getNumber() == 1)
+			die = new DicePairImpl().getDie1();
+		else
+			die = new DicePairImpl().getDie2();
 		return die;
 	}
 
@@ -189,8 +192,7 @@ public class GameEngineImpl implements GameEngine {
 
 	@Override
 	public boolean placeBet(Player player, int bet) {
-		// TODO Auto-generated method stub
-		return false;
+		return player.setBet(bet);
 	}
 
 	@Override
