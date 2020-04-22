@@ -31,29 +31,36 @@ public class GameEngineCallbackImpl implements GameEngineCallback
 	public void playerDieUpdate(Player player, Die die, GameEngine gameEngine)
 	{
 		// intermediate results logged at Level.FINE
-		logger.log(Level.FINE, "Intermediate data to log .. String.format() is good here!");
-		// TODO: complete this method to log results
+		String resultString = String.format("%s die %s rolled to %s", player.getPlayerName(),
+				die.getNumber(), die.toString());
+		logger.log(Level.FINE, resultString);
 	}
 
 	@Override
 	public void playerResult(Player player, DicePair result, GameEngine gameEngine)
 	{
 		// final results logged at Level.INFO
-		logger.log(Level.INFO, "Result data to log .. String.format() is good here!");
-		// TODO: complete this method to log results
+		String resultString = String.format("%s *RESULT*: Dice 1: %s, Dice 2: %s .. rolled to %d",
+				player.getPlayerName(), result.getDie1().toString(), result.getDie2().toString(), result.getTotal());
+		logger.log(Level.INFO, resultString);
 	}
 
 	@Override
 	public void houseDieUpdate(Die die, GameEngine gameEngine) {
-		// TODO Auto-generated method stub
-		logger.log(Level.FINE, "Intermediate data to log .. String.format() is good here!");
+		String resultString = String.format("House die %d rolled to %s", die.getNumber(), die.toString());
+		logger.log(Level.FINE, resultString);
 	}
 
 	@Override
 	public void houseResult(DicePair result, GameEngine gameEngine) {
-		// TODO Auto-generated method stub
-		logger.log(Level.INFO, "Result data to log .. String.format() is good here!");
-	}
+		String resultString = String.format("HOUSE *RESULT*: Dice 1: %s, Dice 2: %s .. Total: %d ", result.getDie1().toString(),  result.getDie2().toString(), result.getTotal());
+		logger.log(Level.INFO, resultString);
 
-	// TODO implement rest of interface
+		// Show Final Player Results
+		String playerResultString = "FINAL PLAYER RESULTS \n";
+		for (Player player : gameEngine.getAllPlayers()) {
+			playerResultString += player.toString() + "\n";
+		}
+		logger.log(Level.INFO, playerResultString);
+	}
 }

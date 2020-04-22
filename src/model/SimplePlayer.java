@@ -67,4 +67,11 @@ public class SimplePlayer implements Player {
 	@Override
 	public void setResult(DicePair rollResult) { diceResult = rollResult; }
 
+	@Override
+	public String toString() {
+		// e.g. "Player: id=1, name=The Roller, bet=100, points=4900, RESULT .. Dice 1: One,  Dice 2: Three .. Total: 4"
+		return String.format("Player: id=%s, name=%s, bet=%d, points=%d, RESULT .. Dice 1: %s, Dice 2: %s .. Total: %d",
+				playerID, playerName, bet, points, diceResult.getDie1().getValue(), diceResult.getDie2().getValue(),
+				diceResult.getTotal());
+	}
 }
