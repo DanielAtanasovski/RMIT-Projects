@@ -19,8 +19,13 @@ public class GameEngineImpl implements GameEngine {
 			int finalDelay2, int delayIncrement2) {
 
 		// Roll dice
-		DicePair playerDice = roll(initialDelay1, finalDelay1, delayIncrement1, initialDelay2,
-				finalDelay2, delayIncrement2, player);
+		DicePair playerDice = null;
+		try {
+			playerDice = roll(initialDelay1, finalDelay1, delayIncrement1, initialDelay2,
+					finalDelay2, delayIncrement2, player);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		// Send updates
 		player.setResult(playerDice);
@@ -40,7 +45,7 @@ public class GameEngineImpl implements GameEngine {
 	}
 
 	private DicePair roll(int initialDelay1, int finalDelay1, int delayIncrement1, int initialDelay2, int finalDelay2,
-						  int delayIncrement2, Player player) {
+						  int delayIncrement2, Player player) throws InterruptedException {
 		// Dice
 		Die die1 = new DicePairImpl().getDie1();
 		Die die2 = new DicePairImpl().getDie2();
@@ -59,30 +64,36 @@ public class GameEngineImpl implements GameEngine {
 				// Update value
 				die1 = dieUpdate(die1);
 				// Increase Delay
+				Thread.sleep(delayIncrement1);
 				currentDelay1 += delayIncrement1;
 				// Callback
-				if (player != null)
+				if (player != null) {
 					playerUpdate(player, die1);
-				else
+					playerUpdate(player, die2);
+				}
+				else {
 					houseUpdate(die1);
+					houseUpdate(die2);
+				}
 				// Ensure another loop
 				doneRolling = false;
 			}
 
 			// Update second die
-			if (currentDelay2 < finalDelay2){
-				// Update value
-				die2 = dieUpdate(die2);
-				// Increase Delay
-				currentDelay2 += delayIncrement2;
-				// Callback
-				if (player != null)
-					playerUpdate(player, die2);
-				else
-					houseUpdate(die2);
-				// Ensure another loop
-				doneRolling = false;
-			}
+			// TODO: Threading to support simultaneous dice rolls
+//			if (currentDelay2 < finalDelay2){
+//				// Update value
+//				die2 = dieUpdate(die2);
+//				// Increase Delay
+//				currentDelay2 += delayIncrement2;
+//				// Callback
+//				if (player != null)
+//					playerUpdate(player, die2);
+//				else
+//					houseUpdate(die2);
+//				// Ensure another loop
+//				doneRolling = false;
+//			}
 		}
 
 		// Return a new dice pair with rolled dice
@@ -94,8 +105,13 @@ public class GameEngineImpl implements GameEngine {
 			int delayIncrement2) {
 
 		// Roll dice
-		DicePair houseDice = roll(initialDelay1, finalDelay1, delayIncrement1, initialDelay2,
-				finalDelay2, delayIncrement2, null);
+		DicePair houseDice = null;
+		try {
+			houseDice = roll(initialDelay1, finalDelay1, delayIncrement1, initialDelay2,
+					finalDelay2, delayIncrement2, null);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		// Updates
 		updateHousePlayers(houseDice);
