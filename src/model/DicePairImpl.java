@@ -14,7 +14,7 @@ public class DicePairImpl implements DicePair{
 	public DicePairImpl()  {
 		Random random = new Random();
 		die1 = new DieImpl(1, random.nextInt(Die.NUM_FACES) + 1, Die.NUM_FACES);
-		die2 = new DieImpl(1, random.nextInt(Die.NUM_FACES) + 1, Die.NUM_FACES);
+		die2 = new DieImpl(2, random.nextInt(Die.NUM_FACES) + 1, Die.NUM_FACES);
 	}
 
 	// Allowing a two argument constructor so that we may have the correct
