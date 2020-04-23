@@ -52,7 +52,7 @@ public class GameEngineImpl implements GameEngine {
 
 		// Delays
 		int currentDelay1 = initialDelay1;
-		int currentDelay2 = initialDelay2;
+//		int currentDelay2 = initialDelay2;
 
 		// Roll the dice
 		boolean doneRolling = false;
@@ -146,24 +146,27 @@ public class GameEngineImpl implements GameEngine {
 	private Die dieUpdate(Die die) {
 		Die newDie;
 		if (die.getNumber() == 1)
-			die = new DicePairImpl().getDie1();
+			newDie = new DicePairImpl().getDie1();
 		else
-			die = new DicePairImpl().getDie2();
-		return die;
+			newDie = new DicePairImpl().getDie2();
+		return newDie;
 	}
 
 	@Override
 	public void applyWinLoss(Player player, DicePair houseResult) {
-		if (player.getResult().getTotal() > houseResult.getTotal()){
-			// Win
-			// (Assuming points bet is doubled and added back to points, otherwise there is no way to get points!)
-			player.setPoints(player.getPoints() + (player.getBet()));
-		} else if (player.getResult().getTotal() < houseResult.getTotal()) {
-			// Loss
-			player.setPoints(player.getPoints() - player.getBet());
-		} else {
-			// Draw
-			player.setPoints(player.getPoints());
+		switch (player.getResult().compareTo(houseResult)) {
+			case -1:
+				// Loss
+				player.setPoints(player.getPoints() - player.getBet());
+				break;
+			case 0:
+				// Draw
+				player.setPoints(player.getPoints());
+				break;
+			case 1:
+				// Win
+				player.setPoints(player.getPoints() + (player.getBet()));
+				break;
 		}
 	}
 
@@ -185,7 +188,7 @@ public class GameEngineImpl implements GameEngine {
 	@Override
 	public Player getPlayer(String id) {
 		for (Player player : playerList) {
-			if (player.getPlayerId() == id) {
+			if (player.getPlayerId().equals(id)) {
 				return player;
 			}
 		}
@@ -195,7 +198,7 @@ public class GameEngineImpl implements GameEngine {
 	@Override
 	public boolean removePlayer(Player player) {
 		for (Player p : playerList) {
-			if (p.getPlayerId() == player.getPlayerId()) {
+			if (p.getPlayerId().equals(player.getPlayerId())) {
 				playerList.remove(p);
 				return true;
 			}
