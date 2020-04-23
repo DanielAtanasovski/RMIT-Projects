@@ -72,15 +72,7 @@ public class DicePairImpl implements DicePair{
 
 	@Override
 	public int compareTo(DicePair dicePair) {
-		int ourTotal = this.getTotal();
-		
-		if (ourTotal < dicePair.getTotal())
-			return -1;
-		
-		if (ourTotal > dicePair.getTotal())
-			return 1;
-		
-		return 0;
+		return Integer.compare(this.getTotal(), dicePair.getTotal());
 	}
 
 }
