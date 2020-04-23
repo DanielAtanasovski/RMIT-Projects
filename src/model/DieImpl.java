@@ -52,7 +52,7 @@ public class DieImpl implements Die {
 
 	@Override
 	public String toString() {
-		String retString = "";
+		String retString;
 		switch (this.value) {
 			case 1:
 				retString = "One";
