@@ -57,8 +57,7 @@ public class SimplePlayer implements Player {
 
 	@Override
 	public void resetBet() {
-		points += bet;
-		bet = 0;
+		this.bet = 0;
 	}
 
 	@Override
