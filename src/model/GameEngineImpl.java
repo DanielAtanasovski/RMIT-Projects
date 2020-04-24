@@ -79,8 +79,8 @@ public class GameEngineImpl implements GameEngine {
 				doneRolling = false;
 			}
 
-			// Update second die
-			// TODO: Threading to support simultaneous dice rolls
+			// Update second die separately
+			// TODO: Threading to support simultaneous dice rolls (Assignment 2)
 //			if (currentDelay2 < finalDelay2){
 //				// Update value
 //				die2 = dieUpdate(die2);

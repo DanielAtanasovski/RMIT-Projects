@@ -4,6 +4,8 @@ import model.GameEngineImpl;
 import model.SimplePlayer;
 import model.interfaces.GameEngine;
 import model.interfaces.Player;
+import tests.DiceTest;
+import tests.GameEngineTest;
 import tests.PlayerTest;
 import tests.interfaces.Test;
 import validate.Validator;
@@ -30,6 +32,11 @@ public class MyTest1Client
       // Player Test
       Test pTest = new PlayerTest();
       pTest.StartTest();
-
+      // Dice Test
+      Test dTest = new DiceTest();
+      dTest.StartTest();
+      // GameEngine Test
+      Test gTest = new GameEngineTest();
+      gTest.StartTest();
    }
 }
