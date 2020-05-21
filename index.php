@@ -1,6 +1,33 @@
 <!DOCTYPE html>
 
 <?php
+require __DIR__ . '/vendor/autoload.php';
+
+use Google\Cloud\Datastore\DatastoreClient;
+
+# Your Google Cloud Platform project ID
+$projectId = 'cc-ptv-planner';
+
+# Instantiates a client
+$datastore = new DatastoreClient([
+    'projectId' => $projectId
+]);
+# The kind for the new entity
+$kind = 'Task';
+
+# The name/ID for the new entity
+$name = 'sampletask1';
+
+# The Cloud Datastore key for the new entity
+$taskKey = $datastore->key($kind, $name);
+
+# Prepares the new entity
+$task = $datastore->entity($taskKey, ['description' => 'Buy milk']);
+
+# Saves the entity
+$datastore->upsert($task);
+
+
 $devid = "3001608";
 $apikey = "751a9dd5-9e2e-4f2a-b87d-009a45729806";
 $searchurl = "http://timetableapi.ptv.vic.gov.au";
@@ -72,7 +99,22 @@ function myUrlEncode($string)
     <!-- Google Login -->
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="323390293985-4o5gi4ubgmtndac68q6bul5litms6qpv.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://apis.google.com/js/platform.js" async defer>
+        function onSignIn(googleUser) {
+            // Useful data for your client-side scripts:
+            var profile = googleUser.getBasicProfile();
+            console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+            console.log('Full Name: ' + profile.getName());
+            console.log('Given Name: ' + profile.getGivenName());
+            console.log('Family Name: ' + profile.getFamilyName());
+            console.log("Image URL: " + profile.getImageUrl());
+            console.log("Email: " + profile.getEmail());
+
+            // The ID token you need to pass to your backend:
+            var id_token = googleUser.getAuthResponse().id_token;
+            console.log("ID Token: " + id_token);
+        }
+    </script>
 </head>
 
 <body>
@@ -82,58 +124,13 @@ function myUrlEncode($string)
             <a class="navbar-brand" href="#">PTV Planner</a>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
-                    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#login">Login</button>
+                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
                 </li>
             </ul>
         </div>
     </nav>
 
-    <!-- Login Modal -->
-    <div id="login" class="modal fade">
-        <div class="modal-dialog modal-login">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Login</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Username</label>
-                        <input type="text" class="form-control" required="required">
-                    </div>
-                    <div class="form-group">
-                        <div class="clearfix">
-                            <label>Password</label>
-                        </div>
 
-                        <input type="password" class="form-control" required="required">
-                    </div>
-                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
-
-                    <script>
-                        function onSignIn(googleUser) {
-                            // Useful data for your client-side scripts:
-                            var profile = googleUser.getBasicProfile();
-                            console.log("ID: " + profile.getId()); // Don't send this directly to your server!
-                            console.log('Full Name: ' + profile.getName());
-                            console.log('Given Name: ' + profile.getGivenName());
-                            console.log('Family Name: ' + profile.getFamilyName());
-                            console.log("Image URL: " + profile.getImageUrl());
-                            console.log("Email: " + profile.getEmail());
-
-                            // The ID token you need to pass to your backend:
-                            var id_token = googleUser.getAuthResponse().id_token;
-                            console.log("ID Token: " + id_token);
-                        }
-                    </script>
-                </div>
-                <div class="modal-footer">
-                    <label class="checkbox-inline pull-left"><input type="checkbox"> Remember me</label>
-                    <input type="submit" class="btn btn-primary pull-right" value="Login">
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Twitter Feed -->
     <div class="float-right">
