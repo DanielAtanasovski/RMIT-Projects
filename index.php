@@ -5,8 +5,26 @@ $devid = "3001608";
 $apikey = "751a9dd5-9e2e-4f2a-b87d-009a45729806";
 $searchurl = "http://timetableapi.ptv.vic.gov.au";
 
+// Map
+$showMap = false;
+$mapLat = 0;
+$mapLon = 0;
+$mapName = "No Results";
+
+// On Search Post
 if (isset($_POST['search'])) {
-    print_r(SearchAndFilter());
+    $result = SearchAndFilter();
+
+    if (count($result['stops']) == 0) {
+        // echo "Nothing";
+    } else {
+        // echo "Something";
+        // print_r($result);
+        $showMap = true;
+        $mapLat = $result['stops'][0]['stop_latitude'];
+        $mapLon = $result['stops'][0]['stop_longitude'];
+        $mapName = $result['stops'][0]['stop_name'];
+    }
 }
 
 // Functions
@@ -18,9 +36,9 @@ function SearchAndFilter()
     global $apikey;
     global $searchurl;
 
-    $req = "/v3/search/" . myUrlEncode($_POST["search"]) . "?" 
-    . "route_types=" . htmlspecialchars($_POST["search-filter"]) 
-    . "&devid=" . $devid;
+    $req = "/v3/search/" . myUrlEncode($_POST["search"]) . "?"
+        . "route_types=" . htmlspecialchars($_POST["search-filter"])
+        . "&devid=" . $devid;
 
     $signature = hash_hmac("sha1", $req, $apikey);
 
@@ -29,7 +47,8 @@ function SearchAndFilter()
     return $return;
 }
 
-function myUrlEncode($string) {
+function myUrlEncode($string)
+{
     $entities = "+";
     $replacements = "%20";
     return str_replace($entities, $replacements, urlencode($string));
@@ -73,6 +92,7 @@ function myUrlEncode($string) {
 
     <!-- Page Content -->
     <div class="container">
+        <!-- Search Functionality -->
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h1 class="mt-5">Search</h1>
@@ -96,9 +116,33 @@ function myUrlEncode($string) {
                 </ul>
             </div>
         </div>
+
+        <!-- Embeded Maps API -->
+        <?php
+        if ($showMap){
+            echo <<<END
+                <div class="row">
+                    <div class="row col-12 text-center">
+                        <h3>$mapName</h3>
+                    </div>
+                    <!--The div element for the map -->
+                    <div class="row col-12">
+                        <div id="map">
+                            <iframe src="https://www.google.com/maps/embed/v1/view?key=AIzaSyBMZN4xPoana_n56KXuglxFhflKOMZDB64&center=$mapLat,$mapLon&zoom=16"
+                                frameborder="0" width=600 height=600></iframe>
+                        </div>
+                    </div>
+                </div>
+
+            END;
+        }
+            
+
+        ?>
+
     </div>
 
-    
+
 
 </body>
 
