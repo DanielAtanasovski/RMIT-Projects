@@ -36,6 +36,8 @@ if (isset($_POST['search'])) {
         $mapLat = $result['stops'][0]['stop_latitude'];
         $mapLon = $result['stops'][0]['stop_longitude'];
         $mapName = $result['stops'][0]['stop_name'];
+
+        
     }
 }
 
@@ -64,6 +66,38 @@ function myUrlEncode($string)
     $entities = "+";
     $replacements = "%20";
     return str_replace($entities, $replacements, urlencode($string));
+}
+
+// Departures
+function Departures($route_type, $stop_id)
+{
+    global $devid;
+    global $apikey;
+    global $searchurl;
+
+    // /v3/departures/route_type/{route_type}/stop/{stop_id} 
+    $req = "/v3/departures/route_type/" . $route_type . "/stop/" . $stop_id . "?devid=" . $devid;
+
+    $signature = hash_hmac("sha1", $req, $apikey);
+    $response = file_get_contents($searchurl . $req . "&signature=" . $signature);
+    $return = json_decode($response, true);
+    return $return;
+}
+
+// Runs
+function Runs($runid)
+{
+    global $devid;
+    global $apikey;
+    global $searchurl;
+
+    // v3/runs/run_id
+    $req = "/v3/runs/" . $runid . "?devid=" . $devid;
+
+    $signature = hash_hmac("sha1", $req, $apikey);
+    $response = file_get_contents($searchurl . $req . "&signature=" . $signature);
+    $return = json_decode($response, true);
+    return $return;
 }
 
 ?>
@@ -184,6 +218,70 @@ function myUrlEncode($string)
                 </form>
                 </ul>
             </div>
+        </div>
+
+        <!-- Showing All Stops -->
+        <div class="row" id="accordion">
+            <?php
+            if ($showMap) {
+                $stopCount=0;
+
+                foreach ($result['stops'] as $stop) {
+                    $stopName = $stop['stop_name'];
+
+                    echo <<< EOT
+
+                    <div class="card col-12">
+                        <div class="card-header" id="heading$stopCount">
+                            <h3 class="mb-0"> 
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="collapse$stopCount" aria-expanded="false" aria-controls="collapse$stopCount">
+                                    $stopName 
+                                </button>
+                            </h3>
+                        </div>
+                        <div id="collapse$stopCount" class="collapse show" aria-labelledby="heading$stopCount" data-parent="#accordion">
+                            <div class="card-body">
+                                <h3><u> Next 5 Stops </u></h3>
+
+EOT;
+                        $departures = Departures($stop['route_type'], $stop['stop_id'])['departures'];
+                        $count = 0;
+                        foreach($departures as $departure) {
+
+                            if ($count >= 5)
+                                break;
+
+                            $run = Runs($departure['run_id'])['runs'];
+                            $name = $run[0]['destination_name'];
+                            
+                            echo <<< EOT
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3> To $name </h3>
+                                </div>
+                                <div class="card-body">
+
+                                </div>
+                            </div>
+
+EOT;
+                            $count++;
+                        }
+
+                    echo <<< EOT
+
+                            </div>
+                        </div>
+                    </div>
+                    
+EOT;
+
+                }
+            }
+
+            ?>
+
         </div>
 
         <!-- Embeded Maps API -->
