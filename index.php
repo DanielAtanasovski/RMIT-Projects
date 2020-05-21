@@ -3,17 +3,36 @@
 <?php
 $devid = "3001608";
 $apikey = "751a9dd5-9e2e-4f2a-b87d-009a45729806";
-$searchurl = "http://timetableapi.ptv.vic.gov.au/v3/search/";
+$searchurl = "http://timetableapi.ptv.vic.gov.au";
 
 if (isset($_POST['search'])) {
+    print_r(SearchAndFilter());
+}
 
-    $signature = hash_hmac("sha1", "/v3/search/" . htmlspecialchars($_POST["search"]) . "?devid=" . $devid, $apikey);
+// Functions
 
-    // echo "Signature=" . $signature;
+// Search
+function SearchAndFilter()
+{
+    global $devid;
+    global $apikey;
+    global $searchurl;
 
-    $response = file_get_contents($searchurl . $_POST['search'] . "?devid=" . $devid . "&signature=" . $signature);
+    $req = "/v3/search/" . myUrlEncode($_POST["search"]) . "?" 
+    . "route_types=" . htmlspecialchars($_POST["search-filter"]) 
+    . "&devid=" . $devid;
 
-    // echo $response;
+    $signature = hash_hmac("sha1", $req, $apikey);
+
+    $response = file_get_contents($searchurl . $req . "&signature=" . $signature);
+    $return = json_decode($response, true);
+    return $return;
+}
+
+function myUrlEncode($string) {
+    $entities = "+";
+    $replacements = "%20";
+    return str_replace($entities, $replacements, urlencode($string));
 }
 
 ?>
@@ -30,20 +49,6 @@ if (isset($_POST['search'])) {
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 </head>
 
-<!-- <body> -->
-<!-- Source: Licensed from Public Transport Victoria under a Creative Commons Attribution 4.0 International Licence." -->
-<!-- 
-    <form action="/" method="post">
-        <label for="Search">Search</label>
-        <input type="text" name="search" id="search">
-    </form> -->
-
-<!-- Twitter feed of PTV -->
-<!-- <a class="twitter-timeline" data-height="800" data-width="400" data-theme="dark" href="https://twitter.com/ptv_official?ref_src=twsrc%5Etfw">Tweets by ptv_official</a>
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
-<!-- 
-</body> -->
-
 <body>
 
     <!-- Navigation -->
@@ -58,24 +63,42 @@ if (isset($_POST['search'])) {
         </div>
     </nav>
 
+
+
+    <!-- Twitter Feed -->
+    <div class="float-right">
+        <a class="twitter-timeline" data-height="1400" data-width="400" data-theme="dark" href="https://twitter.com/ptv_official?ref_src=twsrc%5Etfw">Tweets by ptv_official</a>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+
     <!-- Page Content -->
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h1 class="mt-5">Search</h1>
+                <!-- Source: Licensed from Public Transport Victoria under a Creative Commons Attribution 4.0 International Licence." -->
                 <form action="/" method="post">
-                    <input type="text" name="search" id="search">
+                    <div class="row">
+                        <div class="col-10">
+                            <input class="form-control" type="text" name="search" id="search">
+                        </div>
+                        <div class="col-2">
+                            <select class="form-control" name="search-filter" id="search-filter">
+                                <option value=0>Trains</option>
+                                <option value=1>Trams</option>
+                                <option value=2>Buses</option>
+                                <option value=3>Vline</option>
+                                <option value=4>Night Bus</option>
+                            </select>
+                        </div>
+                    </div>
                 </form>
                 </ul>
             </div>
         </div>
     </div>
 
-    <div class="float-right">
-            <!-- Twitter feed of PTV -->
-            <a class="twitter-timeline" data-height="800" data-width="400" data-theme="dark" href="https://twitter.com/ptv_official?ref_src=twsrc%5Etfw">Tweets by ptv_official</a>
-            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-        </div>
+    
 
 </body>
 
