@@ -1,5 +1,6 @@
 {
     "require": {
-        "google/cloud-datastore": "^1.11"
+        "google/cloud-datastore": "^1.11",
+        "google/apiclient": "^2.4"
     }
 }

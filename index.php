@@ -12,21 +12,6 @@ $projectId = 'cc-ptv-planner';
 $datastore = new DatastoreClient([
     'projectId' => $projectId
 ]);
-# The kind for the new entity
-$kind = 'Task';
-
-# The name/ID for the new entity
-$name = 'sampletask1';
-
-# The Cloud Datastore key for the new entity
-$taskKey = $datastore->key($kind, $name);
-
-# Prepares the new entity
-$task = $datastore->entity($taskKey, ['description' => 'Buy milk']);
-
-# Saves the entity
-$datastore->upsert($task);
-
 
 $devid = "3001608";
 $apikey = "751a9dd5-9e2e-4f2a-b87d-009a45729806";
@@ -99,16 +84,52 @@ function myUrlEncode($string)
     <!-- Google Login -->
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="323390293985-4o5gi4ubgmtndac68q6bul5litms6qpv.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script>
         function onSignIn(googleUser) {
             // Useful data for your client-side scripts:
             var profile = googleUser.getBasicProfile();
+            var id_token = googleUser.getAuthResponse().id_token;
             console.log("ID: " + profile.getId()); // Don't send this directly to your server!
             console.log('Full Name: ' + profile.getName());
             console.log('Given Name: ' + profile.getGivenName());
             console.log('Family Name: ' + profile.getFamilyName());
             console.log("Image URL: " + profile.getImageUrl());
             console.log("Email: " + profile.getEmail());
+
+            var test = profile.getId();
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'https://cc-ptv-planner.ts.r.appspot.com/tokensignin');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                console.log('Signed in as: ' + xhr.responseText);
+            };
+            xhr.send('idtoken=' + id_token);
+
+            <?php
+            # The kind for the new entity
+            $kind = 'Users';
+
+            # The name/ID for the new entity
+            $name = 'UserLogin';
+
+            # The Cloud Datastore key for the new entity
+            $taskKey = $datastore->key($kind, $name);
+
+            # Prepares the new entity
+            $test = $_POST['test'];
+            $task = $datastore->entity(
+                $taskKey,
+                [
+                    'created' => new DateTime(),
+                    'ID' => $test,
+                ]
+            );
+
+            # Saves the entity
+            $datastore->upsert($task);
+            ?>
 
             // The ID token you need to pass to your backend:
             var id_token = googleUser.getAuthResponse().id_token;
@@ -125,11 +146,20 @@ function myUrlEncode($string)
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
                     <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                    <a href="#" onclick="signOut();">Sign out</a>
                 </li>
             </ul>
         </div>
     </nav>
 
+    <script>
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function() {
+                console.log('User signed out.');
+            });
+        }
+    </script>
 
 
     <!-- Twitter Feed -->
