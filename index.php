@@ -235,7 +235,7 @@ function Runs($runid)
 
         <!-- Search Functionality -->
         <div class="row">
-            <div class="col-lg-12 text-center">
+            <div class="col-lg-9 text-center">
                 <h1 class="mt-5">Search</h1>
                 <!-- Source: Licensed from Public Transport Victoria under a Creative Commons Attribution 4.0 International Licence." -->
                 <form action="/" method="post">
@@ -259,7 +259,11 @@ function Runs($runid)
         </div>
 
         <!-- Showing All Stops -->
-        <div class="row" id="accordion">
+
+        
+
+
+        <div class="row pt-2" id="accordion">
             <?php
             if ($showMap) {
                 $stopCount=0;
@@ -269,10 +273,10 @@ function Runs($runid)
 
                     echo <<< EOT
 
-                    <div class="card col-12">
+                    <div class="card col-lg-9 px-0">
                         <div class="card-header" id="heading$stopCount">
                             <h3 class="mb-0"> 
-                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="collapse$stopCount" aria-expanded="false" aria-controls="collapse$stopCount">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse$stopCount" aria-expanded="false" aria-controls="collapse$stopCount">
                                     $stopName 
                                 </button>
                             </h3>
@@ -314,7 +318,7 @@ EOT;
                     </div>
                     
 EOT;
-
+                    $stopCount++;
                 }
             }
 
@@ -323,22 +327,23 @@ EOT;
         </div>
 
         <!-- Embeded Maps API -->
+        <!-- 
         <?php
-        if ($showMap)
-            echo <<< EOT
-                        <div class="row">
-                            <div class="row col-12 text-center">
-                                <h3>$mapName</h3>
-                            </div>
-                            <!--The div element for the map -->
-                            <div class="row col-12">
-                                <div id="map">
-                                    <iframe src="https://www.google.com/maps/embed/v1/view?key=AIzaSyBMZN4xPoana_n56KXuglxFhflKOMZDB64&center=$mapLat,$mapLon&zoom=16"
-                                        frameborder="0" width=600 height=600></iframe>
-                                </div>
-                            </div>
-                        </div>
-EOT;
+//         if ($showMap)
+//             echo <<< EOT
+//                         <div class="row">
+//                             <div class="row col-12 text-center">
+//                                 <h3>$mapName</h3>
+//                             </div>
+//                             <!--The div element for the map -->
+//                             <div class="row col-12">
+//                                 <div id="map">
+//                                     <iframe src="https://www.google.com/maps/embed/v1/view?key=AIzaSyBMZN4xPoana_n56KXuglxFhflKOMZDB64&center=$mapLat,$mapLon&zoom=16"
+//                                         frameborder="0" width=600 height=600></iframe>
+//                                 </div>
+//                             </div>
+//                         </div>
+// EOT;
 
         ?>
 
