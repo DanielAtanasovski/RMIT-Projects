@@ -1,5 +1,5 @@
 {
     "require": {
-        "google/cloud": "^0.132.0"
+        "google/cloud-datastore": "^1.11"
     }
 }

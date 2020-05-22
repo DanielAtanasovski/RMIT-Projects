@@ -1,59 +1,5 @@
 [
     {
-        "name": "brick/math",
-        "version": "0.8.15",
-        "version_normalized": "0.8.15.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/brick/math.git",
-            "reference": "9b08d412b9da9455b210459ff71414de7e6241cd"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/brick/math/zipball/9b08d412b9da9455b210459ff71414de7e6241cd",
-            "reference": "9b08d412b9da9455b210459ff71414de7e6241cd",
-            "shasum": ""
-        },
-        "require": {
-            "ext-json": "*",
-            "php": "^7.1|^8.0"
-        },
-        "require-dev": {
-            "php-coveralls/php-coveralls": "^2.2",
-            "phpunit/phpunit": "^7.5.15|^8.5",
-            "vimeo/psalm": "^3.5"
-        },
-        "time": "2020-04-15T15:59:35+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Brick\\Math\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "Arbitrary-precision arithmetic library",
-        "keywords": [
-            "Arbitrary-precision",
-            "BigInteger",
-            "BigRational",
-            "arithmetic",
-            "bigdecimal",
-            "bignum",
-            "brick",
-            "math"
-        ],
-        "funding": [
-            {
-                "url": "https://tidelift.com/funding/github/packagist/brick/math",
-                "type": "tidelift"
-            }
-        ]
-    },
-    {
         "name": "firebase/php-jwt",
         "version": "v5.2.0",
         "version_normalized": "5.2.0.0",
@@ -160,257 +106,115 @@
         ]
     },
     {
-        "name": "google/cloud",
-        "version": "v0.132.0",
-        "version_normalized": "0.132.0.0",
+        "name": "google/cloud-core",
+        "version": "v1.36.2",
+        "version_normalized": "1.36.2.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/googleapis/google-cloud-php.git",
-            "reference": "72f40ad21565120ecd5ed283c5c55b63711616e7"
+            "url": "https://github.com/googleapis/google-cloud-php-core.git",
+            "reference": "4ae49980a6c32758824838ca96205a1b22c8fc7a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/googleapis/google-cloud-php/zipball/72f40ad21565120ecd5ed283c5c55b63711616e7",
-            "reference": "72f40ad21565120ecd5ed283c5c55b63711616e7",
+            "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/4ae49980a6c32758824838ca96205a1b22c8fc7a",
+            "reference": "4ae49980a6c32758824838ca96205a1b22c8fc7a",
             "shasum": ""
         },
         "require": {
             "google/auth": "^1.6",
-            "google/common-protos": "^1.0",
-            "google/crc32": "^0.1.0",
-            "google/gax": "^1.1",
             "guzzlehttp/guzzle": "^5.3|^6.0",
+            "guzzlehttp/promises": "^1.3",
             "guzzlehttp/psr7": "^1.2",
             "monolog/monolog": "^1.1|^2.0",
             "php": ">=5.5",
             "psr/http-message": "1.0.*",
-            "ramsey/uuid": "^3.0|^4.0",
             "rize/uri-template": "~0.3"
-        },
-        "replace": {
-            "google/cloud-asset": "1.0.0",
-            "google/cloud-automl": "1.1.0",
-            "google/cloud-bigquery": "1.16.0",
-            "google/cloud-bigquery-storage": "0.1.0",
-            "google/cloud-bigquerydatatransfer": "1.0.1",
-            "google/cloud-bigtable": "1.3.2",
-            "google/cloud-billing": "1.0.0",
-            "google/cloud-common-protos": "0.2.1",
-            "google/cloud-container": "1.0.1",
-            "google/cloud-core": "1.36.2",
-            "google/cloud-data-catalog": "0.1.0",
-            "google/cloud-dataproc": "1.0.1",
-            "google/cloud-datastore": "1.11.2",
-            "google/cloud-debugger": "1.0.0",
-            "google/cloud-dialogflow": "0.14.1",
-            "google/cloud-dlp": "0.26.1",
-            "google/cloud-error-reporting": "0.16.2",
-            "google/cloud-firestore": "1.12.2",
-            "google/cloud-iot": "1.0.0",
-            "google/cloud-kms": "1.10.0",
-            "google/cloud-language": "0.22.3",
-            "google/cloud-logging": "1.20.0",
-            "google/cloud-memcache": "0.1.0",
-            "google/cloud-monitoring": "1.0.1",
-            "google/cloud-oslogin": "1.0.0",
-            "google/cloud-pubsub": "1.24.0",
-            "google/cloud-recaptcha-enterprise": "0.1.0",
-            "google/cloud-recommendations-ai": "0.1.0",
-            "google/cloud-recommender": "1.0.0",
-            "google/cloud-redis": "1.0.0",
-            "google/cloud-scheduler": "1.3.0",
-            "google/cloud-secret-manager": "1.0.0",
-            "google/cloud-security-center": "0.7.0",
-            "google/cloud-service-directory": "0.1.1",
-            "google/cloud-spanner": "1.28.0",
-            "google/cloud-speech": "1.1.0",
-            "google/cloud-storage": "1.20.1",
-            "google/cloud-talent": "0.12.0",
-            "google/cloud-tasks": "1.6.1",
-            "google/cloud-text-to-speech": "1.0.1",
-            "google/cloud-trace": "1.0.0",
-            "google/cloud-translate": "1.7.2",
-            "google/cloud-videointelligence": "1.9.1",
-            "google/cloud-vision": "1.0.0",
-            "google/cloud-web-risk": "0.5.0",
-            "google/cloud-web-security-scanner": "0.4.2"
         },
         "require-dev": {
             "erusev/parsedown": "^1.6",
-            "google/cloud-tools": "^0.9.0",
-            "opis/closure": "^3.0",
+            "google/common-protos": "^1.0",
+            "google/gax": "^1.1",
+            "opis/closure": "^3",
             "phpdocumentor/reflection": "^3.0",
-            "phpseclib/phpseclib": "^2",
             "phpunit/phpunit": "^4.8|^5.0",
-            "squizlabs/php_codesniffer": "2.*",
-            "swaggest/json-schema": "^0.12.0",
-            "symfony/console": "^3.0",
-            "symfony/lock": "3.3.x-dev#1ba6ac9",
-            "vierbergenlars/php-semver": "^3.0"
+            "squizlabs/php_codesniffer": "2.*"
         },
         "suggest": {
             "opis/closure": "May be used to serialize closures to process jobs in the batch daemon. Please require version ^3.",
-            "phpseclib/phpseclib": "May be used in place of OpenSSL for creating signed Cloud Storage URLs. Please require version ^2."
+            "symfony/lock": "Required for the Spanner cached based session pool. Please require the following commit: 3.3.x-dev#1ba6ac9"
         },
         "time": "2020-04-22T21:58:25+00:00",
         "bin": [
-            "Core/bin/google-cloud-batch",
-            "Debugger/bin/google-cloud-debugger"
+            "bin/google-cloud-batch"
         ],
         "type": "library",
         "extra": {
             "component": {
-                "id": "google-cloud",
-                "target": "googleapis/google-cloud-php.git",
-                "path": "src",
-                "entry": [
-                    "Version.php",
-                    "ServiceBuilder.php"
-                ]
+                "id": "cloud-core",
+                "target": "googleapis/google-cloud-php-core.git",
+                "path": "Core",
+                "entry": "src/ServiceBuilder.php"
             }
         },
         "installation-source": "dist",
         "autoload": {
             "psr-4": {
-                "GPBMetadata\\Google\\": "CommonProtos/metadata",
-                "GPBMetadata\\Google\\Bigtable\\": "Bigtable/metadata",
-                "GPBMetadata\\Google\\Cloud\\Asset\\": "Asset/metadata",
-                "GPBMetadata\\Google\\Cloud\\Automl\\": "AutoMl/metadata",
-                "GPBMetadata\\Google\\Cloud\\Bigquery\\Datatransfer\\": "BigQueryDataTransfer/metadata",
-                "GPBMetadata\\Google\\Cloud\\Bigquery\\Storage\\": "BigQueryStorage/metadata",
-                "GPBMetadata\\Google\\Cloud\\Billing\\": "Billing/metadata",
-                "GPBMetadata\\Google\\Cloud\\Datacatalog\\": "DataCatalog/metadata",
-                "GPBMetadata\\Google\\Cloud\\Dataproc\\": "Dataproc/metadata",
-                "GPBMetadata\\Google\\Cloud\\Dialogflow\\": "Dialogflow/metadata",
-                "GPBMetadata\\Google\\Cloud\\Iot\\": "Iot/metadata",
-                "GPBMetadata\\Google\\Cloud\\Kms\\": "Kms/metadata",
-                "GPBMetadata\\Google\\Cloud\\Language\\": "Language/metadata",
-                "GPBMetadata\\Google\\Cloud\\Memcache\\": "Memcache/metadata",
-                "GPBMetadata\\Google\\Cloud\\Oslogin\\": "OsLogin/metadata",
-                "GPBMetadata\\Google\\Cloud\\Recaptchaenterprise\\": "RecaptchaEnterprise/metadata",
-                "GPBMetadata\\Google\\Cloud\\Recommendationengine\\": "RecommendationEngine/metadata",
-                "GPBMetadata\\Google\\Cloud\\Recommender\\": "Recommender/metadata",
-                "GPBMetadata\\Google\\Cloud\\Redis\\": "Redis/metadata",
-                "GPBMetadata\\Google\\Cloud\\Scheduler\\": "Scheduler/metadata",
-                "GPBMetadata\\Google\\Cloud\\Secretmanager\\": "SecretManager/metadata",
-                "GPBMetadata\\Google\\Cloud\\Secrets\\": "SecretManager/metadata",
-                "GPBMetadata\\Google\\Cloud\\Securitycenter\\": "SecurityCenter/metadata",
-                "GPBMetadata\\Google\\Cloud\\Servicedirectory\\": "ServiceDirectory/metadata",
-                "GPBMetadata\\Google\\Cloud\\Speech\\": "Speech/metadata",
-                "GPBMetadata\\Google\\Cloud\\Talent\\": "Talent/metadata",
-                "GPBMetadata\\Google\\Cloud\\Tasks\\": "Tasks/metadata",
-                "GPBMetadata\\Google\\Cloud\\Texttospeech\\": "TextToSpeech/metadata",
-                "GPBMetadata\\Google\\Cloud\\Translate\\": "Translate/metadata",
-                "GPBMetadata\\Google\\Cloud\\Videointelligence\\": "VideoIntelligence/metadata",
-                "GPBMetadata\\Google\\Cloud\\Vision\\": "Vision/metadata",
-                "GPBMetadata\\Google\\Cloud\\Webrisk\\": "WebRisk/metadata",
-                "GPBMetadata\\Google\\Cloud\\Websecurityscanner\\": "WebSecurityScanner/metadata",
-                "GPBMetadata\\Google\\Container\\": "Container/metadata",
-                "GPBMetadata\\Google\\Datastore\\": "Datastore/metadata",
-                "GPBMetadata\\Google\\Devtools\\Clouddebugger\\": "Debugger/metadata",
-                "GPBMetadata\\Google\\Devtools\\Clouderrorreporting\\": "ErrorReporting/metadata",
-                "GPBMetadata\\Google\\Devtools\\Cloudtrace\\": "Trace/metadata",
-                "GPBMetadata\\Google\\Firestore\\": "Firestore/metadata",
-                "GPBMetadata\\Google\\Logging\\": "Logging/metadata",
-                "GPBMetadata\\Google\\Monitoring\\": "Monitoring/metadata",
-                "GPBMetadata\\Google\\Privacy\\Dlp\\": "Dlp/metadata",
-                "GPBMetadata\\Google\\Pubsub\\": "PubSub/metadata",
-                "GPBMetadata\\Google\\Spanner\\": "Spanner/metadata",
-                "Google\\Cloud\\": [
-                    "src",
-                    "CommonProtos/src"
-                ],
-                "Google\\Cloud\\Asset\\": "Asset/src",
-                "Google\\Cloud\\AutoMl\\": "AutoMl/src",
-                "Google\\Cloud\\BigQuery\\": "BigQuery/src",
-                "Google\\Cloud\\BigQuery\\DataTransfer\\": "BigQueryDataTransfer/src",
-                "Google\\Cloud\\BigQuery\\Storage\\": "BigQueryStorage/src",
-                "Google\\Cloud\\Bigtable\\": "Bigtable/src",
-                "Google\\Cloud\\Billing\\": "Billing/src",
-                "Google\\Cloud\\Container\\": "Container/src",
-                "Google\\Cloud\\Core\\": "Core/src",
-                "Google\\Cloud\\DataCatalog\\": "DataCatalog/src",
-                "Google\\Cloud\\Dataproc\\": "Dataproc/src",
-                "Google\\Cloud\\Datastore\\": "Datastore/src",
-                "Google\\Cloud\\Debugger\\": "Debugger/src",
-                "Google\\Cloud\\Dialogflow\\": "Dialogflow/src",
-                "Google\\Cloud\\Dlp\\": "Dlp/src",
-                "Google\\Cloud\\ErrorReporting\\": "ErrorReporting/src",
-                "Google\\Cloud\\Firestore\\": "Firestore/src",
-                "Google\\Cloud\\Iot\\": "Iot/src",
-                "Google\\Cloud\\Kms\\": "Kms/src",
-                "Google\\Cloud\\Language\\": "Language/src",
-                "Google\\Cloud\\Logging\\": "Logging/src",
-                "Google\\Cloud\\Memcache\\": "Memcache/src",
-                "Google\\Cloud\\Monitoring\\": "Monitoring/src",
-                "Google\\Cloud\\OsLogin\\": "OsLogin/src",
-                "Google\\Cloud\\PubSub\\": "PubSub/src",
-                "Google\\Cloud\\RecaptchaEnterprise\\": "RecaptchaEnterprise/src",
-                "Google\\Cloud\\RecommendationEngine\\": "RecommendationEngine/src",
-                "Google\\Cloud\\Recommender\\": "Recommender/src",
-                "Google\\Cloud\\Redis\\": "Redis/src",
-                "Google\\Cloud\\Scheduler\\": "Scheduler/src",
-                "Google\\Cloud\\SecretManager\\": "SecretManager/src",
-                "Google\\Cloud\\SecurityCenter\\": "SecurityCenter/src",
-                "Google\\Cloud\\ServiceDirectory\\": "ServiceDirectory/src",
-                "Google\\Cloud\\Spanner\\": "Spanner/src",
-                "Google\\Cloud\\Speech\\": "Speech/src",
-                "Google\\Cloud\\Storage\\": "Storage/src",
-                "Google\\Cloud\\Talent\\": "Talent/src",
-                "Google\\Cloud\\Tasks\\": "Tasks/src",
-                "Google\\Cloud\\TextToSpeech\\": "TextToSpeech/src",
-                "Google\\Cloud\\Trace\\": "Trace/src",
-                "Google\\Cloud\\Translate\\": "Translate/src",
-                "Google\\Cloud\\VideoIntelligence\\": "VideoIntelligence/src",
-                "Google\\Cloud\\Vision\\": "Vision/src",
-                "Google\\Cloud\\WebRisk\\": "WebRisk/src",
-                "Google\\Cloud\\WebSecurityScanner\\": "WebSecurityScanner/src"
+                "Google\\Cloud\\Core\\": "src"
             }
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
             "Apache-2.0"
         ],
-        "authors": [
-            {
-                "name": "Dave Supplee",
-                "email": "dwsupplee@gmail.com"
-            },
-            {
-                "name": "John Pedrie",
-                "email": "john@pedrie.com"
+        "description": "Google Cloud PHP shared dependency, providing functionality useful to all components."
+    },
+    {
+        "name": "google/cloud-datastore",
+        "version": "v1.11.2",
+        "version_normalized": "1.11.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/googleapis/google-cloud-php-datastore.git",
+            "reference": "4aabb41715cf3504f15618c00f4b75f4a7cad500"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/googleapis/google-cloud-php-datastore/zipball/4aabb41715cf3504f15618c00f4b75f4a7cad500",
+            "reference": "4aabb41715cf3504f15618c00f4b75f4a7cad500",
+            "shasum": ""
+        },
+        "require": {
+            "google/cloud-core": "^1.35",
+            "google/gax": "^1.1"
+        },
+        "require-dev": {
+            "erusev/parsedown": "^1.6",
+            "phpdocumentor/reflection": "^3.0",
+            "phpunit/phpunit": "^4.8|^5.0",
+            "squizlabs/php_codesniffer": "2.*"
+        },
+        "time": "2020-04-07T20:58:05+00:00",
+        "type": "library",
+        "extra": {
+            "component": {
+                "id": "cloud-datastore",
+                "target": "googleapis/google-cloud-php-datastore.git",
+                "path": "Datastore",
+                "entry": "src/DatastoreClient.php"
             }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Google\\Cloud\\Datastore\\": "src",
+                "GPBMetadata\\Google\\Datastore\\": "metadata"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
         ],
-        "description": "Google Cloud Client Library",
-        "homepage": "http://github.com/googleapis/google-cloud-php",
-        "keywords": [
-            "Tasks",
-            "big query",
-            "bigquery",
-            "bigtable",
-            "cloud",
-            "datastore",
-            "gcs",
-            "google",
-            "google api",
-            "google api client",
-            "google apis",
-            "google apis client",
-            "google cloud",
-            "google cloud platform",
-            "kms",
-            "language",
-            "natural language",
-            "pub sub",
-            "pubsub",
-            "spanner",
-            "speech",
-            "stackdriver logging",
-            "storage",
-            "translate",
-            "translation",
-            "vision"
-        ]
+        "description": "Cloud Datastore Client for PHP"
     },
     {
         "name": "google/common-protos",
@@ -452,50 +256,6 @@
         "keywords": [
             "google"
         ]
-    },
-    {
-        "name": "google/crc32",
-        "version": "v0.1.0",
-        "version_normalized": "0.1.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/google/php-crc32.git",
-            "reference": "a8525f0dea6fca1893e1bae2f6e804c5f7d007fb"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/google/php-crc32/zipball/a8525f0dea6fca1893e1bae2f6e804c5f7d007fb",
-            "reference": "a8525f0dea6fca1893e1bae2f6e804c5f7d007fb",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.4"
-        },
-        "require-dev": {
-            "friendsofphp/php-cs-fixer": "^1.13 || v2.14.2",
-            "paragonie/random_compat": ">=2",
-            "phpunit/phpunit": "^4"
-        },
-        "time": "2019-05-09T06:24:58+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Google\\CRC32\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "Apache-2.0"
-        ],
-        "authors": [
-            {
-                "name": "Andrew Brampton",
-                "email": "bramp@google.com"
-            }
-        ],
-        "description": "Various CRC32 implementations",
-        "homepage": "https://github.com/google/php-crc32"
     },
     {
         "name": "google/gax",
@@ -1146,158 +906,6 @@
         "description": "A polyfill for getallheaders."
     },
     {
-        "name": "ramsey/collection",
-        "version": "1.0.1",
-        "version_normalized": "1.0.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/ramsey/collection.git",
-            "reference": "925ad8cf55ba7a3fc92e332c58fd0478ace3e1ca"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/ramsey/collection/zipball/925ad8cf55ba7a3fc92e332c58fd0478ace3e1ca",
-            "reference": "925ad8cf55ba7a3fc92e332c58fd0478ace3e1ca",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^7.2"
-        },
-        "require-dev": {
-            "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
-            "fzaninotto/faker": "^1.5",
-            "jakub-onderka/php-parallel-lint": "^1",
-            "jangregor/phpstan-prophecy": "^0.6",
-            "mockery/mockery": "^1.3",
-            "phpstan/extension-installer": "^1",
-            "phpstan/phpdoc-parser": "0.4.1",
-            "phpstan/phpstan": "^0.12",
-            "phpstan/phpstan-mockery": "^0.12",
-            "phpstan/phpstan-phpunit": "^0.12",
-            "phpunit/phpunit": "^8.5",
-            "slevomat/coding-standard": "^6.0",
-            "squizlabs/php_codesniffer": "^3.5"
-        },
-        "time": "2020-01-05T00:22:59+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Ramsey\\Collection\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Ben Ramsey",
-                "email": "ben@benramsey.com",
-                "homepage": "https://benramsey.com"
-            }
-        ],
-        "description": "A PHP 7.2+ library for representing and manipulating collections.",
-        "homepage": "https://github.com/ramsey/collection",
-        "keywords": [
-            "array",
-            "collection",
-            "hash",
-            "map",
-            "queue",
-            "set"
-        ]
-    },
-    {
-        "name": "ramsey/uuid",
-        "version": "4.0.1",
-        "version_normalized": "4.0.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/ramsey/uuid.git",
-            "reference": "ba8fff1d3abb8bb4d35a135ed22a31c6ef3ede3d"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/ramsey/uuid/zipball/ba8fff1d3abb8bb4d35a135ed22a31c6ef3ede3d",
-            "reference": "ba8fff1d3abb8bb4d35a135ed22a31c6ef3ede3d",
-            "shasum": ""
-        },
-        "require": {
-            "brick/math": "^0.8",
-            "ext-json": "*",
-            "php": "^7.2 || ^8",
-            "ramsey/collection": "^1.0",
-            "symfony/polyfill-ctype": "^1.8"
-        },
-        "replace": {
-            "rhumsaa/uuid": "self.version"
-        },
-        "require-dev": {
-            "codeception/aspect-mock": "^3",
-            "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2",
-            "doctrine/annotations": "^1.8",
-            "goaop/framework": "^2",
-            "mockery/mockery": "^1.3",
-            "moontoast/math": "^1.1",
-            "paragonie/random-lib": "^2",
-            "php-mock/php-mock-mockery": "^1.3",
-            "php-mock/php-mock-phpunit": "^2.5",
-            "php-parallel-lint/php-parallel-lint": "^1.1",
-            "phpstan/extension-installer": "^1.0",
-            "phpstan/phpdoc-parser": "0.4.3",
-            "phpstan/phpstan": "^0.12",
-            "phpstan/phpstan-mockery": "^0.12",
-            "phpstan/phpstan-phpunit": "^0.12",
-            "phpunit/phpunit": "^8.5",
-            "psy/psysh": "^0.10.0",
-            "slevomat/coding-standard": "^6.0",
-            "squizlabs/php_codesniffer": "^3.5",
-            "vimeo/psalm": "3.9.4"
-        },
-        "suggest": {
-            "ext-bcmath": "Enables faster math with arbitrary-precision integers using BCMath.",
-            "ext-ctype": "Enables faster processing of character classification using ctype functions.",
-            "ext-gmp": "Enables faster math with arbitrary-precision integers using GMP.",
-            "ext-uuid": "Enables the use of PeclUuidTimeGenerator and PeclUuidRandomGenerator.",
-            "paragonie/random-lib": "Provides RandomLib for use with the RandomLibAdapter",
-            "ramsey/uuid-doctrine": "Allows the use of Ramsey\\Uuid\\Uuid as Doctrine field type."
-        },
-        "time": "2020-03-29T20:13:32+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "4.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Ramsey\\Uuid\\": "src/"
-            },
-            "files": [
-                "src/functions.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "A PHP library for generating and working with universally unique identifiers (UUIDs).",
-        "homepage": "https://github.com/ramsey/uuid",
-        "keywords": [
-            "guid",
-            "identifier",
-            "uuid"
-        ],
-        "funding": [
-            {
-                "url": "https://github.com/ramsey",
-                "type": "github"
-            }
-        ]
-    },
-    {
         "name": "rize/uri-template",
         "version": "0.3.2",
         "version_normalized": "0.3.2.0",
@@ -1341,80 +949,6 @@
             "RFC 6570",
             "template",
             "uri"
-        ]
-    },
-    {
-        "name": "symfony/polyfill-ctype",
-        "version": "v1.17.0",
-        "version_normalized": "1.17.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/polyfill-ctype.git",
-            "reference": "e94c8b1bbe2bc77507a1056cdb06451c75b427f9"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/e94c8b1bbe2bc77507a1056cdb06451c75b427f9",
-            "reference": "e94c8b1bbe2bc77507a1056cdb06451c75b427f9",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "suggest": {
-            "ext-ctype": "For best performance"
-        },
-        "time": "2020-05-12T16:14:59+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.17-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Polyfill\\Ctype\\": ""
-            },
-            "files": [
-                "bootstrap.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Gert de Pagter",
-                "email": "BackEndTea@gmail.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony polyfill for ctype functions",
-        "homepage": "https://symfony.com",
-        "keywords": [
-            "compatibility",
-            "ctype",
-            "polyfill",
-            "portable"
-        ],
-        "funding": [
-            {
-                "url": "https://symfony.com/sponsor",
-                "type": "custom"
-            },
-            {
-                "url": "https://github.com/fabpot",
-                "type": "github"
-            },
-            {
-                "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                "type": "tidelift"
-            }
         ]
     },
     {
