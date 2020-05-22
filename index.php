@@ -239,11 +239,11 @@ function Runs($runid)
                         <div class="card-header" id="heading$stopCount">
                             <h3 class="mb-0"> 
                                 <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse$stopCount" aria-expanded="false" aria-controls="collapse$stopCount">
-                                    $stopName 
+                                    $stopName ▼
                                 </button>
                             </h3>
                         </div>
-                        <div id="collapse$stopCount" class="collapse show" aria-labelledby="heading$stopCount" data-parent="#accordion">
+                        <div id="collapse$stopCount" class="collapse" aria-labelledby="heading$stopCount" data-parent="#accordion">
                             <div class="card-body">
                                 <h3><u> Next 5 Stops </u></h3>
 
@@ -251,11 +251,15 @@ EOT;
                         $departures = Departures($stop['route_type'], $stop['stop_id'])['departures'];
                         $count = 0;
                         foreach($departures as $departure) {
-
+                            print_r($departure);
                             if ($count >= 5)
                                 break;
 
                             $run = Runs($departure['run_id'])['runs'];
+
+                            if ($run == null)
+                                continue;
+
                             $name = $run[0]['destination_name'];
                             
                             echo <<< EOT
