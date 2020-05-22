@@ -176,7 +176,7 @@ function OrganiseData()
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
     <!-- JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
@@ -184,19 +184,6 @@ function OrganiseData()
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="323390293985-4o5gi4ubgmtndac68q6bul5litms6qpv.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script>
-        function onSignIn(googleUser) {
-            // Useful data for your client-side scripts:
-            var profile = googleUser.getBasicProfile();
-            var id_token = googleUser.getAuthResponse().id_token;
-            console.log("ID: " + profile.getId()); // Don't send this directly to your server!
-            console.log('Full Name: ' + profile.getName());
-            console.log('Given Name: ' + profile.getGivenName());
-            console.log('Family Name: ' + profile.getFamilyName());
-            console.log("Image URL: " + profile.getImageUrl());
-            console.log("Email: " + profile.getEmail());
-        }
-    </script>
 </head>
 
 <body>
@@ -221,7 +208,64 @@ function OrganiseData()
             });
         }
     </script>
+    <!-- Retrieving data from Google Login -->
+    <script>
+        function onSignIn(googleUser) {
+            // Useful data for your client-side scripts:
+            var profile = googleUser.getBasicProfile();
+            var id_token = googleUser.getAuthResponse().id_token;
+            console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+            console.log('Full Name: ' + profile.getName());
+            console.log('Given Name: ' + profile.getGivenName());
+            console.log('Family Name: ' + profile.getFamilyName());
+            console.log("Image URL: " + profile.getImageUrl());
+            console.log("Email: " + profile.getEmail());
 
+            $.post("", {
+                id: profile.getId(),
+                givenname: profile.getGivenName(),
+                familyname: profile.getFamilyName(),
+                email: profile.getEmail(),
+                fullname: profile.getName(),
+                imgurl: profile.getImageUrl()
+            });
+            <?php
+            // # The kind for the new entity
+            // $kind = 'User';
+
+            // # The name/ID for the new entity
+            // $name = $_POST['id'];
+
+            // # The Cloud Datastore key for the new entity
+            // $taskKey = $datastore->key($kind, $name);
+
+            // # Prepares the new entity
+            // $task = $datastore->entity(
+            //     $taskKey,
+            //     [
+            //         'Last Login' => new DateTime(),
+            //         'Given Name' => $_POST['givenname'],
+            //         'Family Name' => $_POST['familyname'],
+            //         'Email' => $_POST['email'],
+            //         'Full Name' => $_POST['fullname'],
+            //         'IMG URL' => $_POST['imgurl']
+
+            //     ]
+            // );
+
+            // # Saves the entity
+            // $datastore->upsert($task);
+            // Create an entity
+            // $user = $datastore->entity('User');
+            // $user['lastLogin'] = new DateTime();
+            // $user['firstName'] = $_POST['givenname'];
+            // $user['email'] = $_POST['email'];
+            // $datastore->insert($user);
+
+            ?>
+
+        }
+    </script>
 
     <!-- Twitter Feed -->
     <div class="float-right">
@@ -231,36 +275,36 @@ function OrganiseData()
 
     <!-- Page Content -->
     <div class="container">
+
         <!-- Clock -->
-        <div class="container-fluid text-center">
-            <script>
-                function startTime() {
-                    var today = new Date();
-                    var h = today.getHours();
-                    var m = today.getMinutes();
-                    var s = today.getSeconds();
-                    m = checkTime(m);
-                    s = checkTime(s);
-                    document.getElementById('txt').innerHTML =
-                        h + ":" + m + ":" + s;
-                    var t = setTimeout(startTime, 500);
-                }
+        <div class="row">
+            <div class="col-lg-9 text-center">
+                <script>
+                    function startTime() {
+                        var today = new Date();
+                        var h = today.getHours();
+                        var m = today.getMinutes();
+                        var s = today.getSeconds();
+                        m = checkTime(m);
+                        s = checkTime(s);
+                        document.getElementById('txt').innerHTML =
+                            h + ":" + m + ":" + s;
+                        var t = setTimeout(startTime, 500);
+                    }
 
-                function checkTime(i) {
-                    if (i < 10) {
-                        i = "0" + i
-                    }; // add zero in front of numbers < 10
-                    return i;
-                }
-            </script>
-            <script>
-                $.post
-            </script>
+                    function checkTime(i) {
+                        if (i < 10) {
+                            i = "0" + i
+                        }; // add zero in front of numbers < 10
+                        return i;
+                    }
+                </script>
 
-            <body onload="startTime()">
-                <h1>
-                    <div id="txt"></div>
-                </h1>
+                <body onload="startTime()">
+                    <h1>
+                        <div id="txt"></div>
+                    </h1>
+            </div>
         </div>
 
         <!-- Search Functionality -->
