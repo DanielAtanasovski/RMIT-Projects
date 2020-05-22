@@ -302,10 +302,7 @@ function OrganiseData()
                         <div class="col-2">
                             <select class="form-control" name="search-filter" id="search-filter">
                                 <option value=0>Trains</option>
-                                <option value=1>Trams</option>
-                                <option value=2>Buses</option>
                                 <option value=3>Vline</option>
-                                <option value=4>Night Bus</option>
                             </select>
                         </div>
                     </div>
