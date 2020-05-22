@@ -3,6 +3,8 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
+$signedIn = FALSE;
+
 use Google\Cloud\Datastore\DatastoreClient;
 
 # Your Google Cloud Platform project ID
@@ -176,39 +178,13 @@ function OrganiseData()
 </head>
 
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
-        <div class="container">
-            <a class="navbar-brand" href="">PTV Planner</a>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
-                    <a href="#" onclick="signOut();">Sign out</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
 
-    <script>
-        function signOut() {
-            var auth2 = gapi.auth2.getAuthInstance();
-            auth2.signOut().then(function() {
-                console.log('User signed out.');
-            });
-        }
-    </script>
     <!-- Retrieving data from Google Login -->
     <script>
         function onSignIn(googleUser) {
             // Useful data for your client-side scripts:
             var profile = googleUser.getBasicProfile();
-            var id_token = googleUser.getAuthResponse().id_token;
-            console.log("ID: " + profile.getId()); // Don't send this directly to your server!
-            console.log('Full Name: ' + profile.getName());
-            console.log('Given Name: ' + profile.getGivenName());
-            console.log('Family Name: ' + profile.getFamilyName());
-            console.log("Image URL: " + profile.getImageUrl());
-            console.log("Email: " + profile.getEmail());
+            $signedIn = TRUE
 
             $.post("", {
                 id: profile.getId(),
@@ -218,35 +194,65 @@ function OrganiseData()
                 fullname: profile.getName(),
                 imgurl: profile.getImageUrl()
             });
-            <?php
-            if (!is_null($_POST['email'])) {
-                # The kind for the new entity
-                $kind = 'User';
+        }
 
-                # The name/ID for the new entity
-                $name = $_POST['email'];
+        <?php
+        # Checks if null so database doesn't get cluttered with null entities
+        if (!is_null($_POST['email'])) {
+            $signedIn = TRUE;
+            # The kind for the new entity
+            $kind = 'User';
 
-                # The Cloud Datastore key for the new entity
-                $taskKey = $datastore->key($kind, $name);
+            # The name/ID for the new entity
+            $name = $_POST['email'];
 
-                # Prepares the new entity
-                $task = $datastore->entity(
-                    $taskKey,
-                    [
-                        'Last Login' => new DateTime(),
-                        'Given Name' => $_POST['givenname'],
-                        'Family Name' => $_POST['familyname'],
-                        'Email' => $_POST['email'],
-                        'Full Name' => $_POST['fullname'],
-                        'IMG URL' => $_POST['imgurl']
-                    ]
+            # The Cloud Datastore key for the new entity
+            $taskKey = $datastore->key($kind, $name);
 
-                );
-                # Saves the entity
-                $datastore->upsert($task);
-            }
-            ?>
+            # Prepares the new entity
+            $task = $datastore->entity(
+                $taskKey,
+                [
+                    'Last Login' => new DateTime(),
+                    'Given Name' => $_POST['givenname'],
+                    'Family Name' => $_POST['familyname'],
+                    'Email' => $_POST['email'],
+                    'Full Name' => $_POST['fullname'],
+                    'IMG URL' => $_POST['imgurl']
+                ]
 
+            );
+            # Saves the entity
+            $datastore->upsert($task);
+        }
+        ?>
+    </script>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+        <div class="container">
+            <a class="navbar-brand" href="">PTV Planner</a>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <?php
+                    if ($signedIn == TRUE) { ?>
+                        <a href="#" onclick="signOut();">Sign out</a>
+                    <?php
+                    } else { ?>
+                        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                        <a href="" onclick="signOut();">Sign out</a>
+                    <?php
+                    } ?>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <script>
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function() {
+                console.log('User signed out.');
+            });
         }
     </script>
 
