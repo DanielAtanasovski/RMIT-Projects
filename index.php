@@ -140,20 +140,20 @@ function OrganiseData()
             //     // Run already exists.. add another platform, time
             //     array_push($departures[$foundKey]['data'], $departureData);
             // } else {
-                $count++;
-                // Call Run on each new Departure entry
-                // Get name of each destination
-                // runs[0]['destination_name']
-                $departureEntry['route_id'] =  $departure['route_id'];
-                $departureEntry['run_id'] =  $departure['run_id'];
-                $run = Runs($departure['run_id'])['runs'];
+            $count++;
+            // Call Run on each new Departure entry
+            // Get name of each destination
+            // runs[0]['destination_name']
+            $departureEntry['route_id'] =  $departure['route_id'];
+            $departureEntry['run_id'] =  $departure['run_id'];
+            $run = Runs($departure['run_id'])['runs'];
 
-                if ($run == null)
-                    continue;
+            if ($run == null)
+                continue;
 
-                $departureEntry['destination_name'] = $run[0]['destination_name'];
-                $departureEntry['data'] = $departureData;
-                array_push($departures, $departureEntry);
+            $departureEntry['destination_name'] = $run[0]['destination_name'];
+            $departureEntry['data'] = $departureData;
+            array_push($departures, $departureEntry);
             // }
         }
 
@@ -190,7 +190,7 @@ function OrganiseData()
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
         <div class="container">
-            <a class="navbar-brand" href="#">PTV Planner</a>
+            <a class="navbar-brand" href="">PTV Planner</a>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
                     <div class="g-signin2" data-onsuccess="onSignIn"></div>
@@ -230,31 +230,32 @@ function OrganiseData()
                 imgurl: profile.getImageUrl()
             });
             <?php
-            # The kind for the new entity
-            $kind = 'User';
+            if (!is_null($_POST['email'])) {
+                # The kind for the new entity
+                $kind = 'User';
 
-            # The name/ID for the new entity
-            $name = $_POST['id'];
+                # The name/ID for the new entity
+                $name = $_POST['email'];
 
-            # The Cloud Datastore key for the new entity
-            $taskKey = $datastore->key($kind, $name);
+                # The Cloud Datastore key for the new entity
+                $taskKey = $datastore->key($kind, $name);
 
-            # Prepares the new entity
-            $task = $datastore->entity(
-                $taskKey,
-                [
-                    'Last Login' => new DateTime(),
-                    'Given Name' => $_POST['givenname'],
-                    'Family Name' => $_POST['familyname'],
-                    'Email' => $_POST['email'],
-                    'Full Name' => $_POST['fullname'],
-                    'IMG URL' => $_POST['imgurl']
+                # Prepares the new entity
+                $task = $datastore->entity(
+                    $taskKey,
+                    [
+                        'Last Login' => new DateTime(),
+                        'Given Name' => $_POST['givenname'],
+                        'Family Name' => $_POST['familyname'],
+                        'Email' => $_POST['email'],
+                        'Full Name' => $_POST['fullname'],
+                        'IMG URL' => $_POST['imgurl']
+                    ]
 
-                ]
-            );
-
-            # Saves the entity
-            $datastore->upsert($task);
+                );
+                # Saves the entity
+                $datastore->upsert($task);
+            }
             ?>
 
         }
