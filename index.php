@@ -165,6 +165,7 @@ function OrganiseData()
 
     <!-- Bootstap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
     <!-- JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
@@ -308,8 +309,8 @@ function OrganiseData()
                         </div>
                         <div class="col-2">
                             <select class="form-control" name="search-filter" id="search-filter">
-                                <option value=0>Trains</option>
-                                <option value=3>Vline</option>
+                                <option value=0>Metro</option>
+                                <option value=3>V/line</option>
                             </select>
                         </div>
                     </div>
@@ -335,8 +336,9 @@ function OrganiseData()
                     <div class="card col-lg-9 px-0">
                         <div class="card-header" id="heading$stopCount">
                             <h3 class="mb-0"> 
-                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse$stopCount" aria-expanded="false" aria-controls="collapse$stopCount">
-                                    $stopName ▼
+                                <button class="btn btn-default collapsed" data-toggle="collapse" data-target="#collapse$stopCount" aria-expanded="false" aria-controls="collapse$stopCount">
+                                    $stopName
+                                    <i class="fa fa-chevron-down"></i>
                                 </button>
                             </h3>
                         </div>
