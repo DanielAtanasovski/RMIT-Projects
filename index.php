@@ -28,16 +28,15 @@ if (isset($_POST['search'])) {
     $result = SearchAndFilter();
 
     if (count($result['stops']) == 0) {
+        // Found no stops near this search result
         // echo "Nothing";
     } else {
         // echo "Something";
         // print_r($result);
         $showMap = true;
-        $mapLat = $result['stops'][0]['stop_latitude'];
-        $mapLon = $result['stops'][0]['stop_longitude'];
-        $mapName = $result['stops'][0]['stop_name'];
-
-        
+        // $mapLat = $result['stops'][0]['stop_latitude'];
+        // $mapLon = $result['stops'][0]['stop_longitude'];
+        // $mapName = $result['stops'][0]['stop_name'];
     }
 }
 
@@ -98,6 +97,72 @@ function Runs($runid)
     $response = file_get_contents($searchurl . $req . "&signature=" . $signature);
     $return = json_decode($response, true);
     return $return;
+}
+
+function OrganiseData()
+{
+    global $result;
+
+    // Organise the data 
+    // [Stops] -> []
+    // $stop['route_type'], $stop['stop_id'], $stop['stop_name']
+
+    $data = array();
+    foreach ($result['stops'] as $stop) {
+        // Collect info we want on Stop
+        $stopInfo['stop_latitude'] = $stop['stop_latitude'];
+        $stopInfo['stop_longitude'] = $stop['stop_longitude'];
+        $stopInfo['stop_name'] = $stop['stop_name'];
+        $stopInfo['route_type'] = $stop['route_type'];
+        $stopInfo['stop_id'] = $stop['stop_id'];
+
+
+        // Collect info we want on all departures to leave this stop
+        $departures = array();
+
+        // Call Departures on Each Stop
+        // Grouped by route_id(run id), each element having scheduled time
+        // departures['departures'][0]['run_id'] ... [0]['scheduled_departure_utc'] ... [0]['platform_number']
+        $dToSort = Departures($stopInfo['route_type'], $stopInfo['stop_id']);
+        $count = 0;
+        foreach ($dToSort['departures'] as $departure) {
+            // Arbitray limit to not spam the api or freeze it
+            if ($count > 10)
+                break;
+
+            // Collect departure data
+            $departureData['scheduled_departure_utc'] = $departure['scheduled_departure_utc'];
+            $departureData['platform_number'] = $departure['platform_number'];
+
+            // Check if already exists
+            // $foundKey = array_search($departure['route_id'], array_column($departures, 'route_id'));
+            // if ($foundKey != false) {
+            //     // Run already exists.. add another platform, time
+            //     array_push($departures[$foundKey]['data'], $departureData);
+            // } else {
+                $count++;
+                // Call Run on each new Departure entry
+                // Get name of each destination
+                // runs[0]['destination_name']
+                $departureEntry['route_id'] =  $departure['route_id'];
+                $departureEntry['run_id'] =  $departure['run_id'];
+                $run = Runs($departure['run_id'])['runs'];
+
+                if ($run == null)
+                    continue;
+
+                $departureEntry['destination_name'] = $run[0]['destination_name'];
+                $departureEntry['data'] = $departureData;
+                array_push($departures, $departureEntry);
+            // }
+        }
+
+        // Push all data
+        $stopInfo['departures'] = $departures;
+        array_push($data, $stopInfo);
+    }
+
+    return $data;
 }
 
 ?>
@@ -188,6 +253,9 @@ function Runs($runid)
                     return i;
                 }
             </script>
+            <script>
+                $.post
+            </script>
 
             <body onload="startTime()">
                 <h1>
@@ -222,15 +290,16 @@ function Runs($runid)
 
         <!-- Showing All Stops -->
 
-        
+
 
 
         <div class="row pt-2" id="accordion">
             <?php
             if ($showMap) {
-                $stopCount=0;
+                $organisedData = OrganiseData();
+                $stopCount = 0;
 
-                foreach ($result['stops'] as $stop) {
+                foreach ($organisedData as $stop) {
                     $stopName = $stop['stop_name'];
 
                     echo <<< EOT
@@ -245,40 +314,34 @@ function Runs($runid)
                         </div>
                         <div id="collapse$stopCount" class="collapse" aria-labelledby="heading$stopCount" data-parent="#accordion">
                             <div class="card-body">
-                                <h3><u> Next 5 Stops </u></h3>
+                                <div class="row">
+                                    <h3 class="col-lg-12 text-center"><u> Upcoming Trains </u></h3>
+                                </div>
+                                <div class="row">
 
 EOT;
-                        $departures = Departures($stop['route_type'], $stop['stop_id'])['departures'];
-                        $count = 0;
-                        foreach($departures as $departure) {
-                            print_r($departure);
-                            if ($count >= 5)
-                                break;
+                    foreach ($stop['departures'] as $departure) {
 
-                            $run = Runs($departure['run_id'])['runs'];
+                        $name = $departure['destination_name'];
+                        $id = $departure['run_id'];
+                        $time = $departure['data']['scheduled_departure_utc'];
 
-                            if ($run == null)
-                                continue;
+                        echo <<< EOT
+                                    <div class="card col-lg-4 px-0">
+                                        <div class="card-header">
+                                            <h4> To $name </h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>Time: $time</p>
+                                        </div>
+                                    </div>
 
-                            $name = $run[0]['destination_name'];
-                            
-                            echo <<< EOT
-
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3> To $name </h3>
-                                </div>
-                                <div class="card-body">
-
-                                </div>
-                            </div>
 
 EOT;
-                            $count++;
-                        }
+                    }
 
                     echo <<< EOT
-
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -295,21 +358,21 @@ EOT;
         <!-- Embeded Maps API -->
         <!-- 
         <?php
-//         if ($showMap)
-//             echo <<< EOT
-//                         <div class="row">
-//                             <div class="row col-12 text-center">
-//                                 <h3>$mapName</h3>
-//                             </div>
-//                             <!--The div element for the map -->
-//                             <div class="row col-12">
-//                                 <div id="map">
-//                                     <iframe src="https://www.google.com/maps/embed/v1/view?key=AIzaSyBMZN4xPoana_n56KXuglxFhflKOMZDB64&center=$mapLat,$mapLon&zoom=16"
-//                                         frameborder="0" width=600 height=600></iframe>
-//                                 </div>
-//                             </div>
-//                         </div>
-// EOT;
+        //         if ($showMap)
+        //             echo <<< EOT
+        //                         <div class="row">
+        //                             <div class="row col-12 text-center">
+        //                                 <h3>$mapName</h3>
+        //                             </div>
+        //                             <!--The div element for the map -->
+        //                             <div class="row col-12">
+        //                                 <div id="map">
+        //                                     <iframe src="https://www.google.com/maps/embed/v1/view?key=AIzaSyBMZN4xPoana_n56KXuglxFhflKOMZDB64&center=$mapLat,$mapLon&zoom=16"
+        //                                         frameborder="0" width=600 height=600></iframe>
+        //                                 </div>
+        //                             </div>
+        //                         </div>
+        // EOT;
 
         ?>
 
