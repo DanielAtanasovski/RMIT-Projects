@@ -163,38 +163,31 @@ function Runs($runid)
                 imgurl: profile.getImageUrl()
             });
             <?php
-            // # The kind for the new entity
-            // $kind = 'User';
+            # The kind for the new entity
+            $kind = 'User';
 
-            // # The name/ID for the new entity
-            // $name = $_POST['id'];
+            # The name/ID for the new entity
+            $name = $_POST['id'];
 
-            // # The Cloud Datastore key for the new entity
-            // $taskKey = $datastore->key($kind, $name);
+            # The Cloud Datastore key for the new entity
+            $taskKey = $datastore->key($kind, $name);
 
-            // # Prepares the new entity
-            // $task = $datastore->entity(
-            //     $taskKey,
-            //     [
-            //         'Last Login' => new DateTime(),
-            //         'Given Name' => $_POST['givenname'],
-            //         'Family Name' => $_POST['familyname'],
-            //         'Email' => $_POST['email'],
-            //         'Full Name' => $_POST['fullname'],
-            //         'IMG URL' => $_POST['imgurl']
+            # Prepares the new entity
+            $task = $datastore->entity(
+                $taskKey,
+                [
+                    'Last Login' => new DateTime(),
+                    'Given Name' => $_POST['givenname'],
+                    'Family Name' => $_POST['familyname'],
+                    'Email' => $_POST['email'],
+                    'Full Name' => $_POST['fullname'],
+                    'IMG URL' => $_POST['imgurl']
 
-            //     ]
-            // );
+                ]
+            );
 
-            // # Saves the entity
-            // $datastore->upsert($task);
-            // Create an entity
-            $user = $datastore->entity('User');
-            $user['lastLogin'] = new DateTime();
-            $user['firstName'] = $_POST['givenname'];
-            $user['email'] = $_POST['email'];
-            $datastore->insert($user);
-
+            # Saves the entity
+            $datastore->upsert($task);
             ?>
 
         }
