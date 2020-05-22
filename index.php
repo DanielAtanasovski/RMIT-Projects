@@ -17,6 +17,8 @@ $devid = "3001608";
 $apikey = "751a9dd5-9e2e-4f2a-b87d-009a45729806";
 $searchurl = "http://timetableapi.ptv.vic.gov.au";
 
+$currentTime = new \DateTime("now", new \DateTimeZone("UTC"));
+
 // Map
 $showMap = false;
 $mapLat = 0;
@@ -31,12 +33,7 @@ if (isset($_POST['search'])) {
         // Found no stops near this search result
         // echo "Nothing";
     } else {
-        // echo "Something";
-        // print_r($result);
         $showMap = true;
-        // $mapLat = $result['stops'][0]['stop_latitude'];
-        // $mapLon = $result['stops'][0]['stop_longitude'];
-        // $mapName = $result['stops'][0]['stop_name'];
     }
 }
 
@@ -102,11 +99,9 @@ function Runs($runid)
 function OrganiseData()
 {
     global $result;
+    global $currentTime;
 
     // Organise the data 
-    // [Stops] -> []
-    // $stop['route_type'], $stop['stop_id'], $stop['stop_name']
-
     $data = array();
     foreach ($result['stops'] as $stop) {
         // Collect info we want on Stop
@@ -116,13 +111,10 @@ function OrganiseData()
         $stopInfo['route_type'] = $stop['route_type'];
         $stopInfo['stop_id'] = $stop['stop_id'];
 
-
         // Collect info we want on all departures to leave this stop
         $departures = array();
 
         // Call Departures on Each Stop
-        // Grouped by route_id(run id), each element having scheduled time
-        // departures['departures'][0]['run_id'] ... [0]['scheduled_departure_utc'] ... [0]['platform_number']
         $dToSort = Departures($stopInfo['route_type'], $stopInfo['stop_id']);
         $count = 0;
         foreach ($dToSort['departures'] as $departure) {
@@ -134,16 +126,13 @@ function OrganiseData()
             $departureData['scheduled_departure_utc'] = $departure['scheduled_departure_utc'];
             $departureData['platform_number'] = $departure['platform_number'];
 
-            // Check if already exists
-            // $foundKey = array_search($departure['route_id'], array_column($departures, 'route_id'));
-            // if ($foundKey != false) {
-            //     // Run already exists.. add another platform, time
-            //     array_push($departures[$foundKey]['data'], $departureData);
-            // } else {
+            $departureTime = new \DateTime($departure['scheduled_departure_utc']);
+
+            if ($departureTime < $currentTime)
+                continue;
+
             $count++;
-            // Call Run on each new Departure entry
-            // Get name of each destination
-            // runs[0]['destination_name']
+
             $departureEntry['route_id'] =  $departure['route_id'];
             $departureEntry['run_id'] =  $departure['run_id'];
             $run = Runs($departure['run_id'])['runs'];
@@ -314,10 +303,7 @@ function OrganiseData()
                         <div class="col-2">
                             <select class="form-control" name="search-filter" id="search-filter">
                                 <option value=0>Trains</option>
-                                <option value=1>Trams</option>
-                                <option value=2>Buses</option>
                                 <option value=3>Vline</option>
-                                <option value=4>Night Bus</option>
                             </select>
                         </div>
                     </div>
@@ -327,10 +313,6 @@ function OrganiseData()
         </div>
 
         <!-- Showing All Stops -->
-
-
-
-
         <div class="row pt-2" id="accordion">
             <?php
             if ($showMap) {
@@ -339,6 +321,8 @@ function OrganiseData()
 
                 foreach ($organisedData as $stop) {
                     $stopName = $stop['stop_name'];
+                    $mapLat = $stop['stop_latitude'];
+                    $mapLon = $stop['stop_longitude'];
 
                     echo <<< EOT
 
@@ -352,8 +336,12 @@ function OrganiseData()
                         </div>
                         <div id="collapse$stopCount" class="collapse" aria-labelledby="heading$stopCount" data-parent="#accordion">
                             <div class="card-body">
+                                <div class="row" id="map">
+                                <iframe src="https://www.google.com/maps/embed/v1/view?key=AIzaSyBMZN4xPoana_n56KXuglxFhflKOMZDB64&center=$mapLat,$mapLon&zoom=16"
+                                    frameborder="0" width=600 height=600></iframe>
+                                </div>
                                 <div class="row">
-                                    <h3 class="col-lg-12 text-center"><u> Upcoming Trains </u></h3>
+                                    <h3 class="col-lg-12 text-center"><u> Upcoming </u></h3>
                                 </div>
                                 <div class="row">
 
@@ -363,6 +351,9 @@ EOT;
                         $name = $departure['destination_name'];
                         $id = $departure['run_id'];
                         $time = $departure['data']['scheduled_departure_utc'];
+                        $convertedTime =  new \DateTime($time);
+                        $convertedTime->setTimezone(new DateTimeZone("Australia/Melbourne"));
+                        $stringConvert = $convertedTime->format('h:i:s A');
 
                         echo <<< EOT
                                     <div class="card col-lg-4 px-0">
@@ -370,10 +361,9 @@ EOT;
                                             <h4> To $name </h4>
                                         </div>
                                         <div class="card-body">
-                                            <p>Time: $time</p>
+                                            <p>Time: $stringConvert</p>
                                         </div>
                                     </div>
-
 
 EOT;
                     }
@@ -392,28 +382,6 @@ EOT;
             ?>
 
         </div>
-
-        <!-- Embeded Maps API -->
-        <!-- 
-        <?php
-        //         if ($showMap)
-        //             echo <<< EOT
-        //                         <div class="row">
-        //                             <div class="row col-12 text-center">
-        //                                 <h3>$mapName</h3>
-        //                             </div>
-        //                             <!--The div element for the map -->
-        //                             <div class="row col-12">
-        //                                 <div id="map">
-        //                                     <iframe src="https://www.google.com/maps/embed/v1/view?key=AIzaSyBMZN4xPoana_n56KXuglxFhflKOMZDB64&center=$mapLat,$mapLon&zoom=16"
-        //                                         frameborder="0" width=600 height=600></iframe>
-        //                                 </div>
-        //                             </div>
-        //                         </div>
-        // EOT;
-
-        ?>
-
     </div>
 
 </body>
