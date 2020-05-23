@@ -3,8 +3,6 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
-$signedIn = FALSE;
-
 use Google\Cloud\Datastore\DatastoreClient;
 
 # Your Google Cloud Platform project ID
@@ -157,7 +155,6 @@ function OrganiseData()
 }
 # Checks if null so database doesn't get cluttered with null entities
 if (isset($_POST['email'])) {
-    $signedIn = TRUE;
     # The kind for the new entity
     $kind = 'User';
 
@@ -206,27 +203,29 @@ if (isset($_POST['email'])) {
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 
-<body>
+<body onload="checkIfLoggedIn()">
     <!-- Retrieving data from Google Login -->
     <script>
         function signOut() {
-            var auth2 = gapi.auth2.getAuthInstance();
+            let auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function() {
+                sessionStorage.clear();
                 console.log('User signed out.');
             });
         }
 
         function onSignIn(googleUser) {
-            var auth2 = gapi.auth2.getAuthInstance();
+            let auth2 = gapi.auth2.getAuthInstance();
             if (auth2.isSignedIn.get()) {
                 // Useful data for your client-side scripts:
-                var profile = googleUser.getBasicProfile();
-                console.log('ID: ' + profile.getId());
-                console.log('Full Name: ' + profile.getName());
-                console.log('Given Name: ' + profile.getGivenName());
-                console.log('Family Name: ' + profile.getFamilyName());
-                console.log('Image URL: ' + profile.getImageUrl());
-                console.log('Email: ' + profile.getEmail());
+                let profile = googleUser.getBasicProfile();
+                console.log('User signed in');
+
+                let myUserEntity = {}
+                myUserEntity.Id = profile.getId();
+
+                sessionStorage.setItem('myUserEntity', JSON.stringify(myUserEntity));
+                console.log(myUserEntity);
 
                 $.post("", {
                     id: profile.getId(),
@@ -236,6 +235,34 @@ if (isset($_POST['email'])) {
                     fullname: profile.getName(),
                     imgurl: profile.getImageUrl()
                 });
+                $(document).ready(function() {
+
+                    // Check if the current URL contains '#'
+                    if (document.URL.indexOf("#") == -1) {
+                        // Set the URL to whatever it was plus "#".
+                        url = document.URL + "#";
+                        location = "#";
+
+                        //Reload the page
+                        location.reload(true);
+                    }
+                });
+            }
+        }
+
+        function checkIfLoggedIn() {
+            if (sessionStorage.getItem('myUserEntity') == null) {
+                let x = document.getElementById("gsignin");
+                let y = document.getElementById("gsignout");
+                x.style.display = "block";
+                y.style.display = "none";
+            } else {
+                var userEntity = {};
+                userEntity = JSON.parse(sessionStorage.getItem('myUserEntity'));
+                let x = document.getElementById("gsignin");
+                let y = document.getElementById("gsignout");
+                x.style.display = "block";
+                y.style.display = "block";
             }
         }
     </script>
@@ -243,18 +270,11 @@ if (isset($_POST['email'])) {
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top" id="nav">
         <div class="container" id="nav">
-            <a class="navbar-brand" href="">PTV Planner</a>
+            <a class="navbar-brand" href="#">PTV Planner</a>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
-                    <?php
-                    if ($signedIn == TRUE) {
-                        echo '<a href="#" onclick="signOut();">Sign out</a>';
-                    } else {
-                        echo '<div class="g-signin2" data-onsuccess="onSignIn"></div>';
-                        // This is just here so you can logout, waiting for a fix...
-                        echo '<a href="#" onclick="signOut();">Sign out</a>';
-                    }
-                    ?>
+                    <div id="gsignin" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+                    <a href="" id='gsignout' onclick="signOut();">Sign out</a>
                 </li>
             </ul>
         </div>
@@ -274,15 +294,15 @@ if (isset($_POST['email'])) {
             <div class="col-lg-9 text-center">
                 <script>
                     function startTime() {
-                        var today = new Date();
-                        var h = today.getHours();
-                        var m = today.getMinutes();
-                        var s = today.getSeconds();
+                        let today = new Date();
+                        let h = today.getHours();
+                        let m = today.getMinutes();
+                        let s = today.getSeconds();
                         m = checkTime(m);
                         s = checkTime(s);
                         document.getElementById('txt').innerHTML =
                             h + ":" + m + ":" + s;
-                        var t = setTimeout(startTime, 500);
+                        let t = setTimeout(startTime, 500);
                     }
 
                     function checkTime(i) {
