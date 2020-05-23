@@ -153,6 +153,7 @@ function OrganiseData()
 
     return $data;
 }
+
 # Checks if null so database doesn't get cluttered with null entities
 if (isset($_POST['email'])) {
     # The kind for the new entity
@@ -173,7 +174,8 @@ if (isset($_POST['email'])) {
             'Family Name' => $_POST['familyname'],
             'Email' => $_POST['email'],
             'Full Name' => $_POST['fullname'],
-            'IMG URL' => $_POST['imgurl']
+            'IMG URL' => $_POST['imgurl'],
+            'Favourites' => $stopID
         ]
 
     );
@@ -230,7 +232,7 @@ if (isset($_POST['email'])) {
                     familyname: profile.getFamilyName(),
                     email: profile.getEmail(),
                     fullname: profile.getName(),
-                    imgurl: profile.getImageUrl()
+                    imgurl: profile.getImageUrl(),
                 });
 
                 $(document).ready(function() {
@@ -293,21 +295,21 @@ if (isset($_POST['email'])) {
                     <div id="time"></div>
                 </h1>
                 <script>
-                        function checkTime(i) {
-                            return (i < 10) ? "0" + i : i;
-                        }
+                    function checkTime(i) {
+                        return (i < 10) ? "0" + i : i;
+                    }
 
-                        function startTime() {
-                            var today = new Date(),
-                                h = checkTime(today.getHours()),
-                                m = checkTime(today.getMinutes()),
-                                s = checkTime(today.getSeconds());
-                            document.getElementById('time').innerHTML = h + ":" + m + ":" + s;
-                            t = setTimeout(function() {
-                                startTime()
-                            }, 500);
-                        }
-                        startTime();
+                    function startTime() {
+                        var today = new Date(),
+                            h = checkTime(today.getHours()),
+                            m = checkTime(today.getMinutes()),
+                            s = checkTime(today.getSeconds());
+                        document.getElementById('time').innerHTML = h + ":" + m + ":" + s;
+                        t = setTimeout(function() {
+                            startTime()
+                        }, 500);
+                    }
+                    startTime();
                 </script>
 
             </div>
@@ -355,7 +357,7 @@ if (isset($_POST['email'])) {
                             <h3 class="mb-0"> 
                                 <button type="submit" form="$stopName" class="btn">
                                     <i class="fa fa-heart" aria-hidden="true">
-                                        <form action="/" method="post" id="$stopName">
+                                        <form action="#" method="post" id="$stopName">
                                             <input class="hide" type="hidden" id="stopID" name="stopID" value="$stopID">
                                         </form>
                                     </i>
@@ -378,6 +380,7 @@ if (isset($_POST['email'])) {
                                 <div class="row">
 
 EOT;
+
                     foreach ($stop['departures'] as $departure) {
 
                         $name = $departure['destination_name'];
