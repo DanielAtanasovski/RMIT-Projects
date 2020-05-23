@@ -207,6 +207,7 @@ if (isset($_POST['email'])) {
 </head>
 
 <body>
+    <!-- Retrieving data from Google Login -->
     <script>
         function signOut() {
             var auth2 = gapi.auth2.getAuthInstance();
@@ -214,61 +215,46 @@ if (isset($_POST['email'])) {
                 console.log('User signed out.');
             });
         }
-    </script>
-    <!-- Retrieving data from Google Login -->
-    <script>
+
         function onSignIn(googleUser) {
-            // Useful data for your client-side scripts:
-            var profile = googleUser.getBasicProfile();
+            var auth2 = gapi.auth2.getAuthInstance();
+            if (auth2.isSignedIn.get()) {
+                // Useful data for your client-side scripts:
+                var profile = googleUser.getBasicProfile();
+                console.log('ID: ' + profile.getId());
+                console.log('Full Name: ' + profile.getName());
+                console.log('Given Name: ' + profile.getGivenName());
+                console.log('Family Name: ' + profile.getFamilyName());
+                console.log('Image URL: ' + profile.getImageUrl());
+                console.log('Email: ' + profile.getEmail());
 
-            // $.post("", {
-            //     id: profile.getId(),
-            //     givenname: profile.getGivenName(),
-            //     familyname: profile.getFamilyName(),
-            //     email: profile.getEmail(),
-            //     fullname: profile.getName(),
-            //     imgurl: profile.getImageUrl()
-            // });
-            function post(path, params, method = 'post') {
-
-                // The rest of this code assumes you are not using a library.
-                // It can be made less wordy if you use one.
-                const form = document.createElement('form');
-                form.method = method;
-                form.action = path;
-
-                for (const key in params) {
-                    if (params.hasOwnProperty(key)) {
-                        const hiddenField = document.createElement('input');
-                        hiddenField.type = 'hidden';
-                        hiddenField.name = key;
-                        hiddenField.value = params[key];
-
-                        form.appendChild(hiddenField);
-                    }
-                }
-
-                document.body.appendChild(form);
-                form.submit();
+                $.post("", {
+                    id: profile.getId(),
+                    givenname: profile.getGivenName(),
+                    familyname: profile.getFamilyName(),
+                    email: profile.getEmail(),
+                    fullname: profile.getName(),
+                    imgurl: profile.getImageUrl()
+                });
             }
-
         }
     </script>
 
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top" id="nav">
         <div class="container" id="nav">
             <a class="navbar-brand" href="">PTV Planner</a>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
                     <?php
-                    if ($signedIn == TRUE) { 
+                    if ($signedIn == TRUE) {
                         echo '<a href="#" onclick="signOut();">Sign out</a>';
-                    } else { 
+                    } else {
                         echo '<div class="g-signin2" data-onsuccess="onSignIn"></div>';
                         // This is just here so you can logout, waiting for a fix...
                         echo '<a href="#" onclick="signOut();">Sign out</a>';
-                    } ?>
+                    }
+                    ?>
                 </li>
             </ul>
         </div>
