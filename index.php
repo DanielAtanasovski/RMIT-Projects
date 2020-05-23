@@ -336,6 +336,13 @@ function OrganiseData()
                     <div class="card col-lg-9 px-0">
                         <div class="card-header" id="heading$stopCount">
                             <h3 class="mb-0"> 
+                                <button type="submit" form="$stopName" class="btn">
+                                    <i class="fa fa-heart" aria-hidden="true">
+                                        <form action="/" method="post" id="$stopName">
+                                            <input class="hide" type="hidden" id="stopName" name="stopName" value="$stopName">
+                                        </form>
+                                    </i>
+                                </button>
                                 <button class="btn btn-default collapsed" data-toggle="collapse" data-target="#collapse$stopCount" aria-expanded="false" aria-controls="collapse$stopCount">
                                     $stopName
                                     <i class="fa fa-chevron-down"></i>
