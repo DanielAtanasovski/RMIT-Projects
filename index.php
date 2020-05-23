@@ -293,7 +293,6 @@ if (isset($_POST['email'])) {
                     <div id="time"></div>
                 </h1>
                 <script>
-                    (function() {
                         function checkTime(i) {
                             return (i < 10) ? "0" + i : i;
                         }
@@ -309,7 +308,6 @@ if (isset($_POST['email'])) {
                             }, 500);
                         }
                         startTime();
-                    })();
                 </script>
 
             </div>
