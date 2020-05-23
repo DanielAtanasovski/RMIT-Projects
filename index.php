@@ -320,7 +320,7 @@ if (isset($_POST['email'])) {
             <div class="col-lg-9 text-center">
                 <h1 class="mt-5">Search</h1>
                 <!-- Source: Licensed from Public Transport Victoria under a Creative Commons Attribution 4.0 International Licence." -->
-                <form action="/" method="post">
+                <form action="#" method="post">
                     <div class="row">
                         <div class="col-10">
                             <input class="form-control" type="text" name="search" id="search">
@@ -356,7 +356,7 @@ if (isset($_POST['email'])) {
                             <h3 class="mb-0"> 
                                 <button type="submit" form="$stopName" class="btn">
                                     <i class="fa fa-heart" aria-hidden="true">
-                                        <form action="/" method="post" id="$stopName">
+                                        <form action="#" method="post" id="$stopName">
                                             <input class="hide" type="hidden" id="stopName" name="stopName" value="$stopName">
                                         </form>
                                     </i>
