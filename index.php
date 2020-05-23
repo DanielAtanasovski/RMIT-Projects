@@ -155,6 +155,34 @@ function OrganiseData()
 
     return $data;
 }
+# Checks if null so database doesn't get cluttered with null entities
+if (isset($_POST['email'])) {
+    $signedIn = TRUE;
+    # The kind for the new entity
+    $kind = 'User';
+
+    # The name/ID for the new entity
+    $name = $_POST['email'];
+
+    # The Cloud Datastore key for the new entity
+    $taskKey = $datastore->key($kind, $name);
+
+    # Prepares the new entity
+    $task = $datastore->entity(
+        $taskKey,
+        [
+            'Last Login' => new DateTime(),
+            'Given Name' => $_POST['givenname'],
+            'Family Name' => $_POST['familyname'],
+            'Email' => $_POST['email'],
+            'Full Name' => $_POST['fullname'],
+            'IMG URL' => $_POST['imgurl']
+        ]
+
+    );
+    # Saves the entity
+    $datastore->upsert($task);
+}
 
 ?>
 
@@ -179,75 +207,6 @@ function OrganiseData()
 </head>
 
 <body>
-
-    <!-- Retrieving data from Google Login -->
-    <script>
-        function onSignIn(googleUser) {
-            // Useful data for your client-side scripts:
-            var profile = googleUser.getBasicProfile();
-            $signedIn = TRUE
-
-            $.post("", {
-                id: profile.getId(),
-                givenname: profile.getGivenName(),
-                familyname: profile.getFamilyName(),
-                email: profile.getEmail(),
-                fullname: profile.getName(),
-                imgurl: profile.getImageUrl()
-            });
-        }
-
-        <?php
-        # Checks if null so database doesn't get cluttered with null entities
-        if (!is_null($_POST['email'])) {
-            $signedIn = TRUE;
-            # The kind for the new entity
-            $kind = 'User';
-
-            # The name/ID for the new entity
-            $name = $_POST['email'];
-
-            # The Cloud Datastore key for the new entity
-            $taskKey = $datastore->key($kind, $name);
-
-            # Prepares the new entity
-            $task = $datastore->entity(
-                $taskKey,
-                [
-                    'Last Login' => new DateTime(),
-                    'Given Name' => $_POST['givenname'],
-                    'Family Name' => $_POST['familyname'],
-                    'Email' => $_POST['email'],
-                    'Full Name' => $_POST['fullname'],
-                    'IMG URL' => $_POST['imgurl']
-                ]
-
-            );
-            # Saves the entity
-            $datastore->upsert($task);
-        }
-        ?>
-    </script>
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
-        <div class="container">
-            <a class="navbar-brand" href="">PTV Planner</a>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <?php
-                    if ($signedIn == TRUE) { ?>
-                        <a href="#" onclick="signOut();">Sign out</a>
-                    <?php
-                    } else { ?>
-                        <div class="g-signin2" data-onsuccess="onSignIn"></div>
-                        <a href="" onclick="signOut();">Sign out</a>
-                    <?php
-                    } ?>
-                </li>
-            </ul>
-        </div>
-    </nav>
     <script>
         function signOut() {
             var auth2 = gapi.auth2.getAuthInstance();
@@ -256,6 +215,64 @@ function OrganiseData()
             });
         }
     </script>
+    <!-- Retrieving data from Google Login -->
+    <script>
+        function onSignIn(googleUser) {
+            // Useful data for your client-side scripts:
+            var profile = googleUser.getBasicProfile();
+
+            // $.post("", {
+            //     id: profile.getId(),
+            //     givenname: profile.getGivenName(),
+            //     familyname: profile.getFamilyName(),
+            //     email: profile.getEmail(),
+            //     fullname: profile.getName(),
+            //     imgurl: profile.getImageUrl()
+            // });
+            function post(path, params, method = 'post') {
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                const form = document.createElement('form');
+                form.method = method;
+                form.action = path;
+
+                for (const key in params) {
+                    if (params.hasOwnProperty(key)) {
+                        const hiddenField = document.createElement('input');
+                        hiddenField.type = 'hidden';
+                        hiddenField.name = key;
+                        hiddenField.value = params[key];
+
+                        form.appendChild(hiddenField);
+                    }
+                }
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+
+        }
+    </script>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+        <div class="container" id="nav">
+            <a class="navbar-brand" href="">PTV Planner</a>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <?php
+                    if ($signedIn == TRUE) { 
+                        echo '<a href="#" onclick="signOut();">Sign out</a>';
+                    } else { 
+                        echo '<div class="g-signin2" data-onsuccess="onSignIn"></div>';
+                        // This is just here so you can logout, waiting for a fix...
+                        echo '<a href="#" onclick="signOut();">Sign out</a>';
+                    } ?>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
     <!-- Twitter Feed -->
     <div class="float-right">
