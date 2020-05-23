@@ -219,13 +219,10 @@ if (isset($_POST['email'])) {
             if (auth2.isSignedIn.get()) {
                 // Useful data for your client-side scripts:
                 let profile = googleUser.getBasicProfile();
-                console.log('User signed in');
-
                 let myUserEntity = {}
-                myUserEntity.Id = profile.getId();
 
+                myUserEntity.Id = profile.getId();
                 sessionStorage.setItem('myUserEntity', JSON.stringify(myUserEntity));
-                console.log(myUserEntity);
 
                 $.post("", {
                     id: profile.getId(),
@@ -235,8 +232,8 @@ if (isset($_POST['email'])) {
                     fullname: profile.getName(),
                     imgurl: profile.getImageUrl()
                 });
-                $(document).ready(function() {
 
+                $(document).ready(function() {
                     // Check if the current URL contains '#'
                     if (document.URL.indexOf("#") == -1) {
                         // Set the URL to whatever it was plus "#".
@@ -270,7 +267,7 @@ if (isset($_POST['email'])) {
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top" id="nav">
         <div class="container" id="nav">
-            <a class="navbar-brand" href="#">PTV Planner</a>
+            <a class="navbar-brand" href="">PTV Planner</a>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
                     <div id="gsignin" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
@@ -292,31 +289,29 @@ if (isset($_POST['email'])) {
         <!-- Clock -->
         <div class="row">
             <div class="col-lg-9 text-center">
+                <h1>
+                    <div id="time"></div>
+                </h1>
                 <script>
-                    function startTime() {
-                        let today = new Date();
-                        let h = today.getHours();
-                        let m = today.getMinutes();
-                        let s = today.getSeconds();
-                        m = checkTime(m);
-                        s = checkTime(s);
-                        document.getElementById('txt').innerHTML =
-                            h + ":" + m + ":" + s;
-                        let t = setTimeout(startTime, 500);
-                    }
+                    (function() {
+                        function checkTime(i) {
+                            return (i < 10) ? "0" + i : i;
+                        }
 
-                    function checkTime(i) {
-                        if (i < 10) {
-                            i = "0" + i
-                        }; // add zero in front of numbers < 10
-                        return i;
-                    }
+                        function startTime() {
+                            var today = new Date(),
+                                h = checkTime(today.getHours()),
+                                m = checkTime(today.getMinutes()),
+                                s = checkTime(today.getSeconds());
+                            document.getElementById('time').innerHTML = h + ":" + m + ":" + s;
+                            t = setTimeout(function() {
+                                startTime()
+                            }, 500);
+                        }
+                        startTime();
+                    })();
                 </script>
 
-                <body onload="startTime()">
-                    <h1>
-                        <div id="txt"></div>
-                    </h1>
             </div>
         </div>
 
