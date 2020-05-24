@@ -249,8 +249,7 @@ if (isset($_POST['email'])) {
             'Full Name' => $_POST['fullname'],
             'IMG URL' => $_POST['imgurl'],
             'FavouritesID' => $_COOKIE['FavouriteStopID'],
-            'TestID' => $_COOKIE['id'],
-            'FavouritesType' => $_SESSION['favourite_stopType']
+            'FavouritesType' => $_COOKIE['FavouriteStopRoute']
         ]
 
     );
