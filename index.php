@@ -142,16 +142,17 @@ function OrganiseData()
             if ($count > 10)
                 break;
 
-            // Collect departure data
-            $departureData['scheduled_departure_utc'] = $departure['scheduled_departure_utc'];
-            $departureData['platform_number'] = $departure['platform_number'];
-
+            // Check if future departure
             $departureTime = new \DateTime($departure['scheduled_departure_utc']);
 
             if ($departureTime < $currentTime)
                 continue;
 
             $count++;
+
+            // Collect departure data
+            $departureData['scheduled_departure_utc'] = $departure['scheduled_departure_utc'];
+            $departureData['platform_number'] = $departure['platform_number'];
 
             $departureEntry['route_id'] =  $departure['route_id'];
             $departureEntry['run_id'] =  $departure['run_id'];
@@ -328,13 +329,11 @@ if (isset($_POST['email'])) {
             if (sessionStorage.getItem('myUserEntity') == null) {
                 document.getElementById("gsignin").style.visibility = "visible";
                 document.getElementById("gsignout").style.visibility = "hidden";
-                document.getElementById("favourites").style.visibility = "hidden";
             } else {
                 var userEntity = {};
                 userEntity = JSON.parse(sessionStorage.getItem('myUserEntity'));
                 document.getElementById("gsignin").style.visibility = "visible";
                 document.getElementById("gsignout").style.visibility = "visible";
-                document.getElementById("favourites").style.visibility = "visible";
             }
         }
     </script>
@@ -478,7 +477,7 @@ EOT;
                     foreach ($stop['departures'] as $departure) {
 
                         $name = $departure['destination_name'];
-                        $platform = $departure['platform_number'];
+                        $platform = $departure['data']['platform_number'];
                         $id = $departure['run_id'];
                         $time = $departure['data']['scheduled_departure_utc'];
                         $convertedTime =  new \DateTime($time);
@@ -491,7 +490,12 @@ EOT;
                                             <h4> To $name </h4>
                                         </div>
                                         <div class="card-body">
-                                            <p>On Platform $platform at Time: $stringConvert</p>
+                                            <p>
+                                            Platform: $platform
+                                            </p>
+                                            <p>
+                                            Time: $stringConvert
+                                            </p>
                                         </div>
                                     </div>
 
