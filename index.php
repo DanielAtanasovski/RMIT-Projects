@@ -409,7 +409,7 @@ if (isset($_POST['email'])) {
         <!-- Search Functionality -->
         <div class="row">
             <div class="col-lg-10 text-center">
-                <h1 class="mt-5">Search</h1>
+                <h1 class="mt-5">Search For Stations</h1>
                 <!-- Source: Licensed from Public Transport Victoria under a Creative Commons Attribution 4.0 International Licence." -->
                 <form action="#" method="post">
                     <div class="row">
@@ -445,7 +445,7 @@ if (isset($_POST['email'])) {
                     echo <<< EOT
 
                     <div class="card col-lg-9 px-0">
-                        <div class="card-header" id="heading$stopCount">
+                        <div class="card-header text-left" id="heading$stopCount">
                             <h3 class="mb-0"> 
                                 <button type="submit" form="$stopName" class="btn">
                                     <i class="fa fa-heart" aria-hidden="true">
@@ -468,7 +468,7 @@ if (isset($_POST['email'])) {
                                     frameborder="0" width=600 height=600></iframe>
                                 </div>
                                 <div class="row">
-                                    <h3 class="col-lg-12 text-center"><u> Upcoming </u></h3>
+                                    <h3 class="col-lg-12 text-center"><u> Upcoming Departures </u></h3>
                                 </div>
                                 <div class="row">
 
