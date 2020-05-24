@@ -23,8 +23,10 @@ $devid = "3001608";
 $apikey = "751a9dd5-9e2e-4f2a-b87d-009a45729806";
 $searchurl = "http://timetableapi.ptv.vic.gov.au";
 
-$currentTime = new \DateTime("now", new \DateTimeZone("UTC"));
+print_r(GetStop(1202, 0));
 
+$currentTime = new \DateTime("now", new \DateTimeZone("UTC"));
+$favourite = null;
 // Map
 $showMap = false;
 $mapLat = 0;
@@ -35,10 +37,7 @@ $mapName = "No Results";
 if (isset($_POST['search'])) {
     $result = SearchAndFilter();
 
-    if (count($result['stops']) == 0) {
-        // Found no stops near this search result
-        // echo "Nothing";
-    } else {
+    if (count($result['stops']) != 0) {
         $showMap = true;
     }
 }
@@ -55,6 +54,22 @@ function SearchAndFilter()
     $req = "/v3/search/" . myUrlEncode($_POST["search"]) . "?"
         . "route_types=" . htmlspecialchars($_POST["search-filter"])
         . "&devid=" . $devid;
+
+    $signature = hash_hmac("sha1", $req, $apikey);
+
+    $response = file_get_contents($searchurl . $req . "&signature=" . $signature);
+    $return = json_decode($response, true);
+    return $return;
+}
+
+function GetStop($id, $type)
+{
+    global $devid;
+    global $apikey;
+    global $searchurl;
+
+    $req = "/v3/stops/" . $id . "/route_type/" . $type
+        . "?stop_location=true&devid=" . $devid;
 
     $signature = hash_hmac("sha1", $req, $apikey);
 
@@ -160,6 +175,57 @@ function OrganiseData()
     return $data;
 }
 
+function OrganiseSpecific($id, $type)
+{
+    global $result;
+    global $currentTime;
+
+    // Organise the data 
+    $stopData = GetStop($id, $type);
+    $data['stopName'] = $stopData['stop']['stop_name'];
+    $data['stop_id'] = $id;
+    $data['stop_type'] = $type;
+    $data['stop_latitude'] = $stopData['stop']['stop_location']['gps']['latitude'];
+    $data['stop_longitude'] = $stopData['stop']['stop_location']['gps']['longitude'];
+
+    // Collect info we want on all departures to leave this stop
+    $departures = array();
+
+    // Call Departures on Each Stop
+    $dToSort = Departures($type, $id);
+    $count = 0;
+    foreach ($dToSort['departures'] as $departure) {
+        // Arbitray limit to not spam the api or freeze it
+        if ($count > 15)
+            break;
+
+        // Collect departure data
+        $departureData['scheduled_departure_utc'] = $departure['scheduled_departure_utc'];
+        $departureData['platform_number'] = $departure['platform_number'];
+
+        $departureTime = new \DateTime($departure['scheduled_departure_utc']);
+
+        if ($departureTime < $currentTime)
+            continue;
+
+        $count++;
+
+        $departureEntry['route_id'] =  $departure['route_id'];
+        $departureEntry['run_id'] =  $departure['run_id'];
+        $run = Runs($departure['run_id'])['runs'];
+
+        if ($run == null)
+            continue;
+
+        $departureEntry['destination_name'] = $run[0]['destination_name'];
+        $departureEntry['data'] = $departureData;
+        array_push($departures, $departureEntry);
+    }
+    $data['departures'] = $departures;
+
+    return $data;
+}
+
 # Checks if null so database doesn't get cluttered with null entities
 if (isset($_POST['email'])) {
     # The kind for the new entity
@@ -172,8 +238,6 @@ if (isset($_POST['email'])) {
     $taskKey = $datastore->key($kind, $name);
 
     # Prepares the new entity
-    echo 'SIGN IN';
-
     $task = $datastore->entity(
         $taskKey,
         [
@@ -189,6 +253,9 @@ if (isset($_POST['email'])) {
     );
     # Saves the entity
     $datastore->upsert($task);
+
+    // Generate Favourite Data
+    $favourite = 1;
 }
 
 ?>
@@ -291,22 +358,30 @@ if (isset($_POST['email'])) {
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
 
-    <!-- Favourites bar -->
-    <div class="container-fluid" id="favourites">
-        <div class="row">
-            <div class="col-md-8">
-                <h2>Favourites</h2>
-                <?php echo $_SESSION['favourite_stop']; ?>
+    <!-- Favourites -->
+    <?php
+    if (!is_null($favourite)) {
+    ?>
+        <div class="float-left mx-5 my-5">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Favourites</h3>
+                </div>
+                <div class="card-body">
+                    <p><?php echo $_SESSION['favourite_stop']; ?></p>
+                </div>
             </div>
         </div>
-    </div>
+    <?php
+    }
+    ?>
 
     <!-- Page Content -->
-    <div class="container">
+    <div class="container text-center">
 
         <!-- Clock -->
         <div class="row">
-            <div class="col-lg-9 text-center">
+            <div class="col-lg-10 text-center">
                 <h1>
                     <div id="time"></div>
                 </h1>
@@ -331,9 +406,10 @@ if (isset($_POST['email'])) {
             </div>
         </div>
 
+
         <!-- Search Functionality -->
         <div class="row">
-            <div class="col-lg-9 text-center">
+            <div class="col-lg-10 text-center">
                 <h1 class="mt-5">Search</h1>
                 <!-- Source: Licensed from Public Transport Victoria under a Creative Commons Attribution 4.0 International Licence." -->
                 <form action="#" method="post">
@@ -400,6 +476,7 @@ EOT;
                     foreach ($stop['departures'] as $departure) {
 
                         $name = $departure['destination_name'];
+                        $platform = $departure['platform_number'];
                         $id = $departure['run_id'];
                         $time = $departure['data']['scheduled_departure_utc'];
                         $convertedTime =  new \DateTime($time);
@@ -412,7 +489,7 @@ EOT;
                                             <h4> To $name </h4>
                                         </div>
                                         <div class="card-body">
-                                            <p>Time: $stringConvert</p>
+                                            <p>On Platform $platform at Time: $stringConvert</p>
                                         </div>
                                     </div>
 
