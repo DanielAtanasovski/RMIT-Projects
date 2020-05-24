@@ -17,7 +17,7 @@ $datastore = new DatastoreClient([
 
 if (isset($_POST['add_stopID']) && !is_null($_POST['add_stopID'])) {
     setcookie("FavouriteStopID", $_POST['add_stopID']);
-    $_SESSION['favourite_stopID'] = $_POST['add_stopID'];
+    //$_SESSION['favourite_stopID'] = $_POST['add_stopID'];
     // $_SESSION['favourite_stopType'] = $_POST['add_stopRoute'];
 }
 
