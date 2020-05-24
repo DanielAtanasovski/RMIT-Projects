@@ -4,15 +4,21 @@ require __DIR__ . '/vendor/autoload.php';
 use Google\Cloud\Datastore\DatastoreClient;
 
 session_start();
+
+$devid = "3001608";
+$apikey = "751a9dd5-9e2e-4f2a-b87d-009a45729806";
+$searchurl = "http://timetableapi.ptv.vic.gov.au";
+$favourite = null;
+
+
 if (isset($_POST['add_stopID']) && !is_null($_POST['add_stopID'])) {
     setcookie('FavouriteStopID', $_POST['add_stopID'], time() + (86400 * 30), "/"); // 86400 = 1 day);
     $_COOKIE['FavouriteStopID'] = $_POST['add_stopID'];
     setcookie('FavouriteStopRoute', $_POST['add_stopRoute'], time() + (86400 * 30), "/"); // 86400 = 1 day);
     $_COOKIE['FavouriteStopRoute'] = $_POST['add_stopRoute'];
-    //echo $_COOKIE['FavouriteStopID'];
-    //$_SESSION['favourite_stopID'] = $_POST['add_stopID'];
-    // $_SESSION['favourite_stopType'] = $_POST['add_stopRoute'];
 }
+
+// print_r($favourite);
 
 # Your Google Cloud Platform project ID
 $projectId = 'cc-ptv-planner';
@@ -22,12 +28,8 @@ $datastore = new DatastoreClient([
     'projectId' => $projectId
 ]);
 
-$devid = "3001608";
-$apikey = "751a9dd5-9e2e-4f2a-b87d-009a45729806";
-$searchurl = "http://timetableapi.ptv.vic.gov.au";
-
 $currentTime = new \DateTime("now", new \DateTimeZone("UTC"));
-$favourite = null;
+
 // Map
 $showMap = false;
 $mapLat = 0;
@@ -237,6 +239,14 @@ if (isset($_POST['email'])) {
 
     # The Cloud Datastore key for the new entity
     $taskKey = $datastore->key($kind, $name);
+    $entity = $datastore->$lookup($taskKey);
+
+    // Load
+    if ($entity['FavouritesID'] !=null){
+        $loadedID = $entity['FavouritesID'];
+        $loadedType = $entity['FavouritesType'];
+    }
+    echo $entity['FavouritesID'];
 
     # Prepares the new entity
     $task = $datastore->entity(
@@ -255,10 +265,9 @@ if (isset($_POST['email'])) {
     );
     # Saves the entity
     $datastore->upsert($task);
-
-    // Generate Favourite Data
-    $favourite = OrganiseSpecific($_COOKIE['favourite_stopID'], $_COOKIE['favourite_stopType']);
-    print_r($favourite);
+    // // Generate Favourite Data
+    // $favourite = OrganiseSpecific($_COOKIE['favourite_stopID'], $_COOKIE['favourite_stopType']);
+    // print_r($favourite);
 }
 
 ?>
@@ -292,6 +301,7 @@ if (isset($_POST['email'])) {
                 sessionStorage.clear();
                 document.cookie = "id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                 document.cookie = "FavouriteStopID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "FavouriteStopRoute=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                 console.log('User signed out.');
             });
         }
@@ -333,6 +343,7 @@ if (isset($_POST['email'])) {
                 //     }
                 // });
             }
+            
         }
 
         function checkIfLoggedIn() {
@@ -389,53 +400,14 @@ if (isset($_POST['email'])) {
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
 
-    <!-- Favourites -->
-    <?php
-    if (isset($_COOKIE["id"])) {
-        echo <<< EOT
-        <div class="float-left mx-5 my-5">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Favourites</h3>
-                </div>
-                <div class="card-body">
-EOT;
-        foreach ($favourite as $departure) {
-            $name = $departure['destination_name'];
-            $platform = $departure['platform_number'];
-            $id = $departure['run_id'];
-            $time = $departure['data']['scheduled_departure_utc'];
-            $convertedTime =  new \DateTime($time);
-            $convertedTime->setTimezone(new DateTimeZone("Australia/Melbourne"));
-            $stringConvert = $convertedTime->format('h:i:s A');
 
-    echo <<< EOT
-                <div class="card col-lg-4 px-0">
-                    <div class="card-header">
-                        <h4> To $name </h4>
-                    </div>
-                    <div class="card-body">
-                        <p>On Platform $platform at Time: $stringConvert</p>
-                    </div>
-                </div>
-            echo <<< EOT
-                <p id="usr">
-                </p>
-                </div>
-            </div>
-        </div>
-    
-EOT;
-}
-    }
-    ?>
 
     <!-- Page Content -->
-    <div class="container text-center">
+    <div class="container text-center mx-0">
 
         <!-- Clock -->
-        <div class="row">
-            <div class="col-lg-10 text-center">
+        <div class="row col-lg-12">
+            <div class="col-lg-12 text-center">
                 <h1>
                     <div id="time"></div>
                 </h1>
@@ -460,10 +432,52 @@ EOT;
             </div>
         </div>
 
-
         <!-- Search Functionality -->
-        <div class="row">
-            <div class="col-lg-10 text-center">
+        <div class="row mx-0">
+            <div class="col-lg-4">
+                <!-- Favourites -->
+                <?php
+                if ((isset($_COOKIE["id"]) && isset($loadedID)) || (isset($_COOKIE["id"]) && isset($_COOKIE["FavouriteStopID"])))  {
+                    $favourite = OrganiseSpecific($_COOKIE['FavouriteStopID'], $_COOKIE['FavouriteStopRoute']);
+                ?>
+                    <div>
+                        <div class="card col-12">
+                            <div class="card-header">
+                                <h3>Favourites</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row col-">
+                                    <?php
+                                    foreach ($favourite['departures'] as $departure) {
+                                        $name = $departure['destination_name'];
+                                        $platform = $departure['data']['platform_number'];
+                                        $id = $departure['run_id'];
+                                        $time = $departure['data']['scheduled_departure_utc'];
+                                        $convertedTime =  new \DateTime($time);
+                                        $convertedTime->setTimezone(new DateTimeZone("Australia/Melbourne"));
+                                        $stringConvert = $convertedTime->format('h:i:s A');
+                                    ?>
+                                        <div class="card col-lg-12 px-0">
+                                            <div class="card-header">
+                                                <h4> To <?php echo $name ?> </h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <p>On Platform <?php echo $platform ?> at Time: <?php echo $stringConvert ?></p>
+                                            </div>
+                                        </div>
+                                    <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php
+                }
+                ?>
+
+            </div>
+            <div class="col-lg-8 text-center">
                 <h1 class="mt-5">Search</h1>
                 <!-- Source: Licensed from Public Transport Victoria under a Creative Commons Attribution 4.0 International Licence." -->
                 <form action="/" method="post">
@@ -532,7 +546,7 @@ EOT;
                     foreach ($stop['departures'] as $departure) {
 
                         $name = $departure['destination_name'];
-                        $platform = $departure['platform_number'];
+                        $platform = $departure['data']['platform_number'];
                         $id = $departure['run_id'];
                         $time = $departure['data']['scheduled_departure_utc'];
                         $convertedTime =  new \DateTime($time);
