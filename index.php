@@ -326,17 +326,15 @@ if (isset($_POST['email'])) {
 
         function checkIfLoggedIn() {
             if (sessionStorage.getItem('myUserEntity') == null) {
-                let x = document.getElementById("gsignin");
-                let y = document.getElementById("gsignout");
-                x.style.display = "block";
-                y.style.display = "none";
+                document.getElementById("gsignin").style.visibility = "visible";
+                document.getElementById("gsignout").style.visibility = "hidden";
+                document.getElementById("favourites").style.visibility = "hidden";
             } else {
                 var userEntity = {};
                 userEntity = JSON.parse(sessionStorage.getItem('myUserEntity'));
-                let x = document.getElementById("gsignin");
-                let y = document.getElementById("gsignout");
-                x.style.display = "block";
-                y.style.display = "block";
+                document.getElementById("gsignin").style.visibility = "visible";
+                document.getElementById("gsignout").style.visibility = "visible";
+                document.getElementById("favourites").style.visibility = "visible";
             }
         }
     </script>
@@ -370,7 +368,7 @@ if (isset($_POST['email'])) {
                     <h3>Favourites</h3>
                 </div>
                 <div class="card-body">
-                    <p> body </p>
+                    <p><?php echo $_SESSION['favourite_stop']; ?></p>
                 </div>
             </div>
         </div>
