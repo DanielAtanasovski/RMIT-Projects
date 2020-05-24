@@ -15,7 +15,7 @@ $datastore = new DatastoreClient([
     'projectId' => $projectId
 ]);
 
-if (isset($_POST['add_stop']) && !is_null($_POST['add_stop'])){
+if (isset($_POST['add_stop']) && !is_null($_POST['add_stop'])) {
     $_SESSION['favourite_stop'] = $_POST['add_stop'];
 }
 
@@ -183,7 +183,7 @@ if (isset($_POST['email'])) {
             'Email' => $_POST['email'],
             'Full Name' => $_POST['fullname'],
             'IMG URL' => $_POST['imgurl'],
-            'Favourites' => $_SESSION['favourite_stop'] 
+            'Favourites' => $_SESSION['favourite_stop']
         ]
 
     );
@@ -259,17 +259,15 @@ if (isset($_POST['email'])) {
 
         function checkIfLoggedIn() {
             if (sessionStorage.getItem('myUserEntity') == null) {
-                let x = document.getElementById("gsignin");
-                let y = document.getElementById("gsignout");
-                x.style.display = "block";
-                y.style.display = "none";
+                document.getElementById("gsignin").style.visibility = "visible";
+                document.getElementById("gsignout").style.visibility = "hidden";
+                document.getElementById("favourites").style.visibility = "hidden";
             } else {
                 var userEntity = {};
                 userEntity = JSON.parse(sessionStorage.getItem('myUserEntity'));
-                let x = document.getElementById("gsignin");
-                let y = document.getElementById("gsignout");
-                x.style.display = "block";
-                y.style.display = "block";
+                document.getElementById("gsignin").style.visibility = "visible";
+                document.getElementById("gsignout").style.visibility = "visible";
+                document.getElementById("favourites").style.visibility = "visible";
             }
         }
     </script>
@@ -291,6 +289,16 @@ if (isset($_POST['email'])) {
     <div class="float-right">
         <a class="twitter-timeline" data-height="1400" data-width="400" data-theme="dark" href="https://twitter.com/ptv_official?ref_src=twsrc%5Etfw">Tweets by ptv_official</a>
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+
+    <!-- Favourites bar -->
+    <div class="container-fluid" id="favourites">
+        <div class="row">
+            <div class="col-md-8">
+                <h2>Favourites</h2>
+                <?php echo $_SESSION['favourite_stop']; ?>
+            </div>
+        </div>
     </div>
 
     <!-- Page Content -->
