@@ -15,15 +15,14 @@ $datastore = new DatastoreClient([
     'projectId' => $projectId
 ]);
 
-if (isset($_POST['add_stop']) && !is_null($_POST['add_stop'])) {
-    $_SESSION['favourite_stop'] = $_POST['add_stop'];
+if (isset($_POST['add_stopID']) && !is_null($_POST['add_stopID'])) {
+    $_SESSION['favourite_stopID'] = $_POST['add_stopID'];
+    $_SESSION['favourite_stopType'] = $_POST['add_stopRoute'];
 }
 
 $devid = "3001608";
 $apikey = "751a9dd5-9e2e-4f2a-b87d-009a45729806";
 $searchurl = "http://timetableapi.ptv.vic.gov.au";
-
-print_r(GetStop(1202, 0));
 
 $currentTime = new \DateTime("now", new \DateTimeZone("UTC"));
 $favourite = null;
@@ -247,7 +246,8 @@ if (isset($_POST['email'])) {
             'Email' => $_POST['email'],
             'Full Name' => $_POST['fullname'],
             'IMG URL' => $_POST['imgurl'],
-            'Favourites' => $_SESSION['favourite_stop']
+            'FavouritesID' => $_SESSION['favourite_stopID'],
+            'FavouritesType' => $_SESSION['favourite_stopType']
         ]
 
     );
@@ -255,7 +255,7 @@ if (isset($_POST['email'])) {
     $datastore->upsert($task);
 
     // Generate Favourite Data
-    $favourite = 1;
+    $favourite = OrganiseSpecific($_SESSION['favourite_stopID'], $_SESSION['favourite_stopType']);
 }
 
 ?>
@@ -441,6 +441,7 @@ if (isset($_POST['email'])) {
                 foreach ($organisedData as $stop) {
                     $stopName = $stop['stop_name'];
                     $stopID = $stop['stop_id'];
+                    $stopType = $stop['route_type'];
                     $mapLat = $stop['stop_latitude'];
                     $mapLon = $stop['stop_longitude'];
 
@@ -452,7 +453,8 @@ if (isset($_POST['email'])) {
                                 <button type="submit" form="$stopName" class="btn">
                                     <i class="fa fa-heart" aria-hidden="true">
                                         <form action="#" method="post" id="$stopName">
-                                            <input class="hide" type="hidden" id="add_stop" name="add_stop" value="$stopID">
+                                            <input class="hide" type="hidden" id="add_stopID" name="add_stopID" value="$stopID">
+                                            <input class="hide" type="hidden" id="add_stopRoute" name="add_stopRoute" value="$stopType">
                                         </form>
                                     </i>
                                 </button>
