@@ -5,6 +5,8 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Google\Cloud\Datastore\DatastoreClient;
 
+session_start();
+
 # Your Google Cloud Platform project ID
 $projectId = 'cc-ptv-planner';
 
@@ -12,6 +14,10 @@ $projectId = 'cc-ptv-planner';
 $datastore = new DatastoreClient([
     'projectId' => $projectId
 ]);
+
+if (isset($_POST['add_stop']) && !is_null($_POST['add_stop'])){
+    $_SESSION['favourite_stop'] = $_POST['add_stop'];
+}
 
 $devid = "3001608";
 $apikey = "751a9dd5-9e2e-4f2a-b87d-009a45729806";
@@ -166,6 +172,8 @@ if (isset($_POST['email'])) {
     $taskKey = $datastore->key($kind, $name);
 
     # Prepares the new entity
+    echo 'SIGN IN';
+
     $task = $datastore->entity(
         $taskKey,
         [
@@ -175,7 +183,7 @@ if (isset($_POST['email'])) {
             'Email' => $_POST['email'],
             'Full Name' => $_POST['fullname'],
             'IMG URL' => $_POST['imgurl'],
-            'Favourites' => $stopID
+            'Favourites' => $_SESSION['favourite_stop'] 
         ]
 
     );
@@ -358,7 +366,7 @@ if (isset($_POST['email'])) {
                                 <button type="submit" form="$stopName" class="btn">
                                     <i class="fa fa-heart" aria-hidden="true">
                                         <form action="#" method="post" id="$stopName">
-                                            <input class="hide" type="hidden" id="stopID" name="stopID" value="$stopID">
+                                            <input class="hide" type="hidden" id="add_stop" name="add_stop" value="$stopID">
                                         </form>
                                     </i>
                                 </button>
