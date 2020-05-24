@@ -16,8 +16,9 @@ $datastore = new DatastoreClient([
 ]);
 
 if (isset($_POST['add_stopID']) && !is_null($_POST['add_stopID'])) {
+    setcookie("FavouriteStopID", $_POST['add_stopID']);
     $_SESSION['favourite_stopID'] = $_POST['add_stopID'];
-    $_SESSION['favourite_stopType'] = $_POST['add_stopRoute'];
+    // $_SESSION['favourite_stopType'] = $_POST['add_stopRoute'];
 }
 
 $devid = "3001608";
@@ -246,7 +247,7 @@ if (isset($_POST['email'])) {
             'Email' => $_POST['email'],
             'Full Name' => $_POST['fullname'],
             'IMG URL' => $_POST['imgurl'],
-            'FavouritesID' => $_SESSION['favourite_stopID'],
+            'FavouritesID' => $_COOKIE['FavouriteStopID'],
             'FavouritesType' => $_SESSION['favourite_stopType']
         ]
 
@@ -280,15 +281,21 @@ if (isset($_POST['email'])) {
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 
-<body onload="checkIfLoggedIn()">
+<body>
     <!-- Retrieving data from Google Login -->
     <script>
         function signOut() {
             let auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function() {
                 sessionStorage.clear();
+                document.cookie = "id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "FavouriteStopID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                 console.log('User signed out.');
             });
+        }
+
+        function delete_cookie(name) {
+            document.cookie = name + '=; expires=Thu, 01 Jan 2012 00:00:01 GMT;';
         }
 
         function onSignIn(googleUser) {
@@ -298,10 +305,12 @@ if (isset($_POST['email'])) {
                 let profile = googleUser.getBasicProfile();
                 let myUserEntity = {}
 
+                document.cookie = "id=" + profile.getId();
+
                 myUserEntity.Id = profile.getId();
                 sessionStorage.setItem('myUserEntity', JSON.stringify(myUserEntity));
 
-                $.post("", {
+                $.post("/", {
                     id: profile.getId(),
                     givenname: profile.getGivenName(),
                     familyname: profile.getFamilyName(),
@@ -310,17 +319,17 @@ if (isset($_POST['email'])) {
                     imgurl: profile.getImageUrl(),
                 });
 
-                $(document).ready(function() {
-                    // Check if the current URL contains '#'
-                    if (document.URL.indexOf("#") == -1) {
-                        // Set the URL to whatever it was plus "#".
-                        url = document.URL + "#";
-                        location = "#";
+                // $(document).ready(function() {
+                //     // Check if the current URL contains '#'
+                //     if (document.URL.indexOf("#") == -1) {
+                //         // Set the URL to whatever it was plus "#".
+                //         url = document.URL + "#";
+                //         location = "#";
 
-                        //Reload the page
-                        location.reload(true);
-                    }
-                });
+                //         //Reload the page
+                //         location.reload(true);
+                //     }
+                // });
             }
         }
 
@@ -337,16 +346,36 @@ if (isset($_POST['email'])) {
                 //document.getElementById("favourites").style.visibility = "visible";
             }
         }
+        window.onload = function() {
+            var u = getCookie();
+            document.getElementById("usr").innerHTML = u;
+        }
+
+        function getCookie(cname) {
+            var name = "FavouriteStopID" + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
     </script>
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top" id="nav">
         <div class="container" id="nav">
-            <a class="navbar-brand" href="">PTV Planner</a>
+            <a class="navbar-brand" href="/">PTV Planner</a>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
                     <div id="gsignin" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-                    <a href="" id='gsignout' onclick="signOut();">Sign out</a>
+                    <a href="/" id='gsignout' onclick="signOut();">Sign out</a>
                 </li>
             </ul>
         </div>
@@ -360,19 +389,20 @@ if (isset($_POST['email'])) {
 
     <!-- Favourites -->
     <?php
-    if (!is_null($favourite)) {
-    ?>
+    if (isset($_COOKIE["id"])) {
+        echo <<< EOT
         <div class="float-left mx-5 my-5">
             <div class="card">
                 <div class="card-header">
                     <h3>Favourites</h3>
                 </div>
                 <div class="card-body">
-                    <p><?php echo $_SESSION['favourite_stop']; ?></p>
+                <p id="usr">
+                </p>
                 </div>
             </div>
         </div>
-    <?php
+EOT;
     }
     ?>
 
@@ -412,7 +442,7 @@ if (isset($_POST['email'])) {
             <div class="col-lg-10 text-center">
                 <h1 class="mt-5">Search</h1>
                 <!-- Source: Licensed from Public Transport Victoria under a Creative Commons Attribution 4.0 International Licence." -->
-                <form action="#" method="post">
+                <form action="/" method="post">
                     <div class="row">
                         <div class="col-10">
                             <input class="form-control" type="text" name="search" id="search">
@@ -450,7 +480,7 @@ if (isset($_POST['email'])) {
                             <h3 class="mb-0"> 
                                 <button type="submit" form="$stopName" class="btn">
                                     <i class="fa fa-heart" aria-hidden="true">
-                                        <form action="#" method="post" id="$stopName">
+                                        <form action="/" method="post" id="$stopName">
                                             <input class="hide" type="hidden" id="add_stopID" name="add_stopID" value="$stopID">
                                             <input class="hide" type="hidden" id="add_stopRoute" name="add_stopRoute" value="$stopType">
                                         </form>
