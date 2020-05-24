@@ -1,11 +1,18 @@
-<!DOCTYPE html>
-
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
 use Google\Cloud\Datastore\DatastoreClient;
 
 session_start();
+if (isset($_POST['add_stopID']) && !is_null($_POST['add_stopID'])) {
+    setcookie('FavouriteStopID', $_POST['add_stopID'], time() + (86400 * 30), "/"); // 86400 = 1 day);
+    $_COOKIE['FavouriteStopID'] = $_POST['add_stopID'];
+    setcookie('FavouriteStopRoute', $_POST['add_stopRoute'], time() + (86400 * 30), "/"); // 86400 = 1 day);
+    $_COOKIE['FavouriteStopRoute'] = $_POST['add_stopRoute'];
+    //echo $_COOKIE['FavouriteStopID'];
+    //$_SESSION['favourite_stopID'] = $_POST['add_stopID'];
+    // $_SESSION['favourite_stopType'] = $_POST['add_stopRoute'];
+}
 
 # Your Google Cloud Platform project ID
 $projectId = 'cc-ptv-planner';
@@ -14,12 +21,6 @@ $projectId = 'cc-ptv-planner';
 $datastore = new DatastoreClient([
     'projectId' => $projectId
 ]);
-
-if (isset($_POST['add_stopID']) && !is_null($_POST['add_stopID'])) {
-    setcookie("FavouriteStopID", $_POST['add_stopID']);
-    //$_SESSION['favourite_stopID'] = $_POST['add_stopID'];
-    // $_SESSION['favourite_stopType'] = $_POST['add_stopRoute'];
-}
 
 $devid = "3001608";
 $apikey = "751a9dd5-9e2e-4f2a-b87d-009a45729806";
@@ -248,6 +249,7 @@ if (isset($_POST['email'])) {
             'Full Name' => $_POST['fullname'],
             'IMG URL' => $_POST['imgurl'],
             'FavouritesID' => $_COOKIE['FavouriteStopID'],
+            'TestID' => $_COOKIE['id'],
             'FavouritesType' => $_SESSION['favourite_stopType']
         ]
 
@@ -256,11 +258,12 @@ if (isset($_POST['email'])) {
     $datastore->upsert($task);
 
     // Generate Favourite Data
-    $favourite = OrganiseSpecific($_SESSION['favourite_stopID'], $_SESSION['favourite_stopType']);
+    $favourite = OrganiseSpecific($_COOKIE['favourite_stopID'], $_COOKIE['favourite_stopType']);
+    print_r($favourite);
 }
 
 ?>
-
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -346,26 +349,26 @@ if (isset($_POST['email'])) {
                 //document.getElementById("favourites").style.visibility = "visible";
             }
         }
-        window.onload = function() {
-            var u = getCookie();
-            document.getElementById("usr").innerHTML = u;
-        }
+        // window.onload = function() {
+        //     var u = getCookie();
+        //     document.getElementById("usr").innerHTML = u;
+        // }
 
-        function getCookie(cname) {
-            var name = "FavouriteStopID" + "=";
-            var decodedCookie = decodeURIComponent(document.cookie);
-            var ca = decodedCookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
-            }
-            return "";
-        }
+        // function getCookie(cname) {
+        //     var name = "FavouriteStopID" + "=";
+        //     var decodedCookie = decodeURIComponent(document.cookie);
+        //     var ca = decodedCookie.split(';');
+        //     for (var i = 0; i < ca.length; i++) {
+        //         var c = ca[i];
+        //         while (c.charAt(0) == ' ') {
+        //             c = c.substring(1);
+        //         }
+        //         if (c.indexOf(name) == 0) {
+        //             return c.substring(name.length, c.length);
+        //         }
+        //     }
+        //     return "";
+        // }
     </script>
 
     <!-- Navigation -->
@@ -397,12 +400,34 @@ if (isset($_POST['email'])) {
                     <h3>Favourites</h3>
                 </div>
                 <div class="card-body">
+EOT;
+        foreach ($favourite as $departure) {
+            $name = $departure['destination_name'];
+            $platform = $departure['platform_number'];
+            $id = $departure['run_id'];
+            $time = $departure['data']['scheduled_departure_utc'];
+            $convertedTime =  new \DateTime($time);
+            $convertedTime->setTimezone(new DateTimeZone("Australia/Melbourne"));
+            $stringConvert = $convertedTime->format('h:i:s A');
+
+    echo <<< EOT
+                <div class="card col-lg-4 px-0">
+                    <div class="card-header">
+                        <h4> To $name </h4>
+                    </div>
+                    <div class="card-body">
+                        <p>On Platform $platform at Time: $stringConvert</p>
+                    </div>
+                </div>
+            echo <<< EOT
                 <p id="usr">
                 </p>
                 </div>
             </div>
         </div>
+    
 EOT;
+}
     }
     ?>
 
