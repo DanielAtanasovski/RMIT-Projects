@@ -23,8 +23,6 @@ $devid = "3001608";
 $apikey = "751a9dd5-9e2e-4f2a-b87d-009a45729806";
 $searchurl = "http://timetableapi.ptv.vic.gov.au";
 
-print_r(GetStop(1202, 0));
-
 $currentTime = new \DateTime("now", new \DateTimeZone("UTC"));
 $favourite = null;
 // Map
@@ -328,13 +326,13 @@ if (isset($_POST['email'])) {
             if (sessionStorage.getItem('myUserEntity') == null) {
                 document.getElementById("gsignin").style.visibility = "visible";
                 document.getElementById("gsignout").style.visibility = "hidden";
-                document.getElementById("favourites").style.visibility = "hidden";
+                //document.getElementById("favourites").style.visibility = "hidden";
             } else {
                 var userEntity = {};
                 userEntity = JSON.parse(sessionStorage.getItem('myUserEntity'));
                 document.getElementById("gsignin").style.visibility = "visible";
                 document.getElementById("gsignout").style.visibility = "visible";
-                document.getElementById("favourites").style.visibility = "visible";
+                //document.getElementById("favourites").style.visibility = "visible";
             }
         }
     </script>
