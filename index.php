@@ -240,14 +240,6 @@ if (isset($_POST['email'])) {
 
     # The Cloud Datastore key for the new entity
     $taskKey = $datastore->key($kind, $name);
-    $entity = $datastore->$lookup($taskKey);
-
-    // Load
-    if ($entity['FavouritesID'] != null) {
-        $loadedID = $entity['FavouritesID'];
-        $loadedType = $entity['FavouritesType'];
-    }
-    echo $entity['FavouritesID'];
 
     # Prepares the new entity
     $task = $datastore->entity(
@@ -269,7 +261,16 @@ if (isset($_POST['email'])) {
     // // Generate Favourite Data
     // $favourite = OrganiseSpecific($_COOKIE['favourite_stopID'], $_COOKIE['favourite_stopType']);
     // print_r($favourite);
+
+     // Load
+     $entity = $datastore->$lookup($taskKey);
+     if (!is_null($entity['FavouritesID'])) {
+        $loadedID = $entity['FavouritesID'];
+        $loadedType = $entity['FavouritesType'];
+    }
+    echo $entity['FavouritesID'];
 }
+
 
 ?>
 <!DOCTYPE html>
