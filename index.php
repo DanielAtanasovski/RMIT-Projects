@@ -242,7 +242,7 @@ if (isset($_POST['email'])) {
     $entity = $datastore->$lookup($taskKey);
 
     // Load
-    if ($entity['FavouritesID'] !=null){
+    if ($entity['FavouritesID'] != null) {
         $loadedID = $entity['FavouritesID'];
         $loadedType = $entity['FavouritesType'];
     }
@@ -343,7 +343,7 @@ if (isset($_POST['email'])) {
                 //     }
                 // });
             }
-            
+
         }
 
         function checkIfLoggedIn() {
@@ -406,8 +406,11 @@ if (isset($_POST['email'])) {
     <div class="container text-center mx-0">
 
         <!-- Clock -->
-        <div class="row col-lg-12">
-            <div class="col-lg-12 text-center">
+        <div class="row">
+            <div class="col-lg-4">
+
+            </div>
+            <div class="col-lg-8 text-center">
                 <h1>
                     <div id="time"></div>
                 </h1>
@@ -437,7 +440,7 @@ if (isset($_POST['email'])) {
             <div class="col-lg-4">
                 <!-- Favourites -->
                 <?php
-                if ((isset($_COOKIE["id"]) && isset($loadedID)) || (isset($_COOKIE["id"]) && isset($_COOKIE["FavouriteStopID"])))  {
+                if ((isset($_COOKIE["id"]) && isset($loadedID)) || (isset($_COOKIE["id"]) && isset($_COOKIE["FavouriteStopID"]))) {
                     $favourite = OrganiseSpecific($_COOKIE['FavouriteStopID'], $_COOKIE['FavouriteStopRoute']);
                 ?>
                     <div>
@@ -499,6 +502,8 @@ if (isset($_POST['email'])) {
 
         <!-- Showing All Stops -->
         <div class="row pt-2" id="accordion">
+            <div class="col-lg-4">
+            </div>
             <?php
             if ($showMap) {
                 $organisedData = OrganiseData();
@@ -513,7 +518,7 @@ if (isset($_POST['email'])) {
 
                     echo <<< EOT
 
-                    <div class="card col-lg-9 px-0">
+                    <div class="card col-lg-8 px-0">
                         <div class="card-header" id="heading$stopCount">
                             <h3 class="mb-0"> 
                                 <button type="submit" form="$stopName" class="btn">
