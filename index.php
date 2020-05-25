@@ -1,11 +1,24 @@
-<!DOCTYPE html>
-
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
 use Google\Cloud\Datastore\DatastoreClient;
 
 session_start();
+
+$devid = "3001608";
+$apikey = "751a9dd5-9e2e-4f2a-b87d-009a45729806";
+$searchurl = "http://timetableapi.ptv.vic.gov.au";
+$favourite = null;
+
+
+if (isset($_POST['add_stopID']) && !is_null($_POST['add_stopID'])) {
+    setcookie('FavouriteStopID', $_POST['add_stopID'], time() + (86400 * 30), "/"); // 86400 = 1 day);
+    $_COOKIE['FavouriteStopID'] = $_POST['add_stopID'];
+    setcookie('FavouriteStopRoute', $_POST['add_stopRoute'], time() + (86400 * 30), "/"); // 86400 = 1 day);
+    $_COOKIE['FavouriteStopRoute'] = $_POST['add_stopRoute'];
+}
+
+// print_r($favourite);
 
 # Your Google Cloud Platform project ID
 $projectId = 'cc-ptv-planner';
@@ -15,17 +28,8 @@ $datastore = new DatastoreClient([
     'projectId' => $projectId
 ]);
 
-if (isset($_POST['add_stopID']) && !is_null($_POST['add_stopID'])) {
-    $_SESSION['favourite_stopID'] = $_POST['add_stopID'];
-    $_SESSION['favourite_stopType'] = $_POST['add_stopRoute'];
-}
-
-$devid = "3001608";
-$apikey = "751a9dd5-9e2e-4f2a-b87d-009a45729806";
-$searchurl = "http://timetableapi.ptv.vic.gov.au";
-
 $currentTime = new \DateTime("now", new \DateTimeZone("UTC"));
-$favourite = null;
+
 // Map
 $showMap = false;
 $mapLat = 0;
@@ -236,6 +240,14 @@ if (isset($_POST['email'])) {
 
     # The Cloud Datastore key for the new entity
     $taskKey = $datastore->key($kind, $name);
+    $entity = $datastore->$lookup($taskKey);
+
+    // Load
+    if ($entity['FavouritesID'] != null) {
+        $loadedID = $entity['FavouritesID'];
+        $loadedType = $entity['FavouritesType'];
+    }
+    echo $entity['FavouritesID'];
 
     # Prepares the new entity
     $task = $datastore->entity(
@@ -247,20 +259,20 @@ if (isset($_POST['email'])) {
             'Email' => $_POST['email'],
             'Full Name' => $_POST['fullname'],
             'IMG URL' => $_POST['imgurl'],
-            'FavouritesID' => $_SESSION['favourite_stopID'],
-            'FavouritesType' => $_SESSION['favourite_stopType']
+            'FavouritesID' => $_COOKIE['FavouriteStopID'],
+            'FavouritesType' => $_COOKIE['FavouriteStopRoute']
         ]
 
     );
     # Saves the entity
     $datastore->upsert($task);
-
-    // Generate Favourite Data
-    $favourite = OrganiseSpecific($_SESSION['favourite_stopID'], $_SESSION['favourite_stopType']);
+    // // Generate Favourite Data
+    // $favourite = OrganiseSpecific($_COOKIE['favourite_stopID'], $_COOKIE['favourite_stopType']);
+    // print_r($favourite);
 }
 
 ?>
-
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -281,15 +293,22 @@ if (isset($_POST['email'])) {
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 
-<body onload="checkIfLoggedIn()">
+<body>
     <!-- Retrieving data from Google Login -->
     <script>
         function signOut() {
             let auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function() {
                 sessionStorage.clear();
+                document.cookie = "id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "FavouriteStopID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "FavouriteStopRoute=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                 console.log('User signed out.');
             });
+        }
+
+        function delete_cookie(name) {
+            document.cookie = name + '=; expires=Thu, 01 Jan 2012 00:00:01 GMT;';
         }
 
         function onSignIn(googleUser) {
@@ -299,10 +318,12 @@ if (isset($_POST['email'])) {
                 let profile = googleUser.getBasicProfile();
                 let myUserEntity = {}
 
+                document.cookie = "id=" + profile.getId();
+
                 myUserEntity.Id = profile.getId();
                 sessionStorage.setItem('myUserEntity', JSON.stringify(myUserEntity));
 
-                $.post("", {
+                $.post("/", {
                     id: profile.getId(),
                     givenname: profile.getGivenName(),
                     familyname: profile.getFamilyName(),
@@ -311,18 +332,19 @@ if (isset($_POST['email'])) {
                     imgurl: profile.getImageUrl(),
                 });
 
-                $(document).ready(function() {
-                    // Check if the current URL contains '#'
-                    if (document.URL.indexOf("#") == -1) {
-                        // Set the URL to whatever it was plus "#".
-                        url = document.URL + "#";
-                        location = "#";
+                // $(document).ready(function() {
+                //     // Check if the current URL contains '#'
+                //     if (document.URL.indexOf("#") == -1) {
+                //         // Set the URL to whatever it was plus "#".
+                //         url = document.URL + "#";
+                //         location = "#";
 
-                        //Reload the page
-                        location.reload(true);
-                    }
-                });
+                //         //Reload the page
+                //         location.reload(true);
+                //     }
+                // });
             }
+
         }
 
         function checkIfLoggedIn() {
@@ -336,16 +358,36 @@ if (isset($_POST['email'])) {
                 document.getElementById("gsignout").style.visibility = "visible";
             }
         }
+        // window.onload = function() {
+        //     var u = getCookie();
+        //     document.getElementById("usr").innerHTML = u;
+        // }
+
+        // function getCookie(cname) {
+        //     var name = "FavouriteStopID" + "=";
+        //     var decodedCookie = decodeURIComponent(document.cookie);
+        //     var ca = decodedCookie.split(';');
+        //     for (var i = 0; i < ca.length; i++) {
+        //         var c = ca[i];
+        //         while (c.charAt(0) == ' ') {
+        //             c = c.substring(1);
+        //         }
+        //         if (c.indexOf(name) == 0) {
+        //             return c.substring(name.length, c.length);
+        //         }
+        //     }
+        //     return "";
+        // }
     </script>
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top" id="nav">
         <div class="container" id="nav">
-            <a class="navbar-brand" href="">PTV Planner</a>
+            <a class="navbar-brand" href="/">PTV Planner</a>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
                     <div id="gsignin" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-                    <a href="" id='gsignout' onclick="signOut();">Sign out</a>
+                    <a href="/" id='gsignout' onclick="signOut();">Sign out</a>
                 </li>
             </ul>
         </div>
@@ -357,30 +399,17 @@ if (isset($_POST['email'])) {
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
 
-    <!-- Favourites -->
-    <?php
-    if (!is_null($favourite)) {
-    ?>
-        <div class="float-left mx-5 my-5">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Favourites</h3>
-                </div>
-                <div class="card-body">
-                    <p><?php echo $_SESSION['favourite_stop']; ?></p>
-                </div>
-            </div>
-        </div>
-    <?php
-    }
-    ?>
+
 
     <!-- Page Content -->
-    <div class="container text-center">
+    <div class="container text-center mx-0">
 
         <!-- Clock -->
         <div class="row">
-            <div class="col-lg-10 text-center">
+            <div class="col-lg-4">
+
+            </div>
+            <div class="col-lg-8 text-center">
                 <h1>
                     <div id="time"></div>
                 </h1>
@@ -405,13 +434,55 @@ if (isset($_POST['email'])) {
             </div>
         </div>
 
-
         <!-- Search Functionality -->
-        <div class="row">
-            <div class="col-lg-10 text-center">
+        <div class="row mx-0">
+            <div class="col-lg-4">
+                <!-- Favourites -->
+                <?php
+                if ((isset($_COOKIE["id"]) && isset($loadedID)) || (isset($_COOKIE["id"]) && isset($_COOKIE["FavouriteStopID"]))) {
+                    $favourite = OrganiseSpecific($_COOKIE['FavouriteStopID'], $_COOKIE['FavouriteStopRoute']);
+                ?>
+                    <div>
+                        <div class="card col-12">
+                            <div class="card-header">
+                                <h3>Favourites</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row col-">
+                                    <?php
+                                    foreach ($favourite['departures'] as $departure) {
+                                        $name = $departure['destination_name'];
+                                        $platform = $departure['data']['platform_number'];
+                                        $id = $departure['run_id'];
+                                        $time = $departure['data']['scheduled_departure_utc'];
+                                        $convertedTime =  new \DateTime($time);
+                                        $convertedTime->setTimezone(new DateTimeZone("Australia/Melbourne"));
+                                        $stringConvert = $convertedTime->format('h:i:s A');
+                                    ?>
+                                        <div class="card col-lg-12 px-0">
+                                            <div class="card-header">
+                                                <h4> To <?php echo $name ?> </h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <p>On Platform <?php echo $platform ?> at Time: <?php echo $stringConvert ?></p>
+                                            </div>
+                                        </div>
+                                    <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php
+                }
+                ?>
+
+            </div>
+            <div class="col-lg-8 text-center">
                 <h1 class="mt-5">Search For Stations</h1>
                 <!-- Source: Licensed from Public Transport Victoria under a Creative Commons Attribution 4.0 International Licence." -->
-                <form action="#" method="post">
+                <form action="/" method="post">
                     <div class="row">
                         <div class="col-10">
                             <input class="form-control" type="text" name="search" id="search">
@@ -430,6 +501,8 @@ if (isset($_POST['email'])) {
 
         <!-- Showing All Stops -->
         <div class="row pt-2" id="accordion">
+            <div class="col-lg-4">
+            </div>
             <?php
             if ($showMap) {
                 $organisedData = OrganiseData();
@@ -444,12 +517,12 @@ if (isset($_POST['email'])) {
 
                     echo <<< EOT
 
-                    <div class="card col-lg-9 px-0">
-                        <div class="card-header text-left" id="heading$stopCount">
+                    <div class="card col-lg-8 px-0">
+                        <div class="card-header" id="heading$stopCount">
                             <h3 class="mb-0"> 
                                 <button type="submit" form="$stopName" class="btn">
                                     <i class="fa fa-heart" aria-hidden="true">
-                                        <form action="#" method="post" id="$stopName">
+                                        <form action="/" method="post" id="$stopName">
                                             <input class="hide" type="hidden" id="add_stopID" name="add_stopID" value="$stopID">
                                             <input class="hide" type="hidden" id="add_stopRoute" name="add_stopRoute" value="$stopType">
                                         </form>
