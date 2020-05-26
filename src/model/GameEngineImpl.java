@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import model.interfaces.DicePair;
 import model.interfaces.Die;
@@ -11,8 +12,8 @@ import view.interfaces.GameEngineCallback;
 
 public class GameEngineImpl implements GameEngine {
 	
-	private ArrayList<Player> playerList = new ArrayList<Player>();
-	private ArrayList<GameEngineCallback> gameEngineCallbackList = new ArrayList<GameEngineCallback>();
+	private List<Player> playerList = new ArrayList<Player>();
+	private Collection<GameEngineCallback> gameEngineCallbackList = new ArrayList<GameEngineCallback>();
 
 	@Override
 	public void rollPlayer(Player player, int initialDelay1, int finalDelay1, int delayIncrement1, int initialDelay2,
@@ -187,23 +188,19 @@ public class GameEngineImpl implements GameEngine {
 
 	@Override
 	public Player getPlayer(String id) {
+		Player foundPlayer = null;
 		for (Player player : playerList) {
 			if (player.getPlayerId().equals(id)) {
-				return player;
+				foundPlayer = player;
 			}
 		}
-		return null;
+		return foundPlayer;
 	}
 
 	@Override
 	public boolean removePlayer(Player player) {
-		for (Player p : playerList) {
-			if (p.getPlayerId().equals(player.getPlayerId())) {
-				playerList.remove(p);
-				return true;
-			}
-		}
-		return false;
+		return playerList.remove(player);
+
 	}
 
 	@Override
@@ -218,13 +215,7 @@ public class GameEngineImpl implements GameEngine {
 
 	@Override
 	public boolean removeGameEngineCallback(GameEngineCallback gameEngineCallback) {
-		for (GameEngineCallback callback : gameEngineCallbackList) {
-			if (callback == gameEngineCallback) {
-				gameEngineCallbackList.remove(gameEngineCallback);
-				return true;
-			}
-		}
-		return false;
+		return gameEngineCallbackList.remove(gameEngineCallback);
 	}
 
 	@Override
