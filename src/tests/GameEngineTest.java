@@ -5,8 +5,6 @@ import model.SimplePlayer;
 import model.interfaces.GameEngine;
 import model.interfaces.Player;
 import tests.interfaces.Test;
-import view.GameEngineCallbackImpl;
-import view.interfaces.GameEngineCallback;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
