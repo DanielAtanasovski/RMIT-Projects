@@ -3,14 +3,11 @@
  */
 package structure;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import org.bouncycastle.util.encoders.Hex;
-
 import types.Student;
+import util.HashUtil;
 
 /**
  * @author Daniel Atanasovski
@@ -25,49 +22,68 @@ public class MerkleTree {
 
 	public MerkleTree(List<Student> students) {
 		switch (students.size()) {
-			case 0:
-				this.rootHash = "";
-			case 1:
-				this.extra = new Leaf(students.get(0));
-				this.rootHash = this.extra.getHash();
-			case 2:
-				this.left = new NonLeaf(new Leaf(students.get(0)), new Leaf(students.get(1)));
-				this.rootHash = this.left.getHash();
-			case 3:
-				this.left = new NonLeaf(new Leaf(students.get(0)), new Leaf(students.get(1)));
-				this.extra = new Leaf(students.get(2));
-				try {
-					this.rootHash = calculateHash(false);
-				} catch (NoSuchAlgorithmException e1) {
-					e1.printStackTrace();
-				}
-			case 4:
-				this.left = new NonLeaf(new Leaf(students.get(0)), new Leaf(students.get(1)));
-				this.right = new NonLeaf(new Leaf(students.get(2)), new Leaf(students.get(3)));
-				try {
-					this.rootHash = calculateHash(true);
-				} catch (NoSuchAlgorithmException e) {
-					e.printStackTrace();
-				}
+		case 0:
+			this.rootHash = "";
+			break;
+		case 1:
+			this.extra = new Leaf(students.get(0));
+			this.rootHash = this.extra.getHash();
+			break;
+		case 2:
+			this.left = new NonLeaf(new Leaf(students.get(0)), new Leaf(students.get(1)));
+			this.rootHash = this.left.getHash();
+			break;
+		case 3:
+			this.left = new NonLeaf(new Leaf(students.get(0)), new Leaf(students.get(1)));
+			this.extra = new Leaf(students.get(2));
+			try {
+				this.rootHash = HashUtil.Hash(left.getHash() + extra.getHash());
+
+			} catch (NoSuchAlgorithmException e1) {
+				e1.printStackTrace();
 			}
+			break;
+		case 4:
+			this.left = new NonLeaf(new Leaf(students.get(0)), new Leaf(students.get(1)));
+			this.right = new NonLeaf(new Leaf(students.get(2)), new Leaf(students.get(3)));
+			try {
+				this.rootHash = HashUtil.Hash(left.getHash() + right.getHash());
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			}
+			break;
+		}
 	}
 
 	public String getRootHash() {
 		return this.rootHash;
 	}
 
-	private String calculateHash(boolean complete) throws NoSuchAlgorithmException {
-		MessageDigest digest = MessageDigest.getInstance("SHA-256");
-		// Convert everything into one string
-		String hashComponent;
-		if (complete) {
-			hashComponent = left.getHash() + right.getHash();
-		} else {
-			hashComponent = left.getHash() + extra.getHash();
-		}
+	public NonLeaf getLeft() {
+		return left;
+	}
 
-		// Hash
-		byte[] hash = digest.digest(hashComponent.getBytes(StandardCharsets.UTF_8));
-		return new String(Hex.encode(hash));
+	public NonLeaf getRight() {
+		return right;
+	}
+
+	@Override
+	public String toString() {
+		String topLayer = "|" + rootHash + "|";
+		String middleLayer = "|" + left.getHash() + "|\t" + "|" + right.getHash() + "|\n";
+		String bottomLayer = "|" + left.getLeftLeaf().getHash() + "|\t" + "|" + left.getRightLeaf().getHash() + "|\t"
+				+ "|" + right.getLeftLeaf().getHash() + "|\t" + "|" + right.getRightLeaf().getHash() + "|";
+		
+		// indent to align
+		middleLayer = middleLayer.indent((bottomLayer.length()/2) - (middleLayer.length()/2));
+		topLayer = topLayer.indent((middleLayer.length()/2) - (topLayer.length()/8));
+		
+		// Build Output
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("--- Merkle Tree ---\n");
+		stringBuilder.append(topLayer);
+		stringBuilder.append(middleLayer);
+		stringBuilder.append(bottomLayer);
+		return stringBuilder.toString();
 	}
 }

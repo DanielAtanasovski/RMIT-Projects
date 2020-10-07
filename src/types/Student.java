@@ -1,5 +1,9 @@
 package types;
 
+/**
+ * @author Daniel Atanasovski
+ *
+ */
 public class Student {
 
 	private String studentNumber;
@@ -8,7 +12,16 @@ public class Student {
 	private String DOB;
 	private float CGPA;
 	private int graduationYear;
-
+	
+	
+	/**
+	 * @param studentNumber
+	 * @param studentName
+	 * @param degreeName
+	 * @param DOB
+	 * @param CGPA
+	 * @param graduationYear
+	 */
 	public Student(String studentNumber, String studentName, String degreeName, String DOB, float CGPA,
 			int graduationYear) {
 		this.studentNumber = studentNumber;
@@ -45,7 +58,7 @@ public class Student {
 
 	@Override
 	public String toString() {
-		return String.format("%s-%s-%s-%s-%f-%d", studentNumber, studentName, degreeName, DOB, CGPA, graduationYear);
+		return String.format("%s-%s-%s-%s-%.1f-%d", studentNumber, studentName, degreeName, DOB, CGPA, graduationYear);
 	}
 
 }
