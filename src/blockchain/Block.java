@@ -90,6 +90,10 @@ public class Block {
 		return hash;
 	}
 	
+	public String getPreviousHash() {
+		return previousHash;
+	}
+	
 	public MerkleTree getTree() {
 		return tree;
 	}
@@ -102,6 +106,14 @@ public class Block {
 		if (data.size() >= 4)
 			return true;
 		return false;
+	}
+	
+	public LocalDateTime getTimestamp() {
+		return timestamp;
+	}
+	
+	public ArrayList<Student> getData() {
+		return data;
 	}
 
 	public int getIndex() {

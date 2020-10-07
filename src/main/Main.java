@@ -18,6 +18,10 @@ import util.HashUtil;
  *
  */
 public class Main {
+	
+	public static Server serverA;
+	public static Server serverB;
+	public static Server serverC;
 
 	/**
 	 * @param args
@@ -30,9 +34,9 @@ public class Main {
 		BlockChain testChain = new BlockChain();
 
 		// Servers
-		Server serverA = new Server(testChain);
-		Server serverB = new Server(testChain);
-		Server serverC = new Server(testChain);
+		serverA = new Server(testChain);
+		serverB = new Server(new BlockChain(testChain));
+		serverC = new Server(new BlockChain(testChain));
 
 		// User Interface
 		System.out.println("--- Blockchain ---");
@@ -56,13 +60,13 @@ public class Main {
 				// Adding a Student
 				System.out.println("Enter Student data to add: ");
 				Student student = getStudentData(scanner);
-				testChain.addStudent(student);
+				serverA.getChain().addStudent(student);
 			} else if (choice == 2) {
 				// Verifying a Student
 				System.out.println("Enter Student data to verify: ");
 				
 				Student student = getStudentData(scanner);
-				Block block = testChain.verifyStudent(student);
+				Block block = serverB.getChain().verifyStudent(student);
 				
 				try {
 					System.out.println("Student Hash to find: " + HashUtil.Hash(student.toString()));
@@ -80,7 +84,7 @@ public class Main {
 				}
 				
 			} else if (choice == 3) {
-				System.out.println(testChain.toString());
+				System.out.println(serverC.getChain().toString());
 				
 			} else if (choice == 4) { 
 				if (!isSeeded) {
@@ -98,23 +102,32 @@ public class Main {
 					Student student10 = new Student("s5595", "Luke Skies", "Bachelor of Computer Science", "23/11/2000", 2.6f, 2021);
 					Student student11 = new Student("s4595", "Ryan Jeremy", "Bachelor of Mechanical Engineering", "09/02/1995", 2.9f, 2020);
 					Student student12 = new Student("s2149", "Alex Jacobs", "Bachelor of Aerospace Engineering", "02/08/1990", 3.5f, 2022);
-					testChain.addStudent(student1);
-					testChain.addStudent(student2);
-					testChain.addStudent(student3);
-					testChain.addStudent(student4);
-					testChain.addStudent(student5);
-					testChain.addStudent(student6);
-					testChain.addStudent(student7);
-					testChain.addStudent(student8);
-					testChain.addStudent(student9);
-					testChain.addStudent(student10);
-					testChain.addStudent(student11);
-					testChain.addStudent(student12);
+					serverA.getChain().addStudent(student1);
+					serverA.getChain().addStudent(student2);
+					serverA.getChain().addStudent(student3);
+					Block fullBlock = serverA.getChain().addStudent(student4);
+					updateServers(fullBlock);
+					serverA.getChain().addStudent(student5);
+					serverA.getChain().addStudent(student6);
+					serverA.getChain().addStudent(student7);
+					fullBlock = serverA.getChain().addStudent(student8);
+					updateServers(fullBlock);
+					serverA.getChain().addStudent(student9);
+					serverA.getChain().addStudent(student10);
+					serverA.getChain().addStudent(student11);
+					fullBlock = serverA.getChain().addStudent(student12);
+					updateServers(fullBlock);
 				}
 			} else {
 				System.out.println("Unknown Choice! \n");
 			}
 		}
+	}
+	
+	private static void updateServers(Block block) {
+		serverA.updateChain(block);
+		serverB.updateChain(block);
+		serverC.updateChain(block);
 	}
 	
 	public static Student getStudentData(Scanner scanner) {
