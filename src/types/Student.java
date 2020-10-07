@@ -12,8 +12,7 @@ public class Student {
 	private String DOB;
 	private float CGPA;
 	private int graduationYear;
-	
-	
+
 	/**
 	 * @param studentNumber
 	 * @param studentName

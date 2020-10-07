@@ -12,11 +12,11 @@ import util.HashUtil;
  *
  */
 public class NonLeaf {
-	
+
 	private String hash;
 	private Leaf left;
 	private Leaf right;
-	
+
 	public NonLeaf(Leaf left, Leaf right) {
 		this.left = left;
 		this.right = right;
@@ -30,11 +30,11 @@ public class NonLeaf {
 	public String getHash() {
 		return hash;
 	}
-	
+
 	public Leaf getLeftLeaf() {
 		return left;
 	}
-	
+
 	public Leaf getRightLeaf() {
 		return right;
 	}

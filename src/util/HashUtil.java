@@ -14,16 +14,16 @@ import org.bouncycastle.util.encoders.Hex;
  *
  */
 public class HashUtil {
-	
+
 	/**
 	 * @param component
 	 * @return hash
-	 * @throws NoSuchAlgorithmException 
+	 * @throws NoSuchAlgorithmException
 	 */
 	public static String Hash(String component) throws NoSuchAlgorithmException {
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
 		byte[] hash = digest.digest(component.getBytes(StandardCharsets.UTF_8));
 		return new String(Hex.encode(hash));
 	}
-	
+
 }

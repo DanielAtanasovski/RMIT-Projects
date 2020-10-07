@@ -73,11 +73,11 @@ public class MerkleTree {
 		String middleLayer = "|" + left.getHash() + "|\t" + "|" + right.getHash() + "|\n";
 		String bottomLayer = "|" + left.getLeftLeaf().getHash() + "|\t" + "|" + left.getRightLeaf().getHash() + "|\t"
 				+ "|" + right.getLeftLeaf().getHash() + "|\t" + "|" + right.getRightLeaf().getHash() + "|";
-		
+
 		// indent to align
-		middleLayer = middleLayer.indent((bottomLayer.length()/2) - (middleLayer.length()/2));
-		topLayer = topLayer.indent((middleLayer.length()/2) - (topLayer.length()/8));
-		
+		middleLayer = middleLayer.indent((bottomLayer.length() / 2) - (middleLayer.length() / 2));
+		topLayer = topLayer.indent((middleLayer.length() / 2) - (topLayer.length() / 8));
+
 		// Build Output
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("--- Merkle Tree ---\n");

@@ -70,11 +70,12 @@ public class Block {
 		boolean found = false;
 		try {
 			String hash = HashUtil.Hash(student.toString());
-			
+
 			if (tree.getLeft() == null)
 				return false;
-			
-			if (hash.equals(tree.getLeft().getLeftLeaf().getHash()) || hash.equals(tree.getLeft().getRightLeaf().getHash())
+
+			if (hash.equals(tree.getLeft().getLeftLeaf().getHash())
+					|| hash.equals(tree.getLeft().getRightLeaf().getHash())
 					|| hash.equals(tree.getRight().getLeftLeaf().getHash())
 					|| hash.equals(tree.getRight().getRightLeaf().getHash())) {
 				found = true;
@@ -82,18 +83,18 @@ public class Block {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		
+
 		return found;
 	}
 
 	public String getHash() {
 		return hash;
 	}
-	
+
 	public String getPreviousHash() {
 		return previousHash;
 	}
-	
+
 	public MerkleTree getTree() {
 		return tree;
 	}
@@ -107,11 +108,11 @@ public class Block {
 			return true;
 		return false;
 	}
-	
+
 	public LocalDateTime getTimestamp() {
 		return timestamp;
 	}
-	
+
 	public ArrayList<Student> getData() {
 		return data;
 	}

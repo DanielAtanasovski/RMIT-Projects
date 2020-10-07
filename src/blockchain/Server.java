@@ -1,5 +1,9 @@
 package blockchain;
 
+/**
+ * @author Daniel Atanasovski
+ *
+ */
 public class Server {
 	private BlockChain chain;
 
@@ -14,7 +18,7 @@ public class Server {
 	public void updateChain(Block newBlock) {
 		chain.addBlock(newBlock);
 	}
-	
+
 	public boolean verifyChain(Block newBlock) {
 		return chain.verifyBlock(newBlock);
 	}

@@ -45,7 +45,6 @@ public class BlockChain {
 			System.out.println("Failed to add new block. Previous Block Hash Mismatch");
 			return false;
 		}
-			
 
 		// Verify Data
 		ArrayList<Student> data = newBlock.getData();
@@ -54,7 +53,6 @@ public class BlockChain {
 			System.out.println("Failed to add new block. Merkle Root Hash Mismatch");
 			return false;
 		}
-			
 
 		// Verify block hash
 		try {
