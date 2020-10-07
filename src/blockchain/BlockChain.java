@@ -36,7 +36,7 @@ public class BlockChain {
 			chain.add(newblock);
 	}
 
-	private boolean verifyBlock(Block newBlock) {
+	public boolean verifyBlock(Block newBlock) {
 		String newBlockHash = newBlock.getHash();
 		Block currentLatestBlock = chain.get(chain.size() - 1);
 

@@ -125,9 +125,11 @@ public class Main {
 	}
 	
 	private static void updateServers(Block block) {
-		serverA.updateChain(block);
-		serverB.updateChain(block);
-		serverC.updateChain(block);
+		if (serverA.verifyChain(block) && serverB.verifyChain(block) && serverC.verifyChain(block)) {
+			serverA.updateChain(block);
+			serverB.updateChain(block);
+			serverC.updateChain(block);
+		}
 	}
 	
 	public static Student getStudentData(Scanner scanner) {
