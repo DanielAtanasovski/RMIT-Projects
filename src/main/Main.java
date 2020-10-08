@@ -28,17 +28,17 @@ public class Main {
 			System.out.println("1. Encrypt\n2. Decrypt\n3. Quit\n\nChoice:");
 			choice = scanner.nextInt();
 			switch (choice) {
-				case 1:
-					StegEncryption encrypt = new StegEncryption();
-					break;
-				case 2:
-					StegDecryption decrypt = new StegDecryption();
-					break;
-				case 3:
-					done = true;
-					break;
-				default:
-					System.out.println("\nUnknown Input!\n\n");
+			case 1:
+				StegEncryption encrypt = new StegEncryption();
+				break;
+			case 2:
+				StegDecryption decrypt = new StegDecryption();
+				break;
+			case 3:
+				done = true;
+				break;
+			default:
+				System.out.println("\nUnknown Input!\n\n");
 			}
 		}
 

@@ -35,7 +35,7 @@ public class StegDecryption {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		loadKey();
 		decrypt();
 	}
@@ -84,11 +84,11 @@ public class StegDecryption {
 			b &= 0b00000011; // Clear all data except the one we need
 			b <<= 6;
 			decryptedCharacter |= b;
-			
+
 			char decryptedChar = (char) decryptedCharacter;
 			decryptedMessage += decryptedChar;
 		}
-		
+
 		System.out.println("Message Decrypted: " + decryptedMessage + "\n");
 	}
 }

@@ -2,6 +2,10 @@ package types;
 
 import java.util.List;
 
+/**
+ * @author Daniel Atanasovski
+ *
+ */
 public class StegKey implements java.io.Serializable {
 	private int length;
 	private List<Position> positions;

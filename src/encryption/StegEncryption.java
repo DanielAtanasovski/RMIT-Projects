@@ -23,7 +23,7 @@ import types.StegKey;
  */
 public class StegEncryption {
 
-	private static final String IMAGE_FILE_NAME = "input.jpg";
+	private static final String IMAGE_FILE_NAME = "input.png";
 	private static final String KEY_FILE_NAME = "key";
 
 	private BufferedImage inputImage;
@@ -44,22 +44,26 @@ public class StegEncryption {
 	private void gatherData() {
 		Scanner scanner = new Scanner(System.in);
 
-		// Get Data to encrypt
-		System.out.println("Please enter message to be encrypted: ");
-		String data = scanner.nextLine();
-		byteData = data.getBytes();
-
 		// Convert File to BufferedImage Object
 		try {
 			inputImage = outputImage = ImageIO.read(new File(IMAGE_FILE_NAME));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		System.out.println(String.format("Current Image has %d characters available.", inputImage.getWidth() * inputImage.getHeight()));
+		
+		// Get Data to encrypt
+		System.out.println("Please enter message to be encrypted: ");
+		String data = scanner.nextLine();
+		byteData = data.getBytes();
+
+
 	}
 
 	private void encrypt() {
 		pixelPositions = new ArrayList<Position>();
-		
+
 		// Encryption
 		for (int i = 0; i < byteData.length; i++) {
 
@@ -138,7 +142,7 @@ public class StegEncryption {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		System.out.println("Key Saved.\nEncryption Done.\n");
 	}
 }
