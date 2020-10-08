@@ -60,7 +60,11 @@ public class Main {
 				// Adding a Student
 				System.out.println("Enter Student data to add: ");
 				Student student = getStudentData(scanner);
-				serverA.getChain().addStudent(student);
+				Block fullBlock = serverA.getChain().addStudent(student);
+				if (fullBlock != null) {
+					// new block is full and will simulate someone mining it instantly
+					updateServers(fullBlock);
+				}
 			} else if (choice == 2) {
 				// Verifying a Student
 				System.out.println("Enter Student data to verify: ");

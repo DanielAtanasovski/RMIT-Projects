@@ -74,9 +74,8 @@ public class BlockChain {
 		if (inProgressBlock != null) {
 			inProgressBlock.addStudent(student);
 			if (inProgressBlock.isBlockFull()) {
-				// Complete this block and return it to verify it
+				// Complete this block and return it to verify/mine it
 				inProgressBlock.mineBlock();
-//				chain.add(inProgressBlock); TODO: REMOVE THIS LINE
 				fullBlock = inProgressBlock;
 				inProgressBlock = null;
 			}
