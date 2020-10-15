@@ -109,7 +109,6 @@ int main(int argc, char *argv[])
         else
         {
             mb = (void *)block->nameptr;
-            // printf("mb: %p", mb);
         }
         strcpy((char *)mb, word);
 
@@ -236,6 +235,9 @@ Block *getFreeBlock(int sizeOfWord, llist *list, char *strategy)
 
     if (foundIndex != -1)
     {
+        // Remove block from freed list
+        llist_popAt(list, foundIndex);
+
         // Determine Split
         if (foundBlock->size - sizeOfWord > 0)
         {
@@ -247,9 +249,6 @@ Block *getFreeBlock(int sizeOfWord, llist *list, char *strategy)
             // Add new split block to freed list
             llist_push(list, split);
         }
-
-        // Remove block from freed list
-        llist_popAt(list, foundIndex);
     }
 
     return foundBlock;
@@ -283,7 +282,8 @@ void fprintList(llist *list, void (*print)(void *, int), int name)
 }
 
 // Finds for consecutive addresses of given data and merges, otherwise adds to head
-void mergeAndPush(llist *list, Block *data) {
+void mergeAndPush(llist *list, Block *data)
+{
     // Search through list for consecutive address
     size_t i;
     for (i = 0; i < llist_getSize(list); i++)
@@ -299,8 +299,6 @@ void mergeAndPush(llist *list, Block *data) {
             // Found following address
             printf("Merged two addresses!\n");
             data->size += comparisonBlock->size;
-            // Combine Words
-            strcat(data->nameptr, comparisonBlock->nameptr);
             llist_popAt(list, i);
             llist_push(list, data);
             return;
@@ -311,8 +309,6 @@ void mergeAndPush(llist *list, Block *data) {
             // Found preceding address
             printf("Merged two addresses!\n");
             comparisonBlock->size += data->size;
-            // Combine words
-            strcat(comparisonBlock->nameptr, data->nameptr);
             return;
         }
     }
