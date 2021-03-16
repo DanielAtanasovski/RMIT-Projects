@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "Game.h"
+#include "GlutCallbackInterface.h"
 
 #if _WIN32
 #   include <Windows.h>
@@ -13,6 +15,8 @@
 #   include <GL/glu.h>
 #   include <GL/glut.h>
 #endif
+
+Game* game;
 
 void display(void)
 {
@@ -46,12 +50,20 @@ void keyboard(unsigned char key, int x, int y)
 
 void init()
 {
-	/* In this program these OpenGL calls only need to be done once,
-	  but normally they would go elsewhere, e.g. display */
-
 	glMatrixMode(GL_PROJECTION);
 	glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 	glMatrixMode(GL_MODELVIEW);
+
+	game = new Game();
+	GlutCallbackInterface::getInstance().setGame(game);
+}
+
+void setupCallbacks() {
+	glutDisplayFunc(GlutCallbackInterface::getInstance().displayCallback);
+	glutKeyboardFunc(keyboard);
+	glutReshapeFunc(GlutCallbackInterface::getInstance().displayReshapeCallback);
+
+	glutMainLoop();
 }
 
 int main(int argc, char** argv)
@@ -59,12 +71,15 @@ int main(int argc, char** argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutCreateWindow("Tutorial 1");
-
+	//glutFullScreen();
+	
 	init();
-
-	glutDisplayFunc(display);
-	glutKeyboardFunc(keyboard);
-	glutMainLoop();
+	setupCallbacks();
 
 	return EXIT_SUCCESS;
 }
+
+#pragma region callbacks
+
+#pragma endregion
+

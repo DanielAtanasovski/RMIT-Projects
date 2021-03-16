@@ -4,10 +4,57 @@
     <Filter Include="src">
       <UniqueIdentifier>{e9b2b8c8-28b3-4eff-986f-98a1b2cd3417}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{bcf05b27-94ec-4779-9196-80d72bc5feac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{8b768568-454a-47a7-8289-8f183dc5c60b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World">
+      <UniqueIdentifier>{a578a98b-d67c-4058-9c64-fbea1d6fa199}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\main.c">
+    <ClCompile Include="..\src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\entity\Player.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entity\Asteroid.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\math\Vector.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\world\Arena.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Game.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GlutCallbackInterface.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\entity\Player.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\entity\Asteroid.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\math\Vector.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\world\Arena.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Game.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GlutCallbackInterface.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
