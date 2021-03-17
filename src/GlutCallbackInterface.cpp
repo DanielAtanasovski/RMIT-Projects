@@ -1,6 +1,4 @@
 #include "GlutCallbackInterface.h"
-#include <stdio.h>
-
 
 void GlutCallbackInterface::displayCallback()
 {
@@ -12,16 +10,18 @@ void GlutCallbackInterface::updateCallback()
 	getInstance().getGame()->update();
 }
 
+void GlutCallbackInterface::inputCallback(unsigned char key, int x, int y)
+{
+	getInstance().getGame()->input(key, x, y);
+}
+
 // Callbacks
 void GlutCallbackInterface::displayReshapeCallback(int width, int height)
 {
 	getInstance().getGame()->onReshape(width, height);
 }
 
-
 // Setters / getters
-
 void GlutCallbackInterface::setGame(Game* game) {
 	this->game = game;
-	//getInstance().setGame(game);
 }

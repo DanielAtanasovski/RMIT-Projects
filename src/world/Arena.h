@@ -8,8 +8,8 @@ public:
 	void draw();
 	
 	// Consts
-	const float WIDTH = 0.9;
-	const float HEIGHT = 0.9;
+	const float WIDTH = 199;
+	const float HEIGHT = 199;
 
 private:
 	

@@ -13,6 +13,9 @@
     <Filter Include="World">
       <UniqueIdentifier>{a578a98b-d67c-4058-9c64-fbea1d6fa199}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{3e4599d6-9ff3-42c0-9a8b-14b09b1855b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -36,6 +39,9 @@
     <ClCompile Include="..\src\GlutCallbackInterface.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\manager\InputManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\entity\Player.h">
@@ -55,6 +61,9 @@
     </ClInclude>
     <ClInclude Include="..\src\GlutCallbackInterface.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\manager\InputManager.h">
+      <Filter>Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

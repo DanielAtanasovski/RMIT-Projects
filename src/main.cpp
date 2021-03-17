@@ -18,68 +18,33 @@
 
 Game* game;
 
-void display(void)
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-
-	/* Put drawing code here */
-	// ...
-
-	/* Always check for errors! */
-	int err;
-	while ((err = glGetError()) != GL_NO_ERROR)
-		printf("display: %s\n", gluErrorString(err));
-
-	glutSwapBuffers();
-}
-
-/* You can ignore this for now, it just lets you exit when you press 'q' or ESC */
-void keyboard(unsigned char key, int x, int y)
-{
-	switch (key)
-	{
-	case 27:
-	case 'q':
-		exit(EXIT_SUCCESS);
-		break;
-	default:
-		break;
-	}
+void setupCallbacks() {
+	glutDisplayFunc(GlutCallbackInterface::getInstance().displayCallback);
+	glutKeyboardFunc(GlutCallbackInterface::getInstance().inputCallback);
+	glutReshapeFunc(GlutCallbackInterface::getInstance().displayReshapeCallback);
 }
 
 void init()
 {
-	glMatrixMode(GL_PROJECTION);
-	glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-	glMatrixMode(GL_MODELVIEW);
-
+	// Create game instance and setup callbacks
 	game = new Game();
 	GlutCallbackInterface::getInstance().setGame(game);
+	setupCallbacks();
 }
 
-void setupCallbacks() {
-	glutDisplayFunc(GlutCallbackInterface::getInstance().displayCallback);
-	glutKeyboardFunc(keyboard);
-	glutReshapeFunc(GlutCallbackInterface::getInstance().displayReshapeCallback);
 
-	glutMainLoop();
-}
 
 int main(int argc, char** argv)
 {
+	// Setup GLUT and Window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-	glutCreateWindow("Tutorial 1");
-	//glutFullScreen();
-	
-	init();
-	setupCallbacks();
+	glutCreateWindow("Asteroid Arena");
 
+	init();
+
+	game->init();
+	glutMainLoop();
 	return EXIT_SUCCESS;
 }
-
-#pragma region callbacks
-
-#pragma endregion
 

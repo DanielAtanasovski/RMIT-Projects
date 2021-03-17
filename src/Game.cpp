@@ -1,26 +1,36 @@
-#include <stdio.h>
 #include "Game.h"
-
-#if _WIN32
-#   include <Windows.h>
-#endif
-#if __APPLE__
-#   include <OpenGL/gl.h>
-#   include <OpenGL/glu.h>
-#   include <GLUT/glut.h>
-#else
-#   include <GL/gl.h>
-#   include <GL/glu.h>
-#   include <GL/glut.h>
-#endif
-#include <iostream>
 
 Game::Game() {
 	arena = new Arena();
+	player = new Player(this);
+	inputManager = InputManager();
 }
 
 Game::~Game() {
 
+}
+
+void Game::init()
+{
+	glMatrixMode(GL_PROJECTION);
+	glOrtho(-100.0, 100.0, 0, 100.0, 0, 1.0);
+	glMatrixMode(GL_MODELVIEW);
+
+	if (FULLSCREEN)
+		glutFullScreen();
+}
+
+void Game::input(unsigned char key, int x, int y)
+{
+	switch (key)
+	{
+	case 27:
+	case 'q':
+		exit(EXIT_SUCCESS);
+		break;
+	default:
+		break;
+	}
 }
 
 void Game::draw() {
@@ -30,6 +40,7 @@ void Game::draw() {
 
 	/* Put drawing code here */
 	arena->draw();
+	player->draw();
 
 	/* Always check for errors! */
 	int err;
@@ -54,11 +65,18 @@ void Game::onReshape(int width, int height)
 	// adjust projection to aspect ratio
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+
 	if (width >= height)
-		glOrtho(aspect * -1.0, 1.0 * aspect, -1.0, 1.0, -1.0, 1.0);
+		glOrtho(-100.0 * aspect, 100.0 * aspect, -100.0, 100.0, 0.0, 1.0);
 	else
-		glOrtho(-1.0, 1.0, -1.0 / aspect, 1.0 / aspect, -1.0, 1.0);
+		glOrtho(-100.0, 100.0, -100.0 / aspect, 100.0 / aspect, 0.0, 1.0);
 
 	glMatrixMode(GL_MODELVIEW);
 	
+	
+}
+
+InputManager Game::getInputManager()
+{
+	return inputManager;
 }

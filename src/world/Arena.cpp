@@ -25,9 +25,9 @@ void Arena::draw()
 {
 	//glPointSize(10);
 	glBegin(GL_LINE_LOOP);
-	glVertex3f(-WIDTH, -HEIGHT, 0);
-	glVertex3f(-WIDTH, HEIGHT, 0);
-	glVertex3f(WIDTH, HEIGHT, 0);
-	glVertex3f(WIDTH, -HEIGHT, 0);
+	glVertex3f(-WIDTH/2, -HEIGHT/2, 0);
+	glVertex3f(-WIDTH/2, HEIGHT/2, 0);
+	glVertex3f(WIDTH/2, HEIGHT/2, 0);
+	glVertex3f(WIDTH/2, -HEIGHT/2, 0);
 	glEnd();
 }
