@@ -1,10 +1,9 @@
 #pragma once
-#include <list>
+
 #include <functional>
 #include <vector>
 
 typedef std::pair<char, std::function<void(char key)>>* keySubscription;
-//typedef std::vector<char, std::function<void()>>* keySubscription;
 
 class InputManager
 {
@@ -22,8 +21,8 @@ public:
 
 private:
 	//std::list<char> pressedKeys
-	std::vector<keySubscription> keySubscriptions = std::vector<keySubscription>();
-	std::vector<keySubscription> findSubscription(char key);
+	std::vector<std::pair<char, std::function<void(char key)>>*> *keySubscriptions = new std::vector<std::pair<char, std::function<void(char key)>>*>();
+	std::vector<std::pair<char, std::function<void(char key)>>*> findSubscription(char key);
 };
 
 

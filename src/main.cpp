@@ -32,8 +32,6 @@ void init()
 	setupCallbacks();
 }
 
-
-
 int main(int argc, char** argv)
 {
 	// Setup GLUT and Window

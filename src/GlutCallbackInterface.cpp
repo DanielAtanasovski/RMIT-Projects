@@ -12,7 +12,7 @@ void GlutCallbackInterface::updateCallback()
 
 void GlutCallbackInterface::inputCallback(unsigned char key, int x, int y)
 {
-	getInstance().getGame()->input(key, x, y);
+	getInstance().getGame()->getInputManager().inputCallback(key, x, y);
 }
 
 // Callbacks

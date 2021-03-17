@@ -1,26 +1,11 @@
 #pragma once
 
-#if _WIN32
-#   include <Windows.h>
-#endif
-#if __APPLE__
-#   include <OpenGL/gl.h>
-#   include <OpenGL/glu.h>
-#   include <GLUT/glut.h>
-#else
-#   include <GL/gl.h>
-#   include <GL/glu.h>
-#   include <GL/glut.h>
-#endif
-
-#include <functional>
-//#include "../manager/InputManager.h"
-#include "../Game.h"
+#include "../manager/InputManager.h"
 
 class Player
 {
 public:
-	Player(Game* game);
+	Player(InputManager inputManager, float x, float y);
 	Player();
 	~Player();
 	void draw();
@@ -28,6 +13,7 @@ public:
 	void onMove(char key);
 
 private:
-	Game* game;
+	float x, y, rotation = 0.0f;
+
 };
 

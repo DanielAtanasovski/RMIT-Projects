@@ -1,9 +1,24 @@
 #include "Game.h"
+#include <iostream>
+#include <stdio.h>
+
+#if _WIN32
+#   include <Windows.h>
+#endif
+#if __APPLE__
+#   include <OpenGL/gl.h>
+#   include <OpenGL/glu.h>
+#   include <GLUT/glut.h>
+#else
+#   include <GL/gl.h>
+#   include <GL/glu.h>
+#   include <GL/glut.h>
+#endif
 
 Game::Game() {
 	arena = new Arena();
-	player = new Player(this);
 	inputManager = InputManager();
+	player = new Player(inputManager, -70, -70);
 }
 
 Game::~Game() {
@@ -15,6 +30,7 @@ void Game::init()
 	glMatrixMode(GL_PROJECTION);
 	glOrtho(-100.0, 100.0, 0, 100.0, 0, 1.0);
 	glMatrixMode(GL_MODELVIEW);
+	glutSetKeyRepeat(GLUT_KEY_REPEAT_ON);
 
 	if (FULLSCREEN)
 		glutFullScreen();
