@@ -18,7 +18,7 @@
 Game::Game() {
 	arena = new Arena();
 	inputManager = InputManager();
-	player = new Player(inputManager, -70, -70);
+	player = new Player(-70, -70);
 }
 
 Game::~Game() {
@@ -67,7 +67,7 @@ void Game::draw() {
 }
 
 void Game::update() {
-
+	player->update();
 }
 
 void Game::onReshape(int width, int height)
@@ -88,8 +88,8 @@ void Game::onReshape(int width, int height)
 		glOrtho(-100.0, 100.0, -100.0 / aspect, 100.0 / aspect, 0.0, 1.0);
 
 	glMatrixMode(GL_MODELVIEW);
-	
-	
+
+
 }
 
 InputManager Game::getInputManager()

@@ -1,27 +1,38 @@
 #include "GlutCallbackInterface.h"
+#include "manager/Input.h"
+
+Game* GlutCallbackInterface::gameInstance;
 
 void GlutCallbackInterface::displayCallback()
 {
-	getInstance().getGame()->draw();
+	GlutCallbackInterface::gameInstance->draw();
+	//getInstance().getGame()->draw();
 }
 
 void GlutCallbackInterface::updateCallback()
 {
-	getInstance().getGame()->update();
+	GlutCallbackInterface::gameInstance->update();
+	//getInstance().getGame()->update();
 }
 
-void GlutCallbackInterface::inputCallback(unsigned char key, int x, int y)
+void GlutCallbackInterface::keyboardPressedCallback(unsigned char key, int x, int y)
 {
-	getInstance().getGame()->getInputManager().inputCallback(key, x, y);
+	Input::onKeyboardPressedCallback(key, x, y);
+	//getInstance().getGame()->getInputManager().inputCallback(key, x, y);
+}
+
+void GlutCallbackInterface::keyboardReleasedCallback(unsigned char key, int x, int y) 
+{
+	Input::onKeyboardReleasedCallback(key, x, y);
 }
 
 // Callbacks
 void GlutCallbackInterface::displayReshapeCallback(int width, int height)
 {
-	getInstance().getGame()->onReshape(width, height);
+	GlutCallbackInterface::gameInstance->onReshape(width, height);
 }
 
 // Setters / getters
 void GlutCallbackInterface::setGame(Game* game) {
-	this->game = game;
+	GlutCallbackInterface::gameInstance = game;
 }

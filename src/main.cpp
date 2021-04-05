@@ -19,16 +19,19 @@
 Game* game;
 
 void setupCallbacks() {
-	glutDisplayFunc(GlutCallbackInterface::getInstance().displayCallback);
-	glutKeyboardFunc(GlutCallbackInterface::getInstance().inputCallback);
-	glutReshapeFunc(GlutCallbackInterface::getInstance().displayReshapeCallback);
+	glutDisplayFunc(GlutCallbackInterface::displayCallback);
+	glutKeyboardFunc(GlutCallbackInterface::keyboardPressedCallback);
+	glutKeyboardUpFunc(GlutCallbackInterface::keyboardReleasedCallback);
+	glutReshapeFunc(GlutCallbackInterface::displayReshapeCallback);
+	glutIdleFunc(GlutCallbackInterface::updateCallback);
 }
 
 void init()
 {
 	// Create game instance and setup callbacks
 	game = new Game();
-	GlutCallbackInterface::getInstance().setGame(game);
+	GlutCallbackInterface::setGame(game);
+	glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
 	setupCallbacks();
 }
 

@@ -160,6 +160,7 @@
     <ClCompile Include="..\src\Game.cpp" />
     <ClCompile Include="..\src\GlutCallbackInterface.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\manager\Input.cpp" />
     <ClCompile Include="..\src\manager\InputManager.cpp" />
     <ClCompile Include="..\src\math\Vector.cpp" />
     <ClCompile Include="..\src\world\Arena.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="..\src\entity\Player.h" />
     <ClInclude Include="..\src\Game.h" />
     <ClInclude Include="..\src\GlutCallbackInterface.h" />
+    <ClInclude Include="..\src\manager\Input.h" />
     <ClInclude Include="..\src\manager\InputManager.h" />
     <ClInclude Include="..\src\math\Vector.h" />
     <ClInclude Include="..\src\world\Arena.h" />

@@ -7,21 +7,18 @@
 class GlutCallbackInterface
 {
 public:
-	static GlutCallbackInterface& getInstance() {
-		static GlutCallbackInterface instance;
-		return instance;
-	}
 	// Callbacks
 	static void displayCallback();
 	static void updateCallback();
-	static void inputCallback(unsigned char key, int x, int y);
+	static void keyboardPressedCallback(unsigned char key, int x, int y);
+	static void keyboardReleasedCallback(unsigned char key, int x, int y);
 	static void displayReshapeCallback(int width, int height);
-	void setGame(Game* game);
-	Game* getGame() { return game; };
+	static void setGame(Game* game);
+	//Game* getGame() { return game; };
 
 private:
-	GlutCallbackInterface() { }
-	Game* game = nullptr;
+	GlutCallbackInterface() { gameInstance = nullptr; }
+	static Game* gameInstance;
 
 };
 
