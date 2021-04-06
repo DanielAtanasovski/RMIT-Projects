@@ -16,8 +16,8 @@
 #endif
 
 Game::Game() {
-	arena = new Arena();
 	player = new Player(-70, -70);
+	arena = new Arena(player);
 	init();
 }
 
@@ -54,6 +54,7 @@ void Game::draw() {
 
 void Game::update() {
 	player->update();
+	arena->update();
 }
 
 void Game::onReshape(int width, int height)
@@ -62,7 +63,6 @@ void Game::onReshape(int width, int height)
 	glViewport(0, 0, width, height);
 	// Aspect Ration Calculation
 	float aspect = (float)width / (float)height;
-	std::cout << aspect << std::endl;
 
 	// adjust projection to aspect ratio
 	glMatrixMode(GL_PROJECTION);

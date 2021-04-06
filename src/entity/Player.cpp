@@ -18,6 +18,7 @@
 #include <iostream>
 #include <math.h>
 
+//TODO: add inheritance from base GameObject class
 Player::Player(float x, float y)
 {
 	position = Vector2(x, y);

@@ -16,6 +16,9 @@
     <Filter Include="Manager">
       <UniqueIdentifier>{3e4599d6-9ff3-42c0-9a8b-14b09b1855b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{5b3c945c-8b0c-4443-9353-730189183fd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -45,6 +48,9 @@
     <ClCompile Include="..\src\math\Vector3.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="CollidableGameObject.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\entity\Player.h">
@@ -70,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="..\src\math\Vector3.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\physics\CollidableGameObject.h">
+      <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

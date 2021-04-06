@@ -164,6 +164,7 @@
     <ClCompile Include="..\src\math\Vector2.cpp" />
     <ClCompile Include="..\src\math\Vector3.cpp" />
     <ClCompile Include="..\src\world\Arena.cpp" />
+    <ClCompile Include="CollidableGameObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\entity\Asteroid.h" />
@@ -173,6 +174,7 @@
     <ClInclude Include="..\src\manager\Input.h" />
     <ClInclude Include="..\src\math\Vector2.h" />
     <ClInclude Include="..\src\math\Vector3.h" />
+    <ClInclude Include="..\src\physics\CollidableGameObject.h" />
     <ClInclude Include="..\src\world\Arena.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
