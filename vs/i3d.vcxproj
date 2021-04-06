@@ -162,7 +162,8 @@
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\manager\Input.cpp" />
     <ClCompile Include="..\src\manager\InputManager.cpp" />
-    <ClCompile Include="..\src\math\Vector.cpp" />
+    <ClCompile Include="..\src\math\Vector2.cpp" />
+    <ClCompile Include="..\src\math\Vector3.cpp" />
     <ClCompile Include="..\src\world\Arena.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -172,7 +173,8 @@
     <ClInclude Include="..\src\GlutCallbackInterface.h" />
     <ClInclude Include="..\src\manager\Input.h" />
     <ClInclude Include="..\src\manager\InputManager.h" />
-    <ClInclude Include="..\src\math\Vector.h" />
+    <ClInclude Include="..\src\math\Vector2.h" />
+    <ClInclude Include="..\src\math\Vector3.h" />
     <ClInclude Include="..\src\world\Arena.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

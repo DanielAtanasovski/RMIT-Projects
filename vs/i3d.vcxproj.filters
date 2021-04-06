@@ -27,7 +27,7 @@
     <ClCompile Include="..\src\entity\Asteroid.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\math\Vector.cpp">
+    <ClCompile Include="..\src\math\Vector2.cpp">
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="..\src\world\Arena.cpp">
@@ -45,6 +45,9 @@
     <ClCompile Include="..\src\manager\Input.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\math\Vector3.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\entity\Player.h">
@@ -53,7 +56,7 @@
     <ClInclude Include="..\src\entity\Asteroid.h">
       <Filter>Entity</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\math\Vector.h">
+    <ClInclude Include="..\src\math\Vector2.h">
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="..\src\world\Arena.h">
@@ -70,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="..\src\manager\Input.h">
       <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\math\Vector3.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

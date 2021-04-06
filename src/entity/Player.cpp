@@ -40,33 +40,38 @@ Player::~Player()
 
 void Player::draw()
 {
-	// Apply Rotation
-	glLoadIdentity();
 	glPushMatrix();
+
+	// Apply Rotation
 	glTranslatef(x, y, 0.0f);
 	glRotatef(rotation, 0.0f, 0.0f, -1.0f);
-	//glTranslatef(-x, -y, 0.0f);
-	glColor3f(1.0f, 0.0f, 0.0f);
 
-	// Outline
-	//glBegin(GL_LINE_LOOP);
-	//glVertex3f(10, 10, 0);
-	//glVertex3f(15, 20, 0);
-	//glVertex3f(15, 15, 0);
-	//glVertex3f(20, 10, 0);
-	//glVertex3f(15, 20, 0);
-	//glEnd();
+	// Outline \\ 
+	glColor3f(OUTLINE_COLOUR.x, OUTLINE_COLOUR.y, OUTLINE_COLOUR.z);
+	// Left Half
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(-5, -10, 0);
+	glVertex3f(0, 5, 0);
+	glVertex3f(0, -5, 0);
+	glEnd();
+
+	// Right haf
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(5, -10, 0);
+	glVertex3f(0, 5, 0);
+	glVertex3f(0, -5, 0);
+	glEnd();
 
 	// Fill
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glColor3f(FILL_COLOUR.x, FILL_COLOUR.y, FILL_COLOUR.z);
 	glBegin(GL_TRIANGLE_STRIP);
 	glVertex3f(- 5, - 10, 0);
 	glVertex3f(0, 5, 0);
 	glVertex3f(0, - 5, 0);
 	glVertex3f( 5, - 10, 0);
 	glEnd();
+
 	glPopMatrix();
-	glLoadIdentity();
 }
 
 void Player::update() {
@@ -80,8 +85,8 @@ void Player::boundsCheck() {
 	else if (this->rotation < 0)
 		this->rotation = 360;
 
-	if (velocity > 2)
-		velocity = 2;
+	if (velocity > MOVE_SPEED)
+		velocity = MOVE_SPEED;
 	else if (velocity < 0)
 		velocity = 0;
 }
@@ -89,7 +94,7 @@ void Player::boundsCheck() {
 void Player::move()
 {
 	// Move
-	this->velocity += inputVector.y * MOVE_SPEED;
+	this->velocity = inputVector.y * MOVE_SPEED;
 	// Rotate
 	this->rotation += inputVector.x * ROTATE_SPEED;
 	boundsCheck();

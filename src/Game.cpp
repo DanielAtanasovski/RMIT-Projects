@@ -19,6 +19,7 @@ Game::Game() {
 	arena = new Arena();
 	inputManager = InputManager();
 	player = new Player(-70, -70);
+	init();
 }
 
 Game::~Game() {
@@ -28,7 +29,7 @@ Game::~Game() {
 void Game::init()
 {
 	glMatrixMode(GL_PROJECTION);
-	glOrtho(-100.0, 100.0, 0, 100.0, 0, 1.0);
+	glOrtho(WORLD_UNIT_MIN, WORLD_UNIT_MAX, WORLD_UNIT_MIN, WORLD_UNIT_MAX, 0, WORLD_UNIT_DEPTH);
 	glMatrixMode(GL_MODELVIEW);
 	glutSetKeyRepeat(GLUT_KEY_REPEAT_ON);
 
@@ -83,9 +84,9 @@ void Game::onReshape(int width, int height)
 	glLoadIdentity();
 
 	if (width >= height)
-		glOrtho(-100.0 * aspect, 100.0 * aspect, -100.0, 100.0, 0.0, 1.0);
+		glOrtho(WORLD_UNIT_MIN * aspect, WORLD_UNIT_MAX * aspect, WORLD_UNIT_MIN, WORLD_UNIT_MAX, 0.0, WORLD_UNIT_DEPTH);
 	else
-		glOrtho(-100.0, 100.0, -100.0 / aspect, 100.0 / aspect, 0.0, 1.0);
+		glOrtho(WORLD_UNIT_MIN, WORLD_UNIT_MAX, WORLD_UNIT_MIN / aspect, WORLD_UNIT_MAX / aspect, 0.0, WORLD_UNIT_DEPTH);
 
 	glMatrixMode(GL_MODELVIEW);
 
