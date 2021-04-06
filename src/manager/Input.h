@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-static class Input
+class Input
 {
 public:
 	static void onKeyboardPressedCallback(char key, int x, int y);

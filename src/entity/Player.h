@@ -11,6 +11,8 @@ public:
 	void draw();
 	void update();
 
+	Vector2 getPosition() { return position; }
+
 private:
 	Vector2 position = Vector2(0, 0);
 	float rotation = 45.0f;

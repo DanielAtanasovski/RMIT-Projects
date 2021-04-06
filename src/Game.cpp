@@ -17,7 +17,6 @@
 
 Game::Game() {
 	arena = new Arena();
-	inputManager = InputManager();
 	player = new Player(-70, -70);
 	init();
 }
@@ -37,25 +36,11 @@ void Game::init()
 		glutFullScreen();
 }
 
-void Game::input(unsigned char key, int x, int y)
-{
-	switch (key)
-	{
-	case 27:
-	case 'q':
-		exit(EXIT_SUCCESS);
-		break;
-	default:
-		break;
-	}
-}
-
 void Game::draw() {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 
-	/* Put drawing code here */
 	arena->draw();
 	player->draw();
 
@@ -91,9 +76,4 @@ void Game::onReshape(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 
 
-}
-
-InputManager Game::getInputManager()
-{
-	return inputManager;
 }

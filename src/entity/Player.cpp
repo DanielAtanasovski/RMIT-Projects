@@ -94,8 +94,9 @@ void Player::move()
 	boundsCheck();
 
 	// Update Position
-	position.x += sinf(rotation * (M_PI / 180)) * velocity;
-	position.y += cosf(rotation * (M_PI / 180)) * velocity;
+	// TODO: Move deg2Rad to math class
+	position.x += sinf(rotation * (float(M_PI) / 180)) * velocity;
+	position.y += cosf(rotation * (float(M_PI) / 180)) * velocity;
 
 	// Request Redraw
 	glutPostRedisplay();

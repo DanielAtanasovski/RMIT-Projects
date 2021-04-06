@@ -5,6 +5,10 @@ std::vector<char> Input::keysPressed;
 
 void Input::onKeyboardPressedCallback(char key, int x, int y)
 {
+	// Check for quit
+	if (key == 'q' || key == 27)
+		exit(EXIT_SUCCESS);
+
 	// If not already pressed
 	if (std::find(keysPressed.begin(), keysPressed.end(), toupper(key)) == keysPressed.end())
 		keysPressed.push_back(toupper(key));

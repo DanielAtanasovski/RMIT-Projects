@@ -161,7 +161,6 @@
     <ClCompile Include="..\src\GlutCallbackInterface.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\manager\Input.cpp" />
-    <ClCompile Include="..\src\manager\InputManager.cpp" />
     <ClCompile Include="..\src\math\Vector2.cpp" />
     <ClCompile Include="..\src\math\Vector3.cpp" />
     <ClCompile Include="..\src\world\Arena.cpp" />
@@ -172,7 +171,6 @@
     <ClInclude Include="..\src\Game.h" />
     <ClInclude Include="..\src\GlutCallbackInterface.h" />
     <ClInclude Include="..\src\manager\Input.h" />
-    <ClInclude Include="..\src\manager\InputManager.h" />
     <ClInclude Include="..\src\math\Vector2.h" />
     <ClInclude Include="..\src\math\Vector3.h" />
     <ClInclude Include="..\src\world\Arena.h" />
