@@ -54,6 +54,9 @@
     <ClCompile Include="..\src\entity\Entity.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\math\Math.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\entity\Player.h">
@@ -85,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="..\src\entity\Entity.h">
       <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\math\Math.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

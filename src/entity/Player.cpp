@@ -1,5 +1,7 @@
 #include "Player.h"
 #include "../manager/Input.h"
+#include "../math/Math.h"
+#include <iostream>
 
 
 #if _WIN32
@@ -14,9 +16,8 @@
 #   include <GL/glu.h>
 #   include <GL/glut.h>
 #endif
-#define _USE_MATH_DEFINES
-#include <iostream>
-#include <math.h>
+
+
 
 //TODO: add inheritance from base GameObject class
 Player::Player(Vector2 position, float rotation) : Entity(position, rotation)
@@ -74,30 +75,24 @@ void Player::update(float deltaTime) {
 	move(deltaTime);
 }
 
-void Player::boundsCheck() {
-	if (rotation > 360)
-		rotation = 0;
-	else if (rotation < 0)
-		rotation = 360;
-
-	if (velocity > MOVE_SPEED)
-		velocity = MOVE_SPEED;
-	else if (velocity < 0)
-		velocity = 0;
-}
-
 void Player::move(float deltaTime)
 {
 	// Velocity
 	velocity = inputVector.y * MOVE_SPEED * deltaTime;
 	// Rotate
 	rotation += inputVector.x * ROTATE_SPEED * deltaTime;
-	boundsCheck();
+
+	// Clamp values
+	Math::clamp(velocity, 0, MOVE_SPEED);
+
+	if (rotation > 360)
+		rotation = 0;
+	else if (rotation < 0)
+		rotation = 360;
 
 	// Update Position
-	// TODO: Move deg2Rad to math class
-	position.x += sinf(rotation * (float(M_PI) / 180)) * velocity;
-	position.y += cosf(rotation * (float(M_PI) / 180)) * velocity;
+	position.x += sinf(Math::degToRad(rotation)) * velocity;
+	position.y += cosf(Math::degToRad(rotation)) * velocity;
 
 	// Request Redraw
 	glutPostRedisplay();

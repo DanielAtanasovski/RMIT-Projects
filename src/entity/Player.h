@@ -17,7 +17,6 @@ public:
 private:
 	void getInput();
 	void move(float deltaTime);
-	void boundsCheck();
 	Vector2 inputVector;
 	float velocity = 0.0f;
 

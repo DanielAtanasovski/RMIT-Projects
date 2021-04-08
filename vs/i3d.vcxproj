@@ -162,6 +162,7 @@
     <ClCompile Include="..\src\GlutCallbackInterface.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\manager\Input.cpp" />
+    <ClCompile Include="..\src\math\Math.cpp" />
     <ClCompile Include="..\src\math\Vector2.cpp" />
     <ClCompile Include="..\src\math\Vector3.cpp" />
     <ClCompile Include="..\src\physics\CollidableEntity.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="..\src\Game.h" />
     <ClInclude Include="..\src\GlutCallbackInterface.h" />
     <ClInclude Include="..\src\manager\Input.h" />
+    <ClInclude Include="..\src\math\Math.h" />
     <ClInclude Include="..\src\math\Vector2.h" />
     <ClInclude Include="..\src\math\Vector3.h" />
     <ClInclude Include="..\src\physics\CollidableEntity.h" />
