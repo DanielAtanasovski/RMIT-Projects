@@ -17,21 +17,10 @@
 #   include <GL/glut.h>
 #endif
 
-
-
-//TODO: add inheritance from base GameObject class
-Player::Player(Vector2 position, float rotation) : Entity(position, rotation)
+Player::Player(Vector2 position, float rotation) : CollidableEntity(position, rotation)
 {
-
-}
-
-//Player::Player()
-//{
-//	Entity::Entity();
-//}
-
-Player::~Player()
-{
+	// Determined by the largest side of the ship
+	collisionRadius = max(abs(DRAW_TOP_POINT.y), abs(DRAW_RIGHT_POINT.x));
 }
 
 void Player::draw()
@@ -42,6 +31,7 @@ void Player::draw()
 	glTranslatef(position.x, position.y, 0.0f);
 	glRotatef(rotation, 0.0f, 0.0f, -1.0f);
 
+	glLineWidth(1.5f);
 	// Outline Shape 
 	glColor3f(OUTLINE_COLOUR.x, OUTLINE_COLOUR.y, OUTLINE_COLOUR.z);
 	// Left Half
@@ -66,6 +56,24 @@ void Player::draw()
 	glVertex3f(DRAW_MID_POINT.x, DRAW_MID_POINT.y, 0);
 	glVertex3f(DRAW_RIGHT_POINT.x, DRAW_RIGHT_POINT.y, 0);
 	glEnd();
+
+	// Draw Bounding Circle
+	CollidableEntity::draw();
+	/*glBegin(GL_LINE_LOOP);
+	int r = 10;
+	int n = 32;
+	for (int i = 0; i < n; i++) {
+		float x = ((i / (float)n - 0.5) * 2.0) * r;
+		float y = sqrt(r * r - x * x);
+		glVertex2f(x, y);
+	}
+
+	for (int i = n; i > 0; i--) {
+		float x = (i / (float)n - 0.5) * 2.0 * r;
+		float y = -sqrt(r * r - x * x);
+		glVertex2f(x, y);
+	}
+	glEnd();*/
 
 	glPopMatrix();
 }

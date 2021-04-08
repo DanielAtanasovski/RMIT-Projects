@@ -16,13 +16,9 @@
 #endif
 
 Game::Game() {
-	player = new Player(Vector2(-70,-70), 45);
+	player = new Player(Vector2(-70, -70), 45);
 	arena = new Arena(player);
 	init();
-}
-
-Game::~Game() {
-
 }
 
 void Game::init()
@@ -62,6 +58,13 @@ void Game::update() {
 
 	player->update(deltaTime);
 	arena->update();
+	// Check collisions
+	if (playerOutOfBounds()) {
+		std::cout << "Player Out of Bounds!!!" << std::endl;
+		restart();
+	}
+		
+
 
 	lastElapsedTime = elapsed;
 }
@@ -85,4 +88,31 @@ void Game::onReshape(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 
 
+}
+
+void Game::restart()
+{
+	// Remove old instances
+	// FIXME: Not efficient, should just reset them
+	delete arena;
+	delete player;
+
+	player = new Player(Vector2(-70, -70), 45);
+	arena = new Arena(player);
+}
+
+bool Game::playerOutOfBounds()
+{
+	Vector2 position = player->getPosition();
+	float radius = player->getCollisionRadius();
+
+	if (
+		((position.x - radius) <= arena->TOP_LEFT_POINT.x) ||
+		((position.y + radius) >= arena->TOP_LEFT_POINT.y) ||
+		((position.x + radius) >= arena->BOTTOM_RIGHT_POINT.x) ||
+		((position.y - radius) <= arena->BOTTOM_RIGHT_POINT.y)
+		) {
+		return true;
+	}
+	return false;
 }

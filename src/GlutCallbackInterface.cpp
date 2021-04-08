@@ -1,24 +1,24 @@
 #include "GlutCallbackInterface.h"
 #include "manager/Input.h"
 
+/// <summary>
+/// Serve as a way to call methods of objects in c++ rather than static functions
+/// </summary>
 Game* GlutCallbackInterface::gameInstance;
 
 void GlutCallbackInterface::displayCallback()
 {
 	GlutCallbackInterface::gameInstance->draw();
-	//getInstance().getGame()->draw();
 }
 
 void GlutCallbackInterface::updateCallback()
 {
 	GlutCallbackInterface::gameInstance->update();
-	//getInstance().getGame()->update();
 }
 
 void GlutCallbackInterface::keyboardPressedCallback(unsigned char key, int x, int y)
 {
 	Input::onKeyboardPressedCallback(key, x, y);
-	//getInstance().getGame()->getInputManager().inputCallback(key, x, y);
 }
 
 void GlutCallbackInterface::keyboardReleasedCallback(unsigned char key, int x, int y) 
@@ -26,7 +26,6 @@ void GlutCallbackInterface::keyboardReleasedCallback(unsigned char key, int x, i
 	Input::onKeyboardReleasedCallback(key, x, y);
 }
 
-// Callbacks
 void GlutCallbackInterface::displayReshapeCallback(int width, int height)
 {
 	GlutCallbackInterface::gameInstance->onReshape(width, height);

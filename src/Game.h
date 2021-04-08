@@ -7,7 +7,7 @@ class Game
 {
 public:
 	Game();
-	~Game();
+	~Game() {};
 	void init();
 	void draw();
 	void update();
@@ -23,5 +23,9 @@ private:
 	Player* player = nullptr;
 	Arena* arena = nullptr;
 	float lastElapsedTime = 0.0f;
+
+	void restart();
+	bool playerOutOfBounds(); // Player and Arena
+	void CollisionCheckCollidables(); // Asteroids with eachother and player
 
 };

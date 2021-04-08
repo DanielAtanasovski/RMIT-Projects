@@ -13,18 +13,9 @@
 #endif
 #include <iostream>
 
-Arena::Arena(Player* player)
-{
-	this->player = player;
-}
-
-Arena::~Arena()
-{
-}
-
 void Arena::draw()
 {
-	//glPointSize(10);
+	glLineWidth(2.0f);
 	glBegin(GL_LINES);
 	glColor3f(topLineColour.x, topLineColour.y, topLineColour.z);
 	glVertex3f(TOP_LEFT_POINT.x, TOP_LEFT_POINT.y, 0);

@@ -1,6 +1,4 @@
 #include "Math.h"
-#define _USE_MATH_DEFINES
-#include <math.h>
 
 float Math::degToRad(float degree) {
 	return degree * (float(M_PI) / 180);

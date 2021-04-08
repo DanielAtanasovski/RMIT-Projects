@@ -14,11 +14,9 @@ public:
 	static void keyboardReleasedCallback(unsigned char key, int x, int y);
 	static void displayReshapeCallback(int width, int height);
 	static void setGame(Game* game);
-	//Game* getGame() { return game; };
 
 private:
 	GlutCallbackInterface() { gameInstance = nullptr; }
 	static Game* gameInstance;
-
 };
 
