@@ -22,5 +22,6 @@ public:
 private:
 	Player* player = nullptr;
 	Arena* arena = nullptr;
+	float lastElapsedTime = 0.0f;
 
 };

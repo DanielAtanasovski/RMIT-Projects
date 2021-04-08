@@ -19,15 +19,15 @@
 #include <math.h>
 
 //TODO: add inheritance from base GameObject class
-Player::Player(float x, float y)
+Player::Player(Vector2 position, float rotation) : Entity(position, rotation)
 {
-	position = Vector2(x, y);
+
 }
 
-Player::Player()
-{
-	position = Vector2(0, 0);
-}
+//Player::Player()
+//{
+//	Entity::Entity();
+//}
 
 Player::~Player()
 {
@@ -69,9 +69,9 @@ void Player::draw()
 	glPopMatrix();
 }
 
-void Player::update() {
+void Player::update(float deltaTime) {
 	getInput();
-	move();
+	move(deltaTime);
 }
 
 void Player::boundsCheck() {
@@ -86,12 +86,12 @@ void Player::boundsCheck() {
 		velocity = 0;
 }
 
-void Player::move()
+void Player::move(float deltaTime)
 {
 	// Velocity
-	velocity = inputVector.y * MOVE_SPEED;
+	velocity = inputVector.y * MOVE_SPEED * deltaTime;
 	// Rotate
-	rotation += inputVector.x * ROTATE_SPEED;
+	rotation += inputVector.x * ROTATE_SPEED * deltaTime;
 	boundsCheck();
 
 	// Update Position

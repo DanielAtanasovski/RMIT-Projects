@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\entity\Asteroid.cpp" />
+    <ClCompile Include="..\src\entity\Entity.cpp" />
     <ClCompile Include="..\src\entity\Player.cpp" />
     <ClCompile Include="..\src\Game.cpp" />
     <ClCompile Include="..\src\GlutCallbackInterface.cpp" />
@@ -163,18 +164,19 @@
     <ClCompile Include="..\src\manager\Input.cpp" />
     <ClCompile Include="..\src\math\Vector2.cpp" />
     <ClCompile Include="..\src\math\Vector3.cpp" />
+    <ClCompile Include="..\src\physics\CollidableEntity.cpp" />
     <ClCompile Include="..\src\world\Arena.cpp" />
-    <ClCompile Include="CollidableGameObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\entity\Asteroid.h" />
+    <ClInclude Include="..\src\entity\Entity.h" />
     <ClInclude Include="..\src\entity\Player.h" />
     <ClInclude Include="..\src\Game.h" />
     <ClInclude Include="..\src\GlutCallbackInterface.h" />
     <ClInclude Include="..\src\manager\Input.h" />
     <ClInclude Include="..\src\math\Vector2.h" />
     <ClInclude Include="..\src\math\Vector3.h" />
-    <ClInclude Include="..\src\physics\CollidableGameObject.h" />
+    <ClInclude Include="..\src\physics\CollidableEntity.h" />
     <ClInclude Include="..\src\world\Arena.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

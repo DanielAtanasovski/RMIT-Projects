@@ -16,7 +16,7 @@
 #endif
 
 Game::Game() {
-	player = new Player(-70, -70);
+	player = new Player(Vector2(-70,-70), 45);
 	arena = new Arena(player);
 	init();
 }
@@ -34,6 +34,9 @@ void Game::init()
 
 	if (FULLSCREEN)
 		glutFullScreen();
+
+	// Elapsed Time
+	lastElapsedTime = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
 }
 
 void Game::draw() {
@@ -53,8 +56,14 @@ void Game::draw() {
 }
 
 void Game::update() {
-	player->update();
+	// Calculate Delta Time
+	float elapsed = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
+	float deltaTime = elapsed - lastElapsedTime;
+
+	player->update(deltaTime);
 	arena->update();
+
+	lastElapsedTime = elapsed;
 }
 
 void Game::onReshape(int width, int height)

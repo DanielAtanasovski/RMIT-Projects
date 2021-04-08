@@ -48,8 +48,11 @@
     <ClCompile Include="..\src\math\Vector3.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="CollidableGameObject.cpp">
+    <ClCompile Include="..\src\physics\CollidableEntity.cpp">
       <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entity\Entity.cpp">
+      <Filter>Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -77,8 +80,11 @@
     <ClInclude Include="..\src\math\Vector3.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\physics\CollidableGameObject.h">
+    <ClInclude Include="..\src\physics\CollidableEntity.h">
       <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\entity\Entity.h">
+      <Filter>Entity</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
