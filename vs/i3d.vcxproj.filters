@@ -19,6 +19,9 @@
     <Filter Include="Physics">
       <UniqueIdentifier>{5b3c945c-8b0c-4443-9353-730189183fd7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effects">
+      <UniqueIdentifier>{cae8db72-7015-40aa-adc2-d54d83c6d118}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -57,6 +60,15 @@
     <ClCompile Include="..\src\math\Math.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\effects\Particle.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\effects\ParticleSystem.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\effects\TrailEffect.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\entity\Player.h">
@@ -91,6 +103,15 @@
     </ClInclude>
     <ClInclude Include="..\src\math\Math.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\effects\ParticleSystem.h">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\effects\Particle.h">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\effects\TrailEffect.h">
+      <Filter>Effects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
