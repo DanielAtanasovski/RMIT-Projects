@@ -1,4 +1,9 @@
 #include "Arena.h"
+#include <iostream>
+#include "../Game.h"
+#include "../entity/Asteroid.h"
+
+
 #if _WIN32
 #   include <Windows.h>
 #endif
@@ -11,7 +16,6 @@
 #   include <GL/glu.h>
 #   include <GL/glut.h>
 #endif
-#include <iostream>
 
 void Arena::draw()
 {
@@ -35,9 +39,33 @@ void Arena::draw()
 	glEnd();
 }
 
-void Arena::update()
+void Arena::update(float deltaTime)
 {
 	lineCheck();
+	spawnerUpdate(deltaTime);
+}
+
+void Arena::spawnAsteroid()
+{
+	int randInt = Math::getRandomInt(0, 360);
+	float randomPoint = randInt / (float)360 * 2 * M_PI;
+	float x = ASTEROID_SPAWN_RADIUS * cosf(randomPoint);
+	float y = ASTEROID_SPAWN_RADIUS * sinf(randomPoint);
+
+
+	std::cout << "Spawned Asteroid at " << x << ", " << y  << std::endl;
+	Asteroid* newAsteroid = new Asteroid(Vector2(x, y), 0);
+	game->createCollidableEntity(newAsteroid);
+}
+
+void Arena::spawnerUpdate(float deltaTime)
+{
+	currentSpawnTime += deltaTime;
+	if (currentSpawnTime >= nextSpawnTime) {
+		spawnAsteroid();
+		currentSpawnTime = 0;
+		nextSpawnTime = Math::getRandomFloat(MIN_SPAWN_TIME, MAX_SPAWN_TIME);
+	}
 }
 
 void Arena::lineCheck()

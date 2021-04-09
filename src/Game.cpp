@@ -17,7 +17,7 @@
 
 Game::Game() {
 	player = new Player(Vector2(-70, -70), 45);
-	arena = new Arena(player);
+	arena = new Arena(player, this);
 	init();
 }
 
@@ -43,6 +43,12 @@ void Game::draw() {
 	arena->draw();
 	player->draw();
 
+	// Loop Collidables
+	for (size_t i = 0; i < collidableEntities.size(); i++)
+	{
+		collidableEntities[i]->draw();
+	}
+
 	/* Always check for errors! */
 	int err;
 	while ((err = glGetError()) != GL_NO_ERROR)
@@ -57,13 +63,19 @@ void Game::update() {
 	float deltaTime = elapsed - lastElapsedTime;
 
 	player->update(deltaTime);
-	arena->update();
+	arena->update(deltaTime);
+
 	// Check collisions
 	if (playerOutOfBounds()) {
 		std::cout << "Player Out of Bounds!!!" << std::endl;
 		restart();
 	}
-		
+	
+	// Loop Collidables
+	for (size_t i = 0; i < collidableEntities.size(); i++)
+	{
+		collidableEntities[i]->update(deltaTime);
+	}
 
 
 	lastElapsedTime = elapsed;
@@ -90,6 +102,11 @@ void Game::onReshape(int width, int height)
 
 }
 
+void Game::createCollidableEntity(CollidableEntity* entity)
+{
+	collidableEntities.push_back(entity);
+}
+
 void Game::restart()
 {
 	// Remove old instances
@@ -98,7 +115,7 @@ void Game::restart()
 	delete player;
 
 	player = new Player(Vector2(-70, -70), 45);
-	arena = new Arena(player);
+	arena = new Arena(player, this);
 }
 
 bool Game::playerOutOfBounds()

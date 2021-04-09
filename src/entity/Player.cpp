@@ -1,7 +1,6 @@
 #include "Player.h"
 #include "../manager/Input.h"
 #include "../math/Math.h"
-#include <iostream>
 
 
 #if _WIN32
@@ -20,7 +19,7 @@
 Player::Player(Vector2 position, float rotation) : CollidableEntity(position, rotation)
 {
 	// Determined by the largest side of the ship
-	collisionRadius = max(abs(DRAW_TOP_POINT.y), abs(DRAW_RIGHT_POINT.x));
+	collisionRadius = Math::maxValue(abs(DRAW_TOP_POINT.y), abs(DRAW_RIGHT_POINT.x));
 }
 
 void Player::draw()
@@ -59,21 +58,6 @@ void Player::draw()
 
 	// Draw Bounding Circle
 	CollidableEntity::draw();
-	/*glBegin(GL_LINE_LOOP);
-	int r = 10;
-	int n = 32;
-	for (int i = 0; i < n; i++) {
-		float x = ((i / (float)n - 0.5) * 2.0) * r;
-		float y = sqrt(r * r - x * x);
-		glVertex2f(x, y);
-	}
-
-	for (int i = n; i > 0; i--) {
-		float x = (i / (float)n - 0.5) * 2.0 * r;
-		float y = -sqrt(r * r - x * x);
-		glVertex2f(x, y);
-	}
-	glEnd();*/
 
 	glPopMatrix();
 }
