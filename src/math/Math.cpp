@@ -38,3 +38,16 @@ float Math::getRandomFloat(float min, float max) {
 
 	return uni(rng);
 }
+
+bool Math::getRandomBool() {
+	std::random_device randomDevice;
+	std::mt19937 rng(randomDevice());
+	std::uniform_real_distribution<float> uni(-1, 1);
+
+	float value = uni(rng);
+	if (value >= 0)
+		return true;
+	
+
+	return false;
+}

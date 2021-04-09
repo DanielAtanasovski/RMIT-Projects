@@ -63,4 +63,9 @@ void Asteroid::update(float deltaTime) {
 	direction = direction.normalised();
 	position.x += direction.x * deltaTime * speed;
 	position.y += direction.y * deltaTime * speed;
+
+	if (rotateClockwise)
+		rotation += rotationSpeed * deltaTime;
+	else
+		rotation -= rotationSpeed * deltaTime;
 }

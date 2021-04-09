@@ -12,5 +12,6 @@ public:
 	static float maxValue(float value1, float value2);
 	static int getRandomInt(int min, int max);
 	static float getRandomFloat(float min, float max);
+	static bool getRandomBool();
 };
 

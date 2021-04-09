@@ -22,9 +22,13 @@ private:
 	const float MIN_SIZE_OFFSET = -3.0f;
 	const float MIN_SPEED = 20.0f;
 	const float MAX_SPEED = 40.0f;
+	const float MIN_ROTATION_SPEED = 10.0f;
+	const float MAX_ROTATION_SPEED = 25.0f;
 
+	const bool rotateClockwise = Math::getRandomBool();
 	const float size = Math::getRandomFloat(MIN_SIZE, MAX_SIZE);
 	const float speed = Math::getRandomFloat(MIN_SPEED, MAX_SPEED);
+	const float rotationSpeed = Math::getRandomFloat(MIN_ROTATION_SPEED, MAX_ROTATION_SPEED);
 	std::vector<Vector2> drawPoints = std::vector<Vector2>();
 	Vector2 direction;
 	
