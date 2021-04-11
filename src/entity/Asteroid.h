@@ -18,12 +18,15 @@ private:
 	const int MAX_POINTS = 14; // Amount of points used to draw asteroid
 	const float MAX_SIZE = 14.0f; // Biggest size
 	const float MIN_SIZE = 6.0f; // smallest size
-	const float MAX_SIZE_OFFSET = 3.0f; // max difference between each point
-	const float MIN_SIZE_OFFSET = -3.0f;
+	const float MAX_SIZE_OFFSET = 2.0f; // max difference between each point
+	const float MIN_SIZE_OFFSET = -1.5f;
 	const float MIN_SPEED = 20.0f;
 	const float MAX_SPEED = 40.0f;
 	const float MIN_ROTATION_SPEED = 10.0f;
 	const float MAX_ROTATION_SPEED = 25.0f;
+
+	const Vector3 FILL_COLOUR = Vector3(0.4f, 0.4f, 0.4f);
+	const Vector3 OUTLINE_COLOUR = Vector3(0.8f, 0.8f, 0.8f);
 
 	const bool rotateClockwise = Math::getRandomBool();
 	const float size = Math::getRandomFloat(MIN_SIZE, MAX_SIZE);

@@ -46,16 +46,26 @@ void Asteroid::generateAsteroid()
 }
 
 void Asteroid::drawAsteroid() {
-	//glPushMatrix();
+	glPushMatrix();
 	glBegin(GL_LINE_LOOP);
-	glColor3f(0.8f, 0.8f, 0.8f);
+	glColor3f(OUTLINE_COLOUR.x, OUTLINE_COLOUR.y, OUTLINE_COLOUR.z);
 	
 	for (size_t i = 0; i < MAX_POINTS; i++)
 	{
 		glVertex3f(drawPoints[i].x, drawPoints[i].y, 0);
 	}
 	glEnd();
-	//glPopMatrix();
+
+	glBegin(GL_TRIANGLE_FAN);
+	glColor3f(FILL_COLOUR.x, FILL_COLOUR.y, FILL_COLOUR.z);
+
+	for (size_t i = 0; i < MAX_POINTS; i++)
+	{
+		glVertex3f(drawPoints[i].x, drawPoints[i].y, 0);
+	}
+	glEnd();
+
+	glPopMatrix();
 }
 
 void Asteroid::update(float deltaTime) {
