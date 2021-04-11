@@ -42,3 +42,9 @@ Vector2 Vector2::operator-(const Vector2& other)
 {
 	return Vector2(this->x - other.x, this->y - other.y);
 }
+
+float Vector2::distanceTo(Vector2 other) {
+	float dx = pow((this->x - other.x), 2);
+	float dy = pow((this->y - other.y), 2);
+	return (float)sqrt(dx + dy);
+}

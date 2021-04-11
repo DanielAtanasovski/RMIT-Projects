@@ -11,8 +11,6 @@ public:
 	void draw() override;
 	void update(float deltaTime) override;
 
-	Vector2 getPosition() { return position; }
-
 private:
 	void getInput();
 	void move(float deltaTime);

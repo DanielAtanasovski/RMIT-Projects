@@ -65,17 +65,19 @@ void Game::update() {
 	player->update(deltaTime);
 	arena->update(deltaTime);
 
-	// Check collisions
-	if (playerOutOfBounds()) {
-		std::cout << "Player Out of Bounds!!!" << std::endl;
-		restart();
-	}
-	
 	// Loop Collidables
 	for (size_t i = 0; i < collidableEntities.size(); i++)
 	{
 		collidableEntities[i]->update(deltaTime);
 	}
+
+	// Check collisions
+	if (playerOutOfBounds()) {
+		std::cout << "Player Out of Bounds!" << std::endl;
+		restart();
+	}
+
+	CollisionCheckCollidables();
 
 
 	lastElapsedTime = elapsed;
@@ -113,6 +115,7 @@ void Game::restart()
 	// FIXME: Not efficient, should just reset them
 	delete arena;
 	delete player;
+	collidableEntities.clear();
 
 	player = new Player(Vector2(-70, -70), 45);
 	arena = new Arena(player, this);
@@ -132,4 +135,33 @@ bool Game::playerOutOfBounds()
 		return true;
 	}
 	return false;
+}
+
+void Game::CollisionCheckCollidables()
+{
+	for (size_t i = 0; i < collidableEntities.size(); i++)
+	{
+		// Check with collision with player
+		Vector2 currentPosition = collidableEntities[i]->getPosition();
+		float totalRadius = player->getCollisionRadius() + collidableEntities[i]->getCollisionRadius();
+
+		if (currentPosition.distanceTo(player->getPosition()) < totalRadius) {
+			restart();
+		}
+
+		// Other Asteroids
+		for (size_t j = 0; j < collidableEntities.size(); j++) {
+			// don't check collisions with self
+			if (j == i)
+				continue;
+
+			Vector2 otherPosition = collidableEntities[j]->getPosition();
+			totalRadius = collidableEntities[i]->getCollisionRadius() + collidableEntities[j]->getCollisionRadius();
+
+			if (currentPosition.distanceTo(otherPosition) < totalRadius) {
+				std::cout << "Collision Between Asteroids!" << std::endl;
+			}
+
+		}
+	}
 }

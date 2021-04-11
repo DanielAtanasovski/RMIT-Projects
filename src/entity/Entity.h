@@ -7,6 +7,7 @@ public:
 	Entity(Vector2 position, float rotation = 0.0f);
 	virtual void draw() {};
 	virtual void update(float deltaTime) {};
+	Vector2 getPosition() { return position; };
 protected:
 	Vector2 position = Vector2();
 	float rotation = 0.0f;
