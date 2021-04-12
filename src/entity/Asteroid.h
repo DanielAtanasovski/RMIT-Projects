@@ -33,6 +33,4 @@ private:
 	const float speed = Math::getRandomFloat(MIN_SPEED, MAX_SPEED);
 	const float rotationSpeed = Math::getRandomFloat(MIN_ROTATION_SPEED, MAX_ROTATION_SPEED);
 	std::vector<Vector2> drawPoints = std::vector<Vector2>();
-	Vector2 direction;
-	
 };

@@ -139,15 +139,51 @@ bool Game::playerOutOfBounds()
 
 void Game::CollisionCheckCollidables()
 {
+	std::vector<std::pair<int, int>> ignoreCollisionEvent = std::vector<std::pair<int, int>>();
+	// Loop all collidables (asteroids)
 	for (size_t i = 0; i < collidableEntities.size(); i++)
 	{
 		// Check with collision with player
-		Vector2 currentPosition = collidableEntities[i]->getPosition();
-		float totalRadius = player->getCollisionRadius() + collidableEntities[i]->getCollisionRadius();
+		CollidableEntity* c1 = collidableEntities[i];
+		Vector2 currentPosition = c1->getPosition();
+		float totalRadius = player->getCollisionRadius() + c1->getCollisionRadius();
 
+		// Restart game on collision with player
 		if (currentPosition.distanceTo(player->getPosition()) < totalRadius) {
 			restart();
 		}
+
+		// Check if in arena
+		if (!c1->getInsideArena()) {
+			if (
+				((currentPosition.x + c1->getCollisionRadius()) < arena->TOP_RIGHT_POINT.x) &&
+				((currentPosition.x - c1->getCollisionRadius()) > arena->BOTTOM_LEFT_POINT.x) &&
+				((currentPosition.y + c1->getCollisionRadius()) < arena->TOP_RIGHT_POINT.y) &&
+				((currentPosition.y - c1->getCollisionRadius()) > arena->BOTTOM_LEFT_POINT.y)
+				)
+				c1->setInsideArena(true);
+		}
+		else {
+			// Walls
+			if (currentPosition.distanceTo(Vector2(arena->BOTTOM_RIGHT_POINT.x, currentPosition.y)) < c1->getCollisionRadius()) {
+				c1->setVelocity(Vector2(-c1->getVelocity().x, c1->getVelocity().y));
+			}
+				
+			if (currentPosition.distanceTo(Vector2(currentPosition.x, arena->BOTTOM_RIGHT_POINT.y)) < c1->getCollisionRadius()){
+				c1->setVelocity(Vector2(c1->getVelocity().x, -c1->getVelocity().y));
+			}
+				
+			if (currentPosition.distanceTo(Vector2(arena->TOP_LEFT_POINT.x, currentPosition.y)) < c1->getCollisionRadius()) {
+				c1->setVelocity(Vector2(-c1->getVelocity().x, c1->getVelocity().y));
+			}
+			
+			if (currentPosition.distanceTo(Vector2(currentPosition.x, arena->TOP_LEFT_POINT.y)) < c1->getCollisionRadius()) {
+				c1->setVelocity(Vector2(c1->getVelocity().x, -c1->getVelocity().y));
+			}
+				
+		}
+
+
 
 		// Other Asteroids
 		for (size_t j = 0; j < collidableEntities.size(); j++) {
@@ -155,13 +191,38 @@ void Game::CollisionCheckCollidables()
 			if (j == i)
 				continue;
 
-			Vector2 otherPosition = collidableEntities[j]->getPosition();
-			totalRadius = collidableEntities[i]->getCollisionRadius() + collidableEntities[j]->getCollisionRadius();
+			// Check if already calculated collision with this asteroid
+			if (Math::vectorContains(ignoreCollisionEvent, std::pair<int, int>(i, j)))
+				continue;
+
+			CollidableEntity* c2 = collidableEntities[j];
+			Vector2 otherPosition = c2->getPosition();
+			totalRadius = c1->getCollisionRadius() + c2->getCollisionRadius();
 
 			if (currentPosition.distanceTo(otherPosition) < totalRadius) {
-				std::cout << "Collision Between Asteroids!" << std::endl;
-			}
+				// Gather info
+				Vector2 v1 = c1->getVelocity();
+				Vector2 v2 = c2->getVelocity();
+				// We'll use the radius to represent mass
+				float m1 = c1->getCollisionRadius();
+				float m2 = c2->getCollisionRadius();
 
+				// Apply elastic collision formula
+				Vector2 finalv1 = Vector2(
+					(v1.x * (m1 - m2) + (2 * m2 * v2.x)) / (m1 + m2),
+					(v1.y * (m1 - m2) + (2 * m2 * v2.y)) / (m1 + m2));
+				Vector2 finalv2 = Vector2(
+					(v2.x * (m2 - m1) + (2 * m1 * v1.x)) / (m1 + m2),
+					(v2.y * (m2 - m1) + (2 * m1 * v1.y)) / (m1 + m2));
+
+				// Apply velocity
+				c1->setVelocity(finalv1);
+				c2->setVelocity(finalv2);
+
+				// Add to list of resolved collisions
+				std::pair<int, int> collisionEvent = std::pair<int, int>(i, j);
+				ignoreCollisionEvent.push_back(collisionEvent);
+			}
 		}
 	}
 }

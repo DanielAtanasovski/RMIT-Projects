@@ -38,9 +38,27 @@ Vector2 Vector2::operator+(const Vector2& other)
 	return Vector2(this->x + other.x, this->y + other.y);
 }
 
+Vector2 Vector2::operator+=(const Vector2& other)
+{
+	return Vector2(this->x + other.x, this->y + other.y);
+}
+
 Vector2 Vector2::operator-(const Vector2& other)
 {
 	return Vector2(this->x - other.x, this->y - other.y);
+}
+
+Vector2 Vector2::operator*(const float scalar) {
+	return Vector2(this->x * scalar, this->y * scalar);
+}
+
+Vector2 Vector2::operator*=(const float scalar) {
+	return Vector2(this->x * scalar, this->y * scalar);
+}
+
+float Vector2::dot(const Vector2& other)
+{
+	return (float)(x * other.x + y * other.y);
 }
 
 float Vector2::distanceTo(Vector2 other) {

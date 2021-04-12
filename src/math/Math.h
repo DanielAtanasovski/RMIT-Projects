@@ -3,6 +3,8 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+#include <vector>
+
 
 class Math
 {
@@ -13,5 +15,6 @@ public:
 	static int getRandomInt(int min, int max);
 	static float getRandomFloat(float min, float max);
 	static bool getRandomBool();
+	static bool vectorContains(std::vector<std::pair<int,int>> vector, std::pair<int,int> compare);
 };
 

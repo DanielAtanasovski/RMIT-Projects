@@ -13,11 +13,13 @@
 #   include <GL/glu.h>
 #   include <GL/glut.h>
 #endif
+#include <iostream>
 
 
 Asteroid::Asteroid(Vector2 position, float rotation) : CollidableEntity(position, rotation) {
 	collisionRadius = size;
-	direction = Vector2(0, 0) - position;
+	direction = (Vector2(0, 0) - position).normalised();
+	velocity = Vector2(direction) * speed;
 	generateAsteroid();
 }
 
@@ -47,6 +49,9 @@ void Asteroid::generateAsteroid()
 
 void Asteroid::drawAsteroid() {
 	glPushMatrix();
+
+	CollidableEntity::drawDebugCollisionCircle();
+
 	glBegin(GL_LINE_LOOP);
 	glColor3f(OUTLINE_COLOUR.x, OUTLINE_COLOUR.y, OUTLINE_COLOUR.z);
 	
@@ -65,15 +70,19 @@ void Asteroid::drawAsteroid() {
 	}
 	glEnd();
 
+
 	glPopMatrix();
 }
 
 void Asteroid::update(float deltaTime) {
-	
-	direction = direction.normalised();
-	position.x += direction.x * deltaTime * speed;
-	position.y += direction.y * deltaTime * speed;
+	// Check if in arena
 
+
+	// Apply velocity
+	position.x += velocity.x * deltaTime;
+	position.y += velocity.y * deltaTime;
+
+	// Rotate
 	if (rotateClockwise)
 		rotation += rotationSpeed * deltaTime;
 	else

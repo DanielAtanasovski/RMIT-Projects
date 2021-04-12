@@ -51,3 +51,16 @@ bool Math::getRandomBool() {
 
 	return false;
 }
+
+bool Math::vectorContains(std::vector<std::pair<int, int>> vector, std::pair<int, int> compare)
+{
+	for (size_t i = 0; i < vector.size(); i++)
+	{
+		if (
+			(vector[i].first == compare.first && vector[i].second == compare.second) ||
+			(vector[i].first == compare.second && vector[i].second == compare.first)
+			)
+			return true;
+	}
+	return false;
+}
