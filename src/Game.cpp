@@ -78,7 +78,7 @@ void Game::update() {
 	}
 
 	CollisionCheckCollidables();
-
+	runQueueDelete();
 
 	lastElapsedTime = elapsed;
 }
@@ -107,6 +107,22 @@ void Game::onReshape(int width, int height)
 void Game::createCollidableEntity(CollidableEntity* entity)
 {
 	collidableEntities.push_back(entity);
+	asteroidsCount++;
+}
+
+bool Game::isPointSafe(Vector2 point, float radius)
+{
+	for (size_t i = 0; i < collidableEntities.size(); i++)
+	{
+		float totalRadius = collidableEntities[i]->getCollisionRadius() + radius;
+		if (point.distanceTo(collidableEntities[i]->getPosition()) < totalRadius) {
+			std::cout << "Can't Spawn at " << point.x << "," << point.y << " because of " 
+				<< collidableEntities[i]->getPosition().x << "," << collidableEntities[i]->getPosition().y<< std::endl;
+			return false;
+		}
+			
+	}
+	return true;
 }
 
 void Game::restart()
@@ -149,9 +165,12 @@ void Game::CollisionCheckCollidables()
 		float totalRadius = player->getCollisionRadius() + c1->getCollisionRadius();
 
 		// Restart game on collision with player
-		if (currentPosition.distanceTo(player->getPosition()) < totalRadius) {
+		/*if (currentPosition.distanceTo(player->getPosition()) < totalRadius) {
 			restart();
-		}
+		}*/
+
+		if (isOutsideWorld(*c1))
+			queueCollidableDelete(i);
 
 		// Check if in arena
 		if (!c1->getInsideArena()) {
@@ -165,25 +184,23 @@ void Game::CollisionCheckCollidables()
 		}
 		else {
 			// Walls
+			// right
 			if (currentPosition.distanceTo(Vector2(arena->BOTTOM_RIGHT_POINT.x, currentPosition.y)) < c1->getCollisionRadius()) {
 				c1->setVelocity(Vector2(-c1->getVelocity().x, c1->getVelocity().y));
 			}
-				
+			// bottom
 			if (currentPosition.distanceTo(Vector2(currentPosition.x, arena->BOTTOM_RIGHT_POINT.y)) < c1->getCollisionRadius()){
 				c1->setVelocity(Vector2(c1->getVelocity().x, -c1->getVelocity().y));
 			}
-				
+			// left
 			if (currentPosition.distanceTo(Vector2(arena->TOP_LEFT_POINT.x, currentPosition.y)) < c1->getCollisionRadius()) {
 				c1->setVelocity(Vector2(-c1->getVelocity().x, c1->getVelocity().y));
 			}
-			
+			// top
 			if (currentPosition.distanceTo(Vector2(currentPosition.x, arena->TOP_LEFT_POINT.y)) < c1->getCollisionRadius()) {
 				c1->setVelocity(Vector2(c1->getVelocity().x, -c1->getVelocity().y));
-			}
-				
+			}		
 		}
-
-
 
 		// Other Asteroids
 		for (size_t j = 0; j < collidableEntities.size(); j++) {
@@ -225,4 +242,30 @@ void Game::CollisionCheckCollidables()
 			}
 		}
 	}
+}
+
+void Game::queueCollidableDelete(int index)
+{
+	queueDeleteList.push_back(index);
+}
+
+void Game::runQueueDelete()
+{
+	for(unsigned i = queueDeleteList.size(); i-- > 0;)
+	{
+		std::cout << "Deleteing: " << collidableEntities[queueDeleteList[i]]->getPosition().x << ", " << collidableEntities[queueDeleteList[i]]->getPosition().y << std::endl;
+		collidableEntities.erase(collidableEntities.begin() + queueDeleteList[i]);
+		asteroidsCount--;
+	}
+
+	queueDeleteList.clear();
+}
+
+bool Game::isOutsideWorld(CollidableEntity& entity)
+{
+	float totalRadius = entity.getCollisionRadius() + arena->ASTEROID_SPAWN_RADIUS;
+	if (entity.getPosition().distanceTo(Vector2(0, 0)) > totalRadius)
+		return true;
+
+	return false;
 }

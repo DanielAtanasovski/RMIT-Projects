@@ -2,7 +2,6 @@
 #include "../manager/Input.h"
 #include "../math/Math.h"
 
-
 #if _WIN32
 #   include <Windows.h>
 #endif
@@ -58,13 +57,25 @@ void Player::draw()
 
 	// Draw Bounding Circle
 	CollidableEntity::drawDebugCollisionCircle();
+	
 
 	glPopMatrix();
+
+	trailEffect->draw();
 }
 
 void Player::update(float deltaTime) {
 	getInput();
 	move(deltaTime);
+
+	// Trail
+	if (isMoving)
+		trailEffect->start();
+	else
+		trailEffect->stop();
+
+	trailEffect->updateState(position, -direction.normalised());
+	trailEffect->update(deltaTime);
 }
 
 void Player::move(float deltaTime)
@@ -73,6 +84,9 @@ void Player::move(float deltaTime)
 	velocity = inputVector.y * MOVE_SPEED * deltaTime;
 	// Rotate
 	rotation += inputVector.x * ROTATE_SPEED * deltaTime;
+
+	direction.x = sinf(Math::degToRad(rotation));
+	direction.y = cosf(Math::degToRad(rotation));
 
 	// Clamp values
 	Math::clamp(velocity, 0, MOVE_SPEED);
@@ -97,10 +111,6 @@ void Player::getInput()
 		inputVector.y += 1;
 	}
 
-	if (Input::onPressed(KEY_DOWN)) {
-		inputVector.y -= 1;
-	}
-
 	if (Input::onPressed(KEY_LEFT)) {
 		inputVector.x -= 1;
 	}
@@ -108,4 +118,9 @@ void Player::getInput()
 	if (Input::onPressed(KEY_RIGHT)) {
 		inputVector.x += 1;
 	}
+
+	if (inputVector.magnitude() > 0)
+		isMoving = true;
+	else
+		isMoving = false;
 }

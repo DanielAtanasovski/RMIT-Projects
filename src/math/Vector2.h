@@ -17,6 +17,7 @@ public:
 	Vector2 operator+(const Vector2& other);
 	Vector2 operator+=(const Vector2& other);
 	Vector2 operator-(const Vector2& other);
+	Vector2 operator-();
 	Vector2 operator*(const float scalar);
 	Vector2 operator*=(const float scalar);
 	float dot(const Vector2& other);

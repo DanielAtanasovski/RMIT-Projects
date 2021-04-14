@@ -1,5 +1,6 @@
 #pragma once
-class ParticleSystem
+#include "../entity/Entity.h"
+class ParticleSystem : public Entity
 {
 };
 

@@ -48,6 +48,11 @@ Vector2 Vector2::operator-(const Vector2& other)
 	return Vector2(this->x - other.x, this->y - other.y);
 }
 
+Vector2 Vector2::operator-()
+{
+	return Vector2(-this->x, -this->y);
+}
+
 Vector2 Vector2::operator*(const float scalar) {
 	return Vector2(this->x * scalar, this->y * scalar);
 }

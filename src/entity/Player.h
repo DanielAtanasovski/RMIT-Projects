@@ -2,6 +2,7 @@
 #include "../math/Vector2.h"
 #include "../math/Vector3.h"
 #include "../physics/CollidableEntity.h"
+#include "../effects/TrailEffect.h"
 
 class Player : public CollidableEntity
 {
@@ -16,12 +17,11 @@ private:
 	void move(float deltaTime);
 	Vector2 inputVector;
 	float velocity = 0.0f;
+	TrailEffect* trailEffect = new TrailEffect();
+	bool isMoving = false;
 
-	// Settings
-	// TODO: Move to Game options class
 	// Controls
 	const char KEY_UP = 'W';
-	const char KEY_DOWN = 'S';
 	const char SHOOT = ' ';
 	const char KEY_LEFT = 'A';
 	const char KEY_RIGHT = 'D';

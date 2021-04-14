@@ -75,9 +75,6 @@ void Asteroid::drawAsteroid() {
 }
 
 void Asteroid::update(float deltaTime) {
-	// Check if in arena
-
-
 	// Apply velocity
 	position.x += velocity.x * deltaTime;
 	position.y += velocity.y * deltaTime;

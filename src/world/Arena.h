@@ -37,9 +37,11 @@ public:
 
 private:
 	// Consts
-	const float MIN_SPAWN_TIME = 1.0f;
-	const float MAX_SPAWN_TIME = 3.0f;
+	//const float MIN_SPAWN_TIME = 1.0f;
+	//const float MAX_SPAWN_TIME = 3.0f;
 	const float WARNING_DISTANCE = 30.0f;
+	const float WAVE_SPAWN_TIME = 2.0f;
+	const int WAVE_MAX_ASTEROIDS = 10;
 
 	const Vector3 DEFAULT_LINE_COLOUR = Vector3(1.0f, 1.0f, 1.0f);
 	const Vector3 WARNING_LINE_COLOUR = Vector3(1.0f, 0.0f, 0.0f);
@@ -53,14 +55,13 @@ private:
 	Player* player = nullptr;
 	Game* game = nullptr;
 
-
 	float currentSpawnTime = 0.0f;
-	//(max - min)* ((double)rand() / (double)RAND_MAX) + min
-	float nextSpawnTime = Math::getRandomFloat(MIN_SPAWN_TIME, MAX_SPAWN_TIME);
-	//int NextSpawnTime = rand() % (MAX_SPAWN_TIME - MIN_SPAWN_TIME + 1) + MIN_SPAWN_TIME;
+	int currentAsteroidsWave = 1;
 
-	void spawnAsteroid();
+	void spawnWave(int asteroids);
 	void spawnerUpdate(float deltaTime);
+	Vector2 getRandomSpawn();
+	Vector2 getValidSpawnPoint();
 	void lineCheck();
 };
 

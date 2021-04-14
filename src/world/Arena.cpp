@@ -3,7 +3,6 @@
 #include "../Game.h"
 #include "../entity/Asteroid.h"
 
-
 #if _WIN32
 #   include <Windows.h>
 #endif
@@ -45,27 +44,47 @@ void Arena::update(float deltaTime)
 	spawnerUpdate(deltaTime);
 }
 
-void Arena::spawnAsteroid()
+// TODO: Check for other asteroids on spawn (to not spawn ontop of another)
+void Arena::spawnWave(int asteroids)
 {
-	int randInt = Math::getRandomInt(0, 360);
-	float randomPoint = randInt / (float)360 * 2 * M_PI;
-	float x = ASTEROID_SPAWN_RADIUS * cosf(randomPoint);
-	float y = ASTEROID_SPAWN_RADIUS * sinf(randomPoint);
-
-
-	std::cout << "Spawned Asteroid at " << x << ", " << y  << std::endl;
-	Asteroid* newAsteroid = new Asteroid(Vector2(x, y), 0);
-	game->createCollidableEntity(newAsteroid);
+	for (size_t i = 0; i < asteroids; i++)
+	{
+		Asteroid* newAsteroid = new Asteroid(getValidSpawnPoint(), 0);
+		game->createCollidableEntity(newAsteroid);
+	}
 }
 
 void Arena::spawnerUpdate(float deltaTime)
 {
 	currentSpawnTime += deltaTime;
-	if (currentSpawnTime >= nextSpawnTime) {
-		spawnAsteroid();
+	if (currentSpawnTime >= WAVE_SPAWN_TIME) {
+		spawnWave(currentAsteroidsWave);
 		currentSpawnTime = 0;
-		nextSpawnTime = Math::getRandomFloat(MIN_SPAWN_TIME, MAX_SPAWN_TIME);
+		currentAsteroidsWave++;
+
+		Math::clamp(currentAsteroidsWave, 0, WAVE_MAX_ASTEROIDS);
 	}
+}
+
+Vector2 Arena::getValidSpawnPoint()
+{
+	Vector2 spawnPosition = getRandomSpawn();
+	while (!game->isPointSafe(spawnPosition, Asteroid::MAX_SIZE))
+	{
+		spawnPosition = getRandomSpawn();
+	}
+
+	return spawnPosition;
+}
+
+Vector2 Arena::getRandomSpawn()
+{
+	int randomFloat = Math::getRandomFloat(0, 360);
+	float randomPoint = randomFloat / (float)360 * 2 * M_PI;
+	float x = ASTEROID_SPAWN_RADIUS * cosf(randomPoint);
+	float y = ASTEROID_SPAWN_RADIUS * sinf(randomPoint);
+	Vector2 spawnPosition = Vector2(x, y);
+	return spawnPosition;
 }
 
 void Arena::lineCheck()

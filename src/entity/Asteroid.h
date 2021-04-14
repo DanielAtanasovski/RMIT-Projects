@@ -13,11 +13,13 @@ public:
 	void draw() override;
 	void update(float deltaTime) override;
 
+	// Useful values to be seen everywhere
+	static constexpr float MAX_SIZE = 14.0f;
+
 private:
-	
 	const int MAX_POINTS = 14; // Amount of points used to draw asteroid
-	const float MAX_SIZE = 14.0f; // Biggest size
-	const float MIN_SIZE = 6.0f; // smallest size
+	 // Biggest size
+	const float MIN_SIZE = 8.0f; // smallest size
 	const float MAX_SIZE_OFFSET = 2.0f; // max difference between each point
 	const float MIN_SIZE_OFFSET = -1.5f;
 	const float MIN_SPEED = 20.0f;

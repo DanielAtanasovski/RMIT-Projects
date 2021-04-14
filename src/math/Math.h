@@ -1,10 +1,12 @@
 #pragma once
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+//#ifndef M_PI
+//#define M_PI 3.14159265358979323846
+//#endif
 
 #include <vector>
+#include <random>
 
+const double M_PI = 3.14159265358979323846;
 
 class Math
 {
@@ -16,5 +18,8 @@ public:
 	static float getRandomFloat(float min, float max);
 	static bool getRandomBool();
 	static bool vectorContains(std::vector<std::pair<int,int>> vector, std::pair<int,int> compare);
+private:
+	static std::random_device randomDevice;
+	static std::mt19937 generator;
 };
 

@@ -1,5 +1,9 @@
 #include "Math.h"
+#include <chrono>
 #include <random>
+
+std::random_device Math::randomDevice;
+std::mt19937 Math::generator(Math::randomDevice());
 
 float Math::degToRad(float degree) {
 	return degree * (float(M_PI) / 180);
@@ -24,27 +28,21 @@ float Math::maxValue(float value1, float value2)
 
 int Math::getRandomInt(int min, int max)
 {
-	std::random_device randomDevice;
-	std::mt19937 rng(randomDevice());
 	std::uniform_int_distribution<int> uni(min, max);
 
-	return uni(rng);
+	return uni(generator);
 }
 
 float Math::getRandomFloat(float min, float max) {
-	std::random_device randomDevice;
-	std::mt19937 rng(randomDevice());
 	std::uniform_real_distribution<float> uni(min, max);
 
-	return uni(rng);
+	return uni(generator);
 }
 
 bool Math::getRandomBool() {
-	std::random_device randomDevice;
-	std::mt19937 rng(randomDevice());
 	std::uniform_real_distribution<float> uni(-1, 1);
 
-	float value = uni(rng);
+	float value = uni(generator);
 	if (value >= 0)
 		return true;
 	
