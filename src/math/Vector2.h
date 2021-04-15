@@ -14,6 +14,7 @@ public:
 	float magnitude();
 	float distanceTo(Vector2 other);
 	Vector2 normalised();
+	Vector2 lerp(Vector2 from, Vector2 towards, float ratio);
 	Vector2 operator+(const Vector2& other);
 	Vector2 operator+=(const Vector2& other);
 	Vector2 operator-(const Vector2& other);

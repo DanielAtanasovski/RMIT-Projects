@@ -1,5 +1,6 @@
 #include "Vector2.h"
 #include <math.h>
+#include "Math.h"
 
 Vector2::Vector2()
 {
@@ -31,6 +32,11 @@ float Vector2::magnitude()
 Vector2 Vector2::normalised()
 {
 	return Vector2(x / magnitude(), y / magnitude());
+}
+
+Vector2 Vector2::lerp(Vector2 from, Vector2 towards, float ratio)
+{
+	return Vector2(Math::lerp(from.x, from.x, ratio), Math::lerp(from.y, from.y, ratio));
 }
 
 Vector2 Vector2::operator+(const Vector2& other)

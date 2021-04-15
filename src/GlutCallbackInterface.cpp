@@ -16,6 +16,10 @@ void GlutCallbackInterface::updateCallback()
 	GlutCallbackInterface::gameInstance->update();
 }
 
+void GlutCallbackInterface::mouseFuncCallback(int button, int state, int x, int y) {
+	Input::OnMousePressed(button, state, x, y);
+}
+
 void GlutCallbackInterface::keyboardPressedCallback(unsigned char key, int x, int y)
 {
 	Input::onKeyboardPressedCallback(key, x, y);

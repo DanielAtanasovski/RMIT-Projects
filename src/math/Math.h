@@ -18,6 +18,7 @@ public:
 	static float getRandomFloat(float min, float max);
 	static bool getRandomBool();
 	static bool vectorContains(std::vector<std::pair<int,int>> vector, std::pair<int,int> compare);
+	static float lerp(float current, float towards, float ratio);
 private:
 	static std::random_device randomDevice;
 	static std::mt19937 generator;

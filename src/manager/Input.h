@@ -5,6 +5,7 @@ class Input
 public:
 	static void onKeyboardPressedCallback(char key, int x, int y);
 	static void onKeyboardReleasedCallback(char key, int x, int y);
+	static void OnMousePressed(int button, int state, int x, int y);
 	static bool onPressed(char key);
 	static bool onReleased(char key);
 

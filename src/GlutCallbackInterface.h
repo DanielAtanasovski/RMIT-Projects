@@ -10,6 +10,7 @@ public:
 	// Callbacks
 	static void displayCallback();
 	static void updateCallback();
+	static void mouseFuncCallback(int button, int state, int x, int y);
 	static void keyboardPressedCallback(unsigned char key, int x, int y);
 	static void keyboardReleasedCallback(unsigned char key, int x, int y);
 	static void displayReshapeCallback(int width, int height);

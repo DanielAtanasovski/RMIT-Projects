@@ -19,6 +19,8 @@ Player::Player(Vector2 position, float rotation) : CollidableEntity(position, ro
 {
 	// Determined by the largest side of the ship
 	collisionRadius = Math::maxValue(abs(DRAW_TOP_POINT.y), abs(DRAW_RIGHT_POINT.x));
+	Vector2 trailPosition = Vector2(position.x + direction.x, position.y + direction.y);
+	trailEffect = new TrailEffect(trailPosition, TRAIL_COLOUR);
 }
 
 void Player::draw()
@@ -74,7 +76,8 @@ void Player::update(float deltaTime) {
 	else
 		trailEffect->stop();
 
-	trailEffect->updateState(position, -direction.normalised());
+	Vector2 trailPosition = Vector2(position.x + (direction.x * -5), position.y + (direction.y * -5));
+	trailEffect->updateState(trailPosition, -direction.normalised());
 	trailEffect->update(deltaTime);
 }
 
@@ -104,6 +107,11 @@ void Player::move(float deltaTime)
 	glutPostRedisplay();
 }
 
+void Player::shoot()
+{
+
+}
+
 void Player::getInput()
 {
 	inputVector.zero();
@@ -118,6 +126,8 @@ void Player::getInput()
 	if (Input::onPressed(KEY_RIGHT)) {
 		inputVector.x += 1;
 	}
+
+	//if (Input::onPressed(KEY_SHOOT_1) || Input::onPressed(KEY_SHOOT_2))
 
 	if (inputVector.magnitude() > 0)
 		isMoving = true;

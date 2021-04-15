@@ -14,7 +14,7 @@ void TrailEffect::update(float deltaTime)
 			float newDirx = cosf(Math::degToRad(randomDirection)) * direction.x - (sinf(Math::degToRad(randomDirection)) * direction.y);
 			float newDiry = sinf(Math::degToRad(randomDirection)) * direction.x + (cosf(Math::degToRad(randomDirection)) * direction.y);
 			Vector2 newDir = Vector2(newDirx, newDiry);
-			particles.push_back(new Particle(this->position, newDir, Vector3(0.6f, 0.6f, 0.0f), 80.0f, 0.5f, 1.0f));
+			particles.push_back(new Particle(position, newDir, particlesColour, PARTICLE_SPEED, PARTICLE_DURATION, PARTICLE_MAX_SIZE));
 		}		
 	}
 

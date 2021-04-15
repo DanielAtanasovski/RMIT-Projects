@@ -62,3 +62,8 @@ bool Math::vectorContains(std::vector<std::pair<int, int>> vector, std::pair<int
 	}
 	return false;
 }
+
+float Math::lerp(float current, float towards, float ratio)
+{
+	return current + (towards - current) * ratio;
+}

@@ -8,21 +8,22 @@ class Player : public CollidableEntity
 {
 public:
 	Player(Vector2 position, float rotation);
-	~Player() { };
+	~Player() { delete trailEffect; };
 	void draw() override;
 	void update(float deltaTime) override;
 
 private:
 	void getInput();
 	void move(float deltaTime);
+	void shoot();
 	Vector2 inputVector;
 	float velocity = 0.0f;
-	TrailEffect* trailEffect = new TrailEffect();
+	TrailEffect* trailEffect;
 	bool isMoving = false;
 
 	// Controls
 	const char KEY_UP = 'W';
-	const char SHOOT = ' ';
+	const char KEY_SHOOT_1 = ' ';
 	const char KEY_LEFT = 'A';
 	const char KEY_RIGHT = 'D';
 	// Stats
@@ -31,6 +32,7 @@ private:
 	// Colours
 	const Vector3 OUTLINE_COLOUR = Vector3(0.0f, 0.0f, 1.0f);
 	const Vector3 FILL_COLOUR = Vector3(1.0f, 1.0f, 1.0f);
+	const Vector3 TRAIL_COLOUR = Vector3(1.0f, 0.5f, 0.0f);
 	// Drawing
 	const Vector2 DRAW_TOP_POINT = Vector2(0, 7.5);
 	const Vector2 DRAW_LEFT_POINT = Vector2(-5, -7.5);

@@ -20,6 +20,10 @@ void Input::onKeyboardReleasedCallback(char key, int x, int y)
 	clearKeyFromKeys(toupper(key));
 }
 
+void Input::OnMousePressed(int button, int state, int x, int y)
+{
+}
+
 bool Input::onPressed(char key)
 {
 	for (size_t i = 0; i < keysPressed.size(); i++)
