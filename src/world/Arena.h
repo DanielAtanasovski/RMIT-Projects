@@ -14,10 +14,7 @@ class Arena
 {
 
 public:
-	Arena(Player* player, Game* game) {
-		this->player = player;
-		this->game = game;
-	};
+	Arena(Game& game) : game(game) {};
 	~Arena() {};
 	void draw();
 	void update(float deltaTime);
@@ -37,10 +34,8 @@ public:
 
 private:
 	// Consts
-	//const float MIN_SPAWN_TIME = 1.0f;
-	//const float MAX_SPAWN_TIME = 3.0f;
 	const float WARNING_DISTANCE = 30.0f;
-	const float WAVE_SPAWN_TIME = 2.0f;
+	const float WAVE_SPAWN_TIME = 5.0f;
 	const int WAVE_MAX_ASTEROIDS = 10;
 
 	const Vector3 DEFAULT_LINE_COLOUR = Vector3(1.0f, 1.0f, 1.0f);
@@ -52,8 +47,7 @@ private:
 	Vector3 leftLineColour = Vector3(DEFAULT_LINE_COLOUR);
 
 	// Reference
-	Player* player = nullptr;
-	Game* game = nullptr;
+	Game& game;
 
 	float currentSpawnTime = 0.0f;
 	int currentAsteroidsWave = 1;

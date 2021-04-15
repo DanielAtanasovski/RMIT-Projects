@@ -17,7 +17,7 @@ void GlutCallbackInterface::updateCallback()
 }
 
 void GlutCallbackInterface::mouseFuncCallback(int button, int state, int x, int y) {
-	Input::OnMousePressed(button, state, x, y);
+	Input::OnMouseCallback(button, state, x, y);
 }
 
 void GlutCallbackInterface::keyboardPressedCallback(unsigned char key, int x, int y)

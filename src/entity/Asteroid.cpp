@@ -16,11 +16,12 @@
 #include <iostream>
 
 
-Asteroid::Asteroid(Vector2 position, float rotation) : CollidableEntity(position, rotation) {
+Asteroid::Asteroid(Game& game, Vector2 position, float rotation) : game(game), CollidableEntity(position, rotation) {
 	collisionRadius = size;
 	direction = (Vector2(0, 0) - position).normalised();
 	velocity = Vector2(direction) * speed;
 	generateAsteroid();
+	tag = "Asteroid";
 }
 
 void Asteroid::draw() {
@@ -39,7 +40,7 @@ void Asteroid::generateAsteroid()
 	for (size_t i = 0; i < MAX_POINTS; i++)
 	{
 		float radius = size + Math::getRandomFloat(MIN_SIZE_OFFSET, MAX_SIZE_OFFSET);
-		float step = (float)i / MAX_POINTS * 2 * M_PI;
+		float step = (float)i / MAX_POINTS * 2 * (float)M_PI;
 		float x = radius * cosf(step);
 		float y = radius * sinf(step);
 		drawPoints.push_back(Vector2(x, y));
@@ -84,4 +85,30 @@ void Asteroid::update(float deltaTime) {
 		rotation += rotationSpeed * deltaTime;
 	else
 		rotation -= rotationSpeed * deltaTime;
+}
+
+void Asteroid::onCollide(CollidableEntity& other)
+{
+	// Collided with another asteroid
+	if (other.getTag() == "Asteroid") {
+		// Gather info
+		Vector2 v1 = velocity;
+		Vector2 v2 = other.getVelocity();
+		// We'll use the radius to represent mass
+		float m1 = collisionRadius;
+		float m2 = other.getCollisionRadius();
+
+		// Apply elastic collision formula
+		Vector2 finalv1 = Vector2(
+			(v1.x * (m1 - m2) + (2 * m2 * v2.x)) / (m1 + m2),
+			(v1.y * (m1 - m2) + (2 * m2 * v2.y)) / (m1 + m2));
+
+		// Apply velocity
+		velocity = finalv1;
+	}
+	else if (other.getTag() == "Bullet") {
+		// break
+		game.deleteCollidableEntity(this);
+	}
+
 }

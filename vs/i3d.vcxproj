@@ -159,6 +159,7 @@
     <ClCompile Include="..\src\effects\ParticleSystem.cpp" />
     <ClCompile Include="..\src\effects\TrailEffect.cpp" />
     <ClCompile Include="..\src\entity\Asteroid.cpp" />
+    <ClCompile Include="..\src\entity\Bullet.cpp" />
     <ClCompile Include="..\src\entity\Entity.cpp" />
     <ClCompile Include="..\src\entity\Player.cpp" />
     <ClCompile Include="..\src\Game.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="..\src\effects\ParticleSystem.h" />
     <ClInclude Include="..\src\effects\TrailEffect.h" />
     <ClInclude Include="..\src\entity\Asteroid.h" />
+    <ClInclude Include="..\src\entity\Bullet.h" />
     <ClInclude Include="..\src\entity\Entity.h" />
     <ClInclude Include="..\src\entity\Player.h" />
     <ClInclude Include="..\src\Game.h" />

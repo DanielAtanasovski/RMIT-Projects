@@ -14,6 +14,7 @@ public:
 	void setVelocity(Vector2 velocity) { this->velocity = velocity; }
 	bool getInsideArena() { return insideArena; };
 	void setInsideArena(bool value) { insideArena = value; }
+	virtual void onCollide(CollidableEntity& other) {};
 
 protected:
 	float collisionRadius = 0.0f;

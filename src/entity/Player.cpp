@@ -1,6 +1,8 @@
 #include "Player.h"
 #include "../manager/Input.h"
 #include "../math/Math.h"
+#include "Bullet.h"
+#include <iostream>
 
 #if _WIN32
 #   include <Windows.h>
@@ -15,10 +17,11 @@
 #   include <GL/glut.h>
 #endif
 
-Player::Player(Vector2 position, float rotation) : CollidableEntity(position, rotation)
+Player::Player(Game& game, Vector2 position, float rotation) : game(game), CollidableEntity(position, rotation)
 {
 	// Determined by the largest side of the ship
 	collisionRadius = Math::maxValue(abs(DRAW_TOP_POINT.y), abs(DRAW_RIGHT_POINT.x));
+
 	Vector2 trailPosition = Vector2(position.x + direction.x, position.y + direction.y);
 	trailEffect = new TrailEffect(trailPosition, TRAIL_COLOUR);
 }
@@ -70,6 +73,15 @@ void Player::update(float deltaTime) {
 	getInput();
 	move(deltaTime);
 
+	// Fire Rate
+	if (!canShoot) {
+		currentFireRate += deltaTime;
+		if (currentFireRate >= FIRE_RATE) {
+			canShoot = true;
+			currentFireRate = 0;
+		}	
+	}
+
 	// Trail
 	if (isMoving)
 		trailEffect->start();
@@ -109,7 +121,12 @@ void Player::move(float deltaTime)
 
 void Player::shoot()
 {
-
+	if (canShoot) {
+		canShoot = false;
+		Vector2 spawnPoint = Vector2(position.x + direction.x * 5, position.y + direction.y * 5);
+		Bullet* bullet = new Bullet(game, spawnPoint, direction);
+		game.createCollidableEntity(bullet);
+	}
 }
 
 void Player::getInput()
@@ -127,7 +144,9 @@ void Player::getInput()
 		inputVector.x += 1;
 	}
 
-	//if (Input::onPressed(KEY_SHOOT_1) || Input::onPressed(KEY_SHOOT_2))
+	if (Input::onPressed(KEY_SHOOT_1) || Input::onMouseLeftDown()) {
+		shoot();
+	}
 
 	if (inputVector.magnitude() > 0)
 		isMoving = true;

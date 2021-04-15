@@ -1,7 +1,21 @@
 #include "Input.h"
 #include <iostream>
 
+#if _WIN32
+#   include <Windows.h>
+#endif
+#if __APPLE__
+#   include <OpenGL/gl.h>
+#   include <OpenGL/glu.h>
+#   include <GLUT/glut.h>
+#else
+#   include <GL/gl.h>
+#   include <GL/glu.h>
+#   include <GL/glut.h>
+#endif
+
 std::vector<char> Input::keysPressed;
+int Input::mouseLeft;
 
 void Input::onKeyboardPressedCallback(char key, int x, int y)
 {
@@ -20,8 +34,14 @@ void Input::onKeyboardReleasedCallback(char key, int x, int y)
 	clearKeyFromKeys(toupper(key));
 }
 
-void Input::OnMousePressed(int button, int state, int x, int y)
+void Input::OnMouseCallback(int button, int state, int x, int y)
 {
+	if (button == GLUT_LEFT_BUTTON) {
+		if (state == GLUT_UP)
+			mouseLeft = 0;
+		else
+			mouseLeft = 1;
+	}
 }
 
 bool Input::onPressed(char key)
@@ -37,6 +57,10 @@ bool Input::onPressed(char key)
 bool Input::onReleased(char key)
 {
 	return !onPressed(toupper(key));
+}
+
+bool Input::onMouseLeftDown() {
+	return mouseLeft;
 }
 
 void Input::clearKeyFromKeys(char key)

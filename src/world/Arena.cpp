@@ -49,8 +49,8 @@ void Arena::spawnWave(int asteroids)
 {
 	for (size_t i = 0; i < asteroids; i++)
 	{
-		Asteroid* newAsteroid = new Asteroid(getValidSpawnPoint(), 0);
-		game->createCollidableEntity(newAsteroid);
+		Asteroid* newAsteroid = new Asteroid(game, getValidSpawnPoint(), 0);
+		game.createCollidableEntity(newAsteroid);
 	}
 }
 
@@ -62,14 +62,14 @@ void Arena::spawnerUpdate(float deltaTime)
 		currentSpawnTime = 0;
 		currentAsteroidsWave++;
 
-		Math::clamp(currentAsteroidsWave, 0, WAVE_MAX_ASTEROIDS);
+		currentAsteroidsWave = Math::clamp((float)currentAsteroidsWave, 0, (float)WAVE_MAX_ASTEROIDS);
 	}
 }
 
 Vector2 Arena::getValidSpawnPoint()
 {
 	Vector2 spawnPosition = getRandomSpawn();
-	while (!game->isPointSafe(spawnPosition, Asteroid::MAX_SIZE))
+	while (!game.isPointSafe(spawnPosition, Asteroid::MAX_SIZE))
 	{
 		spawnPosition = getRandomSpawn();
 	}
@@ -79,8 +79,8 @@ Vector2 Arena::getValidSpawnPoint()
 
 Vector2 Arena::getRandomSpawn()
 {
-	int randomFloat = Math::getRandomFloat(0, 360);
-	float randomPoint = randomFloat / (float)360 * 2 * M_PI;
+	int randomFloat = Math::getRandomFloat(0, (float)360);
+	float randomPoint = randomFloat / (float)360 * 2 * (float)M_PI;
 	float x = ASTEROID_SPAWN_RADIUS * cosf(randomPoint);
 	float y = ASTEROID_SPAWN_RADIUS * sinf(randomPoint);
 	Vector2 spawnPosition = Vector2(x, y);
@@ -89,7 +89,7 @@ Vector2 Arena::getRandomSpawn()
 
 void Arena::lineCheck()
 {
-	Vector2 playerPosition = player->getPosition();
+	Vector2 playerPosition = game.getPlayer().getPosition();
 	// Right Line
 	if (TOP_RIGHT_POINT.x - playerPosition.x <= WARNING_DISTANCE)
 		rightLineColour = WARNING_LINE_COLOUR;

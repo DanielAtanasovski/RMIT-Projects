@@ -1,6 +1,7 @@
 #include "Game.h"
 #include <iostream>
 #include <stdio.h>
+#include <algorithm>
 
 #if _WIN32
 #   include <Windows.h>
@@ -16,8 +17,8 @@
 #endif
 
 Game::Game() {
-	player = new Player(Vector2(-70, -70), 45);
-	arena = new Arena(player, this);
+	player = new Player(*this, Vector2(-70, -70), 45);
+	arena = new Arena(*this);
 	init();
 }
 
@@ -110,6 +111,14 @@ void Game::createCollidableEntity(CollidableEntity* entity)
 	asteroidsCount++;
 }
 
+void Game::deleteCollidableEntity(CollidableEntity* entity)
+{
+	std::vector<CollidableEntity*>::iterator found = std::find(collidableEntities.begin(), collidableEntities.end(), entity);
+	if (found != collidableEntities.end()) {
+		collidableEntities.erase(found);
+	}
+}
+
 bool Game::isPointSafe(Vector2 point, float radius)
 {
 	for (size_t i = 0; i < collidableEntities.size(); i++)
@@ -132,9 +141,10 @@ void Game::restart()
 	delete arena;
 	delete player;
 	collidableEntities.clear();
+	collidableEntities.resize(0);
 
-	player = new Player(Vector2(-70, -70), 45);
-	arena = new Arena(player, this);
+	player = new Player(*this, Vector2(-70, -70), 45);
+	arena = new Arena(*this);
 }
 
 bool Game::playerOutOfBounds()
@@ -165,14 +175,15 @@ void Game::CollisionCheckCollidables()
 		float totalRadius = player->getCollisionRadius() + c1->getCollisionRadius();
 
 		// Restart game on collision with player
-		/*if (currentPosition.distanceTo(player->getPosition()) < totalRadius) {
-			restart();
-		}*/
+		if (c1->getTag() != "Bullet")
+			if (currentPosition.distanceTo(player->getPosition()) < totalRadius) {
+				restart();
+			}
 
 		if (isOutsideWorld(*c1))
-			queueCollidableDelete(i);
+			queueCollidableDelete((int)i);
 
-		// Check if in arena
+		// Check for collisions Asteroid / Bullets->Arena
 		if (!c1->getInsideArena()) {
 			if (
 				((currentPosition.x + c1->getCollisionRadius()) < arena->TOP_RIGHT_POINT.x) &&
@@ -202,14 +213,14 @@ void Game::CollisionCheckCollidables()
 			}		
 		}
 
-		// Other Asteroids
+		// Other Asteroids or Bullets
 		for (size_t j = 0; j < collidableEntities.size(); j++) {
 			// don't check collisions with self
 			if (j == i)
 				continue;
 
 			// Check if already calculated collision with this asteroid
-			if (Math::vectorContains(ignoreCollisionEvent, std::pair<int, int>(i, j)))
+			if (Math::vectorContains(ignoreCollisionEvent, std::pair<int, int>((int)i, (int)j)))
 				continue;
 
 			CollidableEntity* c2 = collidableEntities[j];
@@ -217,27 +228,13 @@ void Game::CollisionCheckCollidables()
 			totalRadius = c1->getCollisionRadius() + c2->getCollisionRadius();
 
 			if (currentPosition.distanceTo(otherPosition) < totalRadius) {
-				// Gather info
-				Vector2 v1 = c1->getVelocity();
-				Vector2 v2 = c2->getVelocity();
-				// We'll use the radius to represent mass
-				float m1 = c1->getCollisionRadius();
-				float m2 = c2->getCollisionRadius();
-
-				// Apply elastic collision formula
-				Vector2 finalv1 = Vector2(
-					(v1.x * (m1 - m2) + (2 * m2 * v2.x)) / (m1 + m2),
-					(v1.y * (m1 - m2) + (2 * m2 * v2.y)) / (m1 + m2));
-				Vector2 finalv2 = Vector2(
-					(v2.x * (m2 - m1) + (2 * m1 * v1.x)) / (m1 + m2),
-					(v2.y * (m2 - m1) + (2 * m1 * v1.y)) / (m1 + m2));
-
-				// Apply velocity
-				c1->setVelocity(finalv1);
-				c2->setVelocity(finalv2);
+				// Collision
+				CollidableEntity copyOfC1 = CollidableEntity(*c1);
+				c1->onCollide(*c2);
+				c2->onCollide(copyOfC1);
 
 				// Add to list of resolved collisions
-				std::pair<int, int> collisionEvent = std::pair<int, int>(i, j);
+				std::pair<int, int> collisionEvent = std::pair<int, int>((int)i, (int)j);
 				ignoreCollisionEvent.push_back(collisionEvent);
 			}
 		}
@@ -251,7 +248,7 @@ void Game::queueCollidableDelete(int index)
 
 void Game::runQueueDelete()
 {
-	for(unsigned i = queueDeleteList.size(); i-- > 0;)
+	for(unsigned i = (int)queueDeleteList.size(); i-- > 0;)
 	{
 		std::cout << "Deleteing: " << collidableEntities[queueDeleteList[i]]->getPosition().x << ", " << collidableEntities[queueDeleteList[i]]->getPosition().y << std::endl;
 		collidableEntities.erase(collidableEntities.begin() + queueDeleteList[i]);

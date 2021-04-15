@@ -1,5 +1,6 @@
 #pragma once
 #include "../math/Vector2.h"
+#include <string>
 class Entity
 {
 public:
@@ -8,9 +9,11 @@ public:
 	virtual void draw() {};
 	virtual void update(float deltaTime) {};
 	Vector2 getPosition() { return position; };
+	std::string getTag() { return tag; };
+	
 protected:
 	Vector2 position = Vector2();
 	float rotation = 0.0f;
-
+	std::string tag = "";
 };
 

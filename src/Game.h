@@ -4,6 +4,9 @@
 #include "entity/Player.h"
 #include <vector>
 
+class Arena;
+class Player;
+
 class Game
 {
 public:
@@ -14,12 +17,15 @@ public:
 	void update();
 	void onReshape(int width, int height);
 	void createCollidableEntity(CollidableEntity* entity);
+	void deleteCollidableEntity(CollidableEntity* entity);
 	bool isPointSafe(Vector2 point, float radius); // check if spaw is safe for spawn
+	Player& getPlayer() { return *player; };
+	Arena& getArena() { return *arena; }
 
 	// consts
 	const bool FULLSCREEN = false;
-	const float WORLD_UNIT_MIN = -160.0f;
-	const float WORLD_UNIT_MAX = 160.0f;
+	const float WORLD_UNIT_MIN = -120.0f;
+	const float WORLD_UNIT_MAX = 120.0f;
 	const float WORLD_UNIT_DEPTH = 1.0f;
 
 private:

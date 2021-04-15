@@ -2,16 +2,18 @@
 #include "../physics/CollidableEntity.h"
 #include "../math/Math.h"
 #include <vector>
+#include "../Game.h"
 
 class Asteroid : public CollidableEntity
 {
 public:
-	Asteroid(Vector2 position, float rotation);
+	Asteroid(Game& game, Vector2 position, float rotation);
 	~Asteroid() {};
 	void generateAsteroid();
 	void drawAsteroid();
 	void draw() override;
 	void update(float deltaTime) override;
+	void onCollide(CollidableEntity& other) override;
 
 	// Useful values to be seen everywhere
 	static constexpr float MAX_SIZE = 14.0f;
@@ -35,4 +37,5 @@ private:
 	const float speed = Math::getRandomFloat(MIN_SPEED, MAX_SPEED);
 	const float rotationSpeed = Math::getRandomFloat(MIN_ROTATION_SPEED, MAX_ROTATION_SPEED);
 	std::vector<Vector2> drawPoints = std::vector<Vector2>();
+	Game& game;
 };
