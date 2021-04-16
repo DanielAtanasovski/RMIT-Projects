@@ -18,6 +18,7 @@ public:
 	void onReshape(int width, int height);
 	void createCollidableEntity(CollidableEntity* entity);
 	void deleteCollidableEntity(CollidableEntity* entity);
+	void increaseScore(float scoreIncrease) { score += scoreIncrease; };
 	bool isPointSafe(Vector2 point, float radius); // check if spaw is safe for spawn
 	Player& getPlayer() { return *player; };
 	Arena& getArena() { return *arena; }
@@ -29,12 +30,16 @@ public:
 	const float WORLD_UNIT_DEPTH = 1.0f;
 
 private:
+	float width = 0;
+	float height = 0;
 	Player* player = nullptr;
 	Arena* arena = nullptr;
 	float lastElapsedTime = 0.0f;
 	std::vector<CollidableEntity*> collidableEntities = std::vector<CollidableEntity*>();
 	std::vector<int> queueDeleteList = std::vector<int>();
 	int asteroidsCount = 0;
+	int score = 0;
+	float time = 0;
 
 	void restart();
 	
@@ -43,5 +48,7 @@ private:
 	void queueCollidableDelete(int index);
 	void runQueueDelete();
 	bool isOutsideWorld(CollidableEntity& entity); // delete items that no longer relevant
+	void drawString(float x, float y, std::string str);
+	float getStringSize(std::string str);
 
 };

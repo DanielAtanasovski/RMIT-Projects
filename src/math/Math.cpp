@@ -67,3 +67,8 @@ float Math::lerp(float current, float towards, float ratio)
 {
 	return current + (towards - current) * ratio;
 }
+
+float Math::difference(float a, float b)
+{
+	return abs(a - b);
+}

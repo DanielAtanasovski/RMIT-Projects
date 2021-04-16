@@ -51,7 +51,7 @@ void Asteroid::generateAsteroid()
 void Asteroid::drawAsteroid() {
 	glPushMatrix();
 
-	CollidableEntity::drawDebugCollisionCircle();
+	//CollidableEntity::drawDebugCollisionCircle();
 
 	glBegin(GL_LINE_LOOP);
 	glColor3f(OUTLINE_COLOUR.x, OUTLINE_COLOUR.y, OUTLINE_COLOUR.z);
@@ -109,6 +109,7 @@ void Asteroid::onCollide(CollidableEntity& other)
 	else if (other.getTag() == "Bullet") {
 		// break
 		game.deleteCollidableEntity(this);
+		game.increaseScore(1);
 	}
 
 }

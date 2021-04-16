@@ -2,6 +2,8 @@
 #include <iostream>
 #include <stdio.h>
 #include <algorithm>
+#include <sstream>
+#include <iomanip>
 
 #if _WIN32
 #   include <Windows.h>
@@ -55,6 +57,32 @@ void Game::draw() {
 	while ((err = glGetError()) != GL_NO_ERROR)
 		printf("display: %s\n", gluErrorString(err));
 
+	// Draw UI
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0.0, width, 0.0, height, 0, 1);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
+
+	std::stringstream stringStream;
+	stringStream << "Time: " << std::fixed << std::setprecision(0) << floor(time);
+	std::string timeString = stringStream.str();
+	stringStream.str(std::string());
+	stringStream << "Score: " << score;
+	std::string scoreString = stringStream.str();
+
+	drawString(abs((WORLD_UNIT_MAX + WORLD_UNIT_MIN) - (arena->WIDTH))/2, height - 50, timeString);
+	drawString(width - (abs((WORLD_UNIT_MAX + WORLD_UNIT_MIN) - (arena->WIDTH)) / 2) - getStringSize(scoreString), height - 50, scoreString);
+
+	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+
 	glutSwapBuffers();
 }
 
@@ -62,6 +90,7 @@ void Game::update() {
 	// Calculate Delta Time
 	float elapsed = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
 	float deltaTime = elapsed - lastElapsedTime;
+	time += deltaTime;
 
 	player->update(deltaTime);
 	arena->update(deltaTime);
@@ -86,6 +115,8 @@ void Game::update() {
 
 void Game::onReshape(int width, int height)
 {
+	this->width = width;
+	this->height = height;
 	// Set Viewport to window size
 	glViewport(0, 0, width, height);
 	// Aspect Ration Calculation
@@ -142,6 +173,8 @@ void Game::restart()
 	delete player;
 	collidableEntities.clear();
 	collidableEntities.resize(0);
+	time = 0;
+	score = 0;
 
 	player = new Player(*this, Vector2(-70, -70), 45);
 	arena = new Arena(*this);
@@ -265,4 +298,27 @@ bool Game::isOutsideWorld(CollidableEntity& entity)
 		return true;
 
 	return false;
+}
+
+void Game::drawString(float x, float y, std::string str)
+{
+	glColor3f(1.0f, 1.0f, 1.0f);
+	float currentX = x;
+	for (size_t i = 0; i < str.length(); i++)
+	{
+		glRasterPos2f(currentX, y);
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, str[i]);
+		currentX += glutBitmapWidth(GLUT_BITMAP_TIMES_ROMAN_24, str[i]);
+	}
+	
+}
+
+float Game::getStringSize(std::string str)
+{
+	float currentSize = 0;
+	for (size_t i = 0; i < str.length(); i++)
+	{
+		currentSize += glutBitmapWidth(GLUT_BITMAP_TIMES_ROMAN_24, str[i]);
+	}
+	return currentSize;
 }
