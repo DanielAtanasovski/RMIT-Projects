@@ -25,8 +25,6 @@ Particle::Particle(Vector2 position, Vector2 direction, Vector3 colour, float SP
 	this->maxLifetime = maxLifeTime;
 	this->sizeStart = SIZE;
 	this->sizeCurrent = SIZE;
-
-	//std::cout << colourCurrent.x << ", " << colourCurrent.y << ", " << colourCurrent.z << ", " << sizeEnd << std::endl;
 }
 
 Particle::Particle(Vector2 position, Vector2 direction, Vector3 colourStart, Vector3 colourEnd, float SPEED, float maxLifeTime, float SIZE) {
@@ -39,7 +37,6 @@ Particle::Particle(Vector2 position, Vector2 direction, Vector3 colourStart, Vec
 	this->maxLifetime = maxLifeTime;
 	this->sizeStart = SIZE;
 	this->sizeCurrent = SIZE;
-	
 }
 
 void Particle::draw()

@@ -1,3 +1,9 @@
+Implemented Level 1, 2, 3, 4
+
+no bonus :(
+
+Uses provided template, should just open in visual studio and run.
+
 Notes:
 - Asteroids will keep spawning every 5 secs by default to a maximum of 5 asteroids per wave; meaning if the player somehow survives,
 the asteroids can keep trying to enter the arena, but will bounce out and can cause the game to slowdown with many asteroids as it looks for safe 
@@ -16,8 +22,13 @@ entering the end screen, skip the end screen and restart the game almost instant
 to try to keep the project as simple as possible, keeping one class, 'Game', as the middleman. Keeping the project simple was a priority over
 making the project over-engineered with long sub-class hierachies and a web of interconnections that can seem overly confusing for a simple concept.
 
+- Asteroids have text to represent health, which can be disabled by commenting out the two lines in the draw function of the 'Asteroid' class
+
+
+known issues: 
 - The game stops updating asteroids on game end... still struggling to understand why that is...
 
+- Explosions explode in seemingly random positions.
 
 Controls:
 

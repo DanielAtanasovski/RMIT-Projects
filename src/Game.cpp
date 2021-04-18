@@ -238,6 +238,9 @@ void Game::CollisionCheckCollidables()
 		Vector2 currentPosition = c1->getPosition();
 		float totalRadius = player->getCollisionRadius() + c1->getCollisionRadius();
 
+		if (!c1->isEnabled())
+			continue;
+
 		// Restart game on collision with player
 		if (c1->getTag() != "Bullet")
 			if (currentPosition.distanceTo(player->getPosition()) < totalRadius) {
@@ -291,6 +294,9 @@ void Game::CollisionCheckCollidables()
 			CollidableEntity* c2 = collidableEntities[j];
 			Vector2 otherPosition = c2->getPosition();
 			totalRadius = c1->getCollisionRadius() + c2->getCollisionRadius();
+
+			if (!c2->isEnabled())
+				continue;
 
 			if (currentPosition.distanceTo(otherPosition) < totalRadius) {
 				// Collision

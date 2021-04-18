@@ -31,7 +31,7 @@ Asteroid::Asteroid(Game& game, Vector2 position, float size, bool canSpawnAstero
 	this->size = size;
 	this->canSpawnAsteroid = canSpawnAsteroid;
 	// Set direction to player position
-	direction = (game.getPlayer().getPosition() - position).normalised(); 
+	direction = (game.getPlayer().getPosition() - position).normalised();
 	velocity = Vector2(direction) * SPEED;
 	collisionRadius = size;
 	health = ceil(size / 4);
@@ -40,21 +40,23 @@ Asteroid::Asteroid(Game& game, Vector2 position, float size, bool canSpawnAstero
 }
 
 void Asteroid::draw() {
-	glPushMatrix();
-	glTranslatef(position.x, position.y, 0.0f);
-	glRotatef(rotation, 0.0f, 0.0f, -1.0f);
+	if (!isDestroyed) {
+		glPushMatrix();
+		glTranslatef(position.x, position.y, 0.0f);
+		glRotatef(rotation, 0.0f, 0.0f, -1.0f);
 
-	CollidableEntity::draw();
-	
-	/* Draw Healt Value above Asteroid */
-	Vector2 screenCoords = game.worldToScreenCoordinate(position);
-	game.drawString(screenCoords.x, screenCoords.y, std::to_string((int)health));
+		/* Draw Health Value above Asteroid */
+		Vector2 screenCoords = game.worldToScreenCoordinate(position);
+		game.drawString(screenCoords.x, screenCoords.y, std::to_string((int)health));
 
-	drawAsteroid();
+		// Actual Asteroid
+		drawAsteroid();
 
-	glPopMatrix();
-
-	
+		glPopMatrix();
+	}
+	else {
+		explosionEffect->draw();
+	}
 }
 
 void Asteroid::setDirection(Vector2 direction) {
@@ -71,7 +73,7 @@ void Asteroid::generateAsteroid()
 		float step = (float)i / MAX_POINTS * 2 * (float)M_PI;
 		float x = radius * cosf(step);
 		float y = radius * sinf(step);
-		
+
 		drawPoints.push_back(Vector2(x, y));
 	}
 
@@ -91,34 +93,30 @@ void Asteroid::generateAsteroid(float size)
 }
 
 void Asteroid::drawAsteroid() {
-	if (!isDestroyed) {
-		glPushMatrix();
 
-		//CollidableEntity::drawDebugCollisionCircle();
+	glPushMatrix();
 
-		glBegin(GL_LINE_LOOP);
-		glColor3f(OUTLINE_COLOUR.x, OUTLINE_COLOUR.y, OUTLINE_COLOUR.z);
+	//CollidableEntity::drawDebugCollisionCircle();
 
-		for (size_t i = 0; i < MAX_POINTS; i++)
-		{
-			glVertex3f(drawPoints[i].x, drawPoints[i].y, 0);
-		}
-		glEnd();
+	glBegin(GL_LINE_LOOP);
+	glColor3f(OUTLINE_COLOUR.x, OUTLINE_COLOUR.y, OUTLINE_COLOUR.z);
 
-		glBegin(GL_TRIANGLE_FAN);
-		glColor3f(FILL_COLOUR.x, FILL_COLOUR.y, FILL_COLOUR.z);
-
-		for (size_t i = 0; i < MAX_POINTS; i++)
-		{
-			glVertex3f(drawPoints[i].x, drawPoints[i].y, 0);
-		}
-		glEnd();
-
-		glPopMatrix();
+	for (size_t i = 0; i < MAX_POINTS; i++)
+	{
+		glVertex3f(drawPoints[i].x, drawPoints[i].y, 0);
 	}
-	else {
-		explosionEffect->draw();
+	glEnd();
+
+	glBegin(GL_TRIANGLE_FAN);
+	glColor3f(FILL_COLOUR.x, FILL_COLOUR.y, FILL_COLOUR.z);
+
+	for (size_t i = 0; i < MAX_POINTS; i++)
+	{
+		glVertex3f(drawPoints[i].x, drawPoints[i].y, 0);
 	}
+	glEnd();
+
+	glPopMatrix();
 
 }
 
@@ -167,7 +165,6 @@ void Asteroid::onCollide(CollidableEntity& other)
 		health--;
 		if (health <= 0 && !isDestroyed) {
 			if (canSpawnAsteroid) {
-				// TODO CALCULATE POSITIONS TO SPAWN AND NEW DIRECTIONS
 				// Spawn Positions
 				Vector2 perpDirection = Vector2(-direction.y, direction.x);
 				Vector2 position1 = Vector2(position.x + (perpDirection.x * (size + 5)), position.y + (perpDirection.y * (size + 5)));
@@ -182,16 +179,17 @@ void Asteroid::onCollide(CollidableEntity& other)
 				newDirx = cosf(Math::degToRad(-45)) * direction.x - (sinf(Math::degToRad(-45)) * direction.y);
 				newDiry = sinf(Math::degToRad(-45)) * direction.x + (cosf(Math::degToRad(-45)) * direction.y);
 				a2->setDirection(Vector2(newDirx, newDiry));
-			
+
 				game.createCollidableEntity(a1);
 				game.createCollidableEntity(a2);
 			}
 
 			isDestroyed = true;
+			enabled = false;
 			explosionEffect = new ExplosionEffect(position, Vector3(0.5f, 0.5f, 0.0f), 20);
 			game.increaseScore(1);
 		}
-			
+
 	}
 
 }

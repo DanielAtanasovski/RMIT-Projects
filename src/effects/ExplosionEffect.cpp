@@ -8,6 +8,7 @@ ExplosionEffect::ExplosionEffect(Vector2 position, Vector3 colour, int amountOfP
 	this->particlesColour = colour;
 	this->amountOfParticles = amountOfParticles;
 
+	std::cout << position.x << ", " << position.y << std::endl;
 	for (size_t i = 0; i < amountOfParticles; i++)
 	{
 		float randomDirection = Math::getRandomFloat(0, 360);
@@ -16,7 +17,7 @@ ExplosionEffect::ExplosionEffect(Vector2 position, Vector3 colour, int amountOfP
 		float randomSize = Math::getRandomFloat(PARTICLE_MIN_SIZE, PARTICLE_MAX_SIZE);
 		float x = cosf(Math::degToRad(randomDirection));
 		float y = sinf(Math::degToRad(randomDirection));
-		std::cout << position.x << "," << position.y << std::endl;
+
 		particles.push_back(new Particle(position, Vector2(x, y), colour, randomSpeed, randomLifeTime, randomSize));
 	}
 }

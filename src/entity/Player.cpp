@@ -65,7 +65,6 @@ void Player::draw()
 
 	// Draw Bounding Circle
 	//CollidableEntity::drawDebugCollisionCircle();
-	
 
 	glPopMatrix();
 
