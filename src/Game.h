@@ -58,6 +58,7 @@ private:
 	const int STATE_GAME = 1;
 	const int STATE_END = 2;
 	const float STATE_END_TIMEOUT = 0.5f; // so it automatically doesnt restart
+	float currentTimeout = 0.0f;
 
 	void restart();
 	bool playerOutOfBounds(); // Player and Arena

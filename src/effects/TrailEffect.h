@@ -1,10 +1,9 @@
 #pragma once
 #include <vector>
 #include "Particle.h"
-#include "ParticleSystem.h"
 #include "../math/Vector2.h"
 
-class TrailEffect : public ParticleSystem
+class TrailEffect : public Entity
 {
 public:
 	TrailEffect(Vector2 position, Vector3 colour) { this->position = position; this->particlesColour = colour; };

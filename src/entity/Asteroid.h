@@ -3,6 +3,7 @@
 #include "../math/Math.h"
 #include <vector>
 #include "../Game.h"
+#include "../effects/ExplosionEffect.h"
 
 class Asteroid : public CollidableEntity
 {
@@ -43,6 +44,8 @@ private:
 	float health = 1;
 	float size = Math::getRandomFloat(MIN_SIZE, MAX_SIZE);
 	bool canSpawnAsteroid = true;
+	bool isDestroyed = false;
+	ExplosionEffect* explosionEffect;
 	std::vector<Vector2> drawPoints = std::vector<Vector2>();
 	Game& game;
 };

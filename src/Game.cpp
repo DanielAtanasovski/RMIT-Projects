@@ -95,9 +95,15 @@ void Game::update() {
 		lastElapsedTime = elapsed;
 	}
 	else if (gameState == STATE_END) {
-		if (Input::onAnyKey()) {
-			restart();
+		if (currentTimeout >= STATE_END_TIMEOUT) {
+			if (Input::onAnyKey()) {
+				restart();
+			}
 		}
+		else {
+			currentTimeout += deltaTime;
+		}
+		
 
 		arena->update(deltaTime);
 		// Loop Collidables
@@ -105,8 +111,6 @@ void Game::update() {
 		{
 			collidableEntities[i]->update(deltaTime);
 		}
-
-		
 
 		CollisionCheckCollidables();
 		runQueueDelete();

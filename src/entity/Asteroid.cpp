@@ -91,41 +91,56 @@ void Asteroid::generateAsteroid(float size)
 }
 
 void Asteroid::drawAsteroid() {
-	glPushMatrix();
+	if (!isDestroyed) {
+		glPushMatrix();
 
-	//CollidableEntity::drawDebugCollisionCircle();
+		//CollidableEntity::drawDebugCollisionCircle();
 
-	glBegin(GL_LINE_LOOP);
-	glColor3f(OUTLINE_COLOUR.x, OUTLINE_COLOUR.y, OUTLINE_COLOUR.z);
-	
-	for (size_t i = 0; i < MAX_POINTS; i++)
-	{
-		glVertex3f(drawPoints[i].x, drawPoints[i].y, 0);
+		glBegin(GL_LINE_LOOP);
+		glColor3f(OUTLINE_COLOUR.x, OUTLINE_COLOUR.y, OUTLINE_COLOUR.z);
+
+		for (size_t i = 0; i < MAX_POINTS; i++)
+		{
+			glVertex3f(drawPoints[i].x, drawPoints[i].y, 0);
+		}
+		glEnd();
+
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(FILL_COLOUR.x, FILL_COLOUR.y, FILL_COLOUR.z);
+
+		for (size_t i = 0; i < MAX_POINTS; i++)
+		{
+			glVertex3f(drawPoints[i].x, drawPoints[i].y, 0);
+		}
+		glEnd();
+
+		glPopMatrix();
 	}
-	glEnd();
-
-	glBegin(GL_TRIANGLE_FAN);
-	glColor3f(FILL_COLOUR.x, FILL_COLOUR.y, FILL_COLOUR.z);
-
-	for (size_t i = 0; i < MAX_POINTS; i++)
-	{
-		glVertex3f(drawPoints[i].x, drawPoints[i].y, 0);
+	else {
+		explosionEffect->draw();
 	}
-	glEnd();
 
-	glPopMatrix();
 }
 
 void Asteroid::update(float deltaTime) {
-	// Apply velocity
-	position.x += velocity.x * deltaTime;
-	position.y += velocity.y * deltaTime;
+	if (!isDestroyed) {
+		// Apply velocity
+		position.x += velocity.x * deltaTime;
+		position.y += velocity.y * deltaTime;
 
-	// Rotate
-	if (ROTATE_CLOCKWISE)
-		rotation += ROTATION_SPEED * deltaTime;
-	else
-		rotation -= ROTATION_SPEED * deltaTime;
+		// Rotate
+		if (ROTATE_CLOCKWISE)
+			rotation += ROTATION_SPEED * deltaTime;
+		else
+			rotation -= ROTATION_SPEED * deltaTime;
+	}
+	else {
+		explosionEffect->update(deltaTime);
+		if (explosionEffect->getDone()) {
+			delete explosionEffect;
+			game.deleteCollidableEntity(this);
+		}
+	}
 }
 
 void Asteroid::onCollide(CollidableEntity& other)
@@ -150,7 +165,7 @@ void Asteroid::onCollide(CollidableEntity& other)
 	else if (other.getTag() == "Bullet") {
 		// break
 		health--;
-		if (health <= 0) {
+		if (health <= 0 && !isDestroyed) {
 			if (canSpawnAsteroid) {
 				// TODO CALCULATE POSITIONS TO SPAWN AND NEW DIRECTIONS
 				// Spawn Positions
@@ -171,8 +186,9 @@ void Asteroid::onCollide(CollidableEntity& other)
 				game.createCollidableEntity(a1);
 				game.createCollidableEntity(a2);
 			}
-				
-			game.deleteCollidableEntity(this);
+
+			isDestroyed = true;
+			explosionEffect = new ExplosionEffect(position, Vector3(0.5f, 0.5f, 0.0f), 20);
 			game.increaseScore(1);
 		}
 			
