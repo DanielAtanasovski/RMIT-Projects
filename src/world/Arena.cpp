@@ -46,7 +46,7 @@ void Arena::update(float deltaTime)
 
 void Arena::restart() {
 	currentSpawnTime = 0;
-	currentAsteroidsWave = 0;
+	currentAsteroidsWave = 1;
 }
 
 void Arena::spawnWave(int asteroids)
