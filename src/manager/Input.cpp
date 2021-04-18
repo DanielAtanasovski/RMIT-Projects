@@ -16,6 +16,7 @@
 
 std::vector<char> Input::keysPressed;
 int Input::mouseLeft;
+bool Input::waitForDifferentKey = false;
 
 void Input::onKeyboardPressedCallback(char key, int x, int y)
 {
@@ -32,6 +33,13 @@ void Input::onKeyboardReleasedCallback(char key, int x, int y)
 {
 	// Remove key from pressed keys list
 	clearKeyFromKeys(toupper(key));
+}
+
+bool Input::onAnyKey() {
+	if (keysPressed.size() > 0) {
+		return true;
+	}	
+	return false;
 }
 
 void Input::OnMouseCallback(int button, int state, int x, int y)

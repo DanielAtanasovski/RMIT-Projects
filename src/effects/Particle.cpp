@@ -16,29 +16,29 @@
 #include "../math/Math.h"
 #include <iostream>
 
-Particle::Particle(Vector2 position, Vector2 direction, Vector3 colour, float speed, float maxLifeTime, float size) {
+Particle::Particle(Vector2 position, Vector2 direction, Vector3 colour, float SPEED, float maxLifeTime, float SIZE) {
 	this->position = position;
 	this->direction = direction;
 	this->colourStart = colour;
 	this->colourCurrent = colour;
-	this->speed = speed;
+	this->SPEED = SPEED;
 	this->maxLifetime = maxLifeTime;
-	this->sizeStart = size;
-	this->sizeCurrent = size;
+	this->sizeStart = SIZE;
+	this->sizeCurrent = SIZE;
 
 	//std::cout << colourCurrent.x << ", " << colourCurrent.y << ", " << colourCurrent.z << ", " << sizeEnd << std::endl;
 }
 
-Particle::Particle(Vector2 position, Vector2 direction, Vector3 colourStart, Vector3 colourEnd, float speed, float maxLifeTime, float size) {
+Particle::Particle(Vector2 position, Vector2 direction, Vector3 colourStart, Vector3 colourEnd, float SPEED, float maxLifeTime, float SIZE) {
 	this->position = position;
 	this->direction = direction;
 	this->colourStart = colourStart;
 	this->colourCurrent = colourStart;
 	this->colourEnd = colourEnd;
-	this->speed = speed;
+	this->SPEED = SPEED;
 	this->maxLifetime = maxLifeTime;
-	this->sizeStart = size;
-	this->sizeCurrent = size;
+	this->sizeStart = SIZE;
+	this->sizeCurrent = SIZE;
 	
 }
 
@@ -72,7 +72,7 @@ void Particle::update(float deltaTime)
 		// Calculate Current Size
 		sizeCurrent = Math::lerp(sizeStart, sizeEnd, (currentLifetime) / maxLifetime);
 
-		position.x += direction.x * speed * deltaTime;
-		position.y += direction.y * speed * deltaTime;
+		position.x += direction.x * SPEED * deltaTime;
+		position.y += direction.y * SPEED * deltaTime;
 	}
 }

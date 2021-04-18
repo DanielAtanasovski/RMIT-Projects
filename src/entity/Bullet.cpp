@@ -16,6 +16,10 @@
 
 void Bullet::update(float deltaTime)
 {
+	// Weird bug where the direction can be zero, therefore not moving
+	if (direction.x == 0 && direction.y == 0)
+		game.deleteCollidableEntity(this);
+
 	position.x += direction.x * SPEED * deltaTime;
 	position.y += direction.y * SPEED * deltaTime;
 }

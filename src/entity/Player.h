@@ -15,7 +15,10 @@ public:
 	~Player() { delete trailEffect; };
 	void draw() override;
 	void update(float deltaTime) override;
-	virtual void onCollide(CollidableEntity& other) {};
+	virtual void onCollide(CollidableEntity& other) {}
+	void setDead(bool dead) { this->dead = dead; }
+	void setRotation(float rotation) { this->rotation = rotation; }
+	void setPosition(Vector2 position) { this->position = position; }
 
 private:
 	void getInput();
@@ -29,6 +32,7 @@ private:
 
 	bool canShoot = true;
 	float currentFireRate = 0.0f;
+	bool dead = false;
 
 	// Controls
 	const char KEY_UP = 'W';
@@ -38,7 +42,7 @@ private:
 	// Stats
 	const float ROTATE_SPEED = 200.0f;
 	const float MOVE_SPEED = 90.0f;
-	const float FIRE_RATE = 0.8f;
+	const float FIRE_RATE = 0.3f;
 	// Colours
 	const Vector3 OUTLINE_COLOUR = Vector3(0.0f, 0.0f, 1.0f);
 	const Vector3 FILL_COLOUR = Vector3(1.0f, 1.0f, 1.0f);

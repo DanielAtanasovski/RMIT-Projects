@@ -4,7 +4,10 @@
 class Bullet : public CollidableEntity
 {
 public:
-	Bullet(Game& game, Vector2 position, Vector2 direction) : game(game), CollidableEntity(position, 0) { tag = "Bullet"; this->direction = direction; }
+	Bullet(Game& game, Vector2 position, Vector2 direction) : game(game), CollidableEntity(position, 0) { 
+		tag = "Bullet";
+		this->direction = direction;
+	}
 	~Bullet() {};
 	void update(float deltaTime) override;
 	void draw() override;

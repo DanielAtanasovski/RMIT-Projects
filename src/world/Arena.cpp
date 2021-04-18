@@ -44,12 +44,16 @@ void Arena::update(float deltaTime)
 	spawnerUpdate(deltaTime);
 }
 
-// TODO: Check for other asteroids on spawn (to not spawn ontop of another)
+void Arena::restart() {
+	currentSpawnTime = 0;
+	currentAsteroidsWave = 0;
+}
+
 void Arena::spawnWave(int asteroids)
 {
 	for (size_t i = 0; i < asteroids; i++)
 	{
-		Asteroid* newAsteroid = new Asteroid(game, getValidSpawnPoint(), 0);
+		Asteroid* newAsteroid = new Asteroid(game, getValidSpawnPoint());
 		game.createCollidableEntity(newAsteroid);
 	}
 }

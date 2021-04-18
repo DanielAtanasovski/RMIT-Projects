@@ -17,9 +17,10 @@
 #   include <GL/glu.h>
 #   include <GL/glut.h>
 #endif
+#include "manager/Input.h"
 
 Game::Game() {
-	player = new Player(*this, Vector2(-70, -70), 45);
+	player = new Player(*this, PLAYER_START_POSITION, PLAYER_START_ROTATION);
 	arena = new Arena(*this);
 	init();
 }
@@ -43,6 +44,15 @@ void Game::draw() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 
+	// state
+	if (gameState == STATE_START) {
+		drawString((width / 2) - (getStringSize(START_MESSAGE) / 2), (height / 2), START_MESSAGE);
+	}
+	else if (gameState == STATE_END) {
+		drawString((width / 2) - (getStringSize(END_MESSAGE) / 2), (height / 2), END_MESSAGE);
+	}
+	
+	// main actors
 	arena->draw();
 	player->draw();
 
@@ -58,16 +68,6 @@ void Game::draw() {
 		printf("display: %s\n", gluErrorString(err));
 
 	// Draw UI
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	glOrtho(0.0, width, 0.0, height, 0, 1);
-
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-
-
 	std::stringstream stringStream;
 	stringStream << "Time: " << std::fixed << std::setprecision(0) << floor(time);
 	std::string timeString = stringStream.str();
@@ -78,10 +78,6 @@ void Game::draw() {
 	drawString(abs((WORLD_UNIT_MAX + WORLD_UNIT_MIN) - (arena->WIDTH))/2, height - 50, timeString);
 	drawString(width - (abs((WORLD_UNIT_MAX + WORLD_UNIT_MIN) - (arena->WIDTH)) / 2) - getStringSize(scoreString), height - 50, scoreString);
 
-	glPopMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-
 
 	glutSwapBuffers();
 }
@@ -90,27 +86,54 @@ void Game::update() {
 	// Calculate Delta Time
 	float elapsed = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
 	float deltaTime = elapsed - lastElapsedTime;
-	time += deltaTime;
+	
 
-	player->update(deltaTime);
-	arena->update(deltaTime);
+	if (gameState == STATE_START) {
+		if (Input::onAnyKey()) {
+			gameState = STATE_GAME;
+		}
+		lastElapsedTime = elapsed;
+	}
+	else if (gameState == STATE_END) {
+		if (Input::onAnyKey()) {
+			restart();
+		}
 
-	// Loop Collidables
-	for (size_t i = 0; i < collidableEntities.size(); i++)
-	{
-		collidableEntities[i]->update(deltaTime);
+		arena->update(deltaTime);
+		// Loop Collidables
+		for (size_t i = 0; i < collidableEntities.size(); i++)
+		{
+			collidableEntities[i]->update(deltaTime);
+		}
+
+		
+
+		CollisionCheckCollidables();
+		runQueueDelete();
+		lastElapsedTime = elapsed;
+	}
+	else {
+		time += deltaTime;
+		player->update(deltaTime);
+		arena->update(deltaTime);
+
+		// Loop Collidables
+		for (size_t i = 0; i < collidableEntities.size(); i++)
+		{
+			collidableEntities[i]->update(deltaTime);
+		}
+
+		// Check collisions
+		if (playerOutOfBounds()) {
+			gameState = STATE_END;
+		}
+
+		CollisionCheckCollidables();
+		runQueueDelete();
+
+		lastElapsedTime = elapsed;
 	}
 
-	// Check collisions
-	if (playerOutOfBounds()) {
-		std::cout << "Player Out of Bounds!" << std::endl;
-		restart();
-	}
-
-	CollisionCheckCollidables();
-	runQueueDelete();
-
-	lastElapsedTime = elapsed;
 }
 
 void Game::onReshape(int width, int height)
@@ -168,16 +191,20 @@ bool Game::isPointSafe(Vector2 point, float radius)
 void Game::restart()
 {
 	// Remove old instances
-	// FIXME: Not efficient, should just reset them
-	delete arena;
-	delete player;
 	collidableEntities.clear();
-	collidableEntities.resize(0);
+	
+	// reset player
+	player->setRotation(PLAYER_START_ROTATION);
+	player->setPosition(PLAYER_START_POSITION);
+	player->setDead(false);
+
+	arena->restart();
+
 	time = 0;
 	score = 0;
 
-	player = new Player(*this, Vector2(-70, -70), 45);
-	arena = new Arena(*this);
+
+	gameState = STATE_GAME;
 }
 
 bool Game::playerOutOfBounds()
@@ -210,7 +237,8 @@ void Game::CollisionCheckCollidables()
 		// Restart game on collision with player
 		if (c1->getTag() != "Bullet")
 			if (currentPosition.distanceTo(player->getPosition()) < totalRadius) {
-				restart();
+				player->setDead(true);
+				gameState = STATE_END;
 			}
 
 		if (isOutsideWorld(*c1))
@@ -283,7 +311,6 @@ void Game::runQueueDelete()
 {
 	for(unsigned i = (int)queueDeleteList.size(); i-- > 0;)
 	{
-		std::cout << "Deleteing: " << collidableEntities[queueDeleteList[i]]->getPosition().x << ", " << collidableEntities[queueDeleteList[i]]->getPosition().y << std::endl;
 		collidableEntities.erase(collidableEntities.begin() + queueDeleteList[i]);
 		asteroidsCount--;
 	}
@@ -300,8 +327,28 @@ bool Game::isOutsideWorld(CollidableEntity& entity)
 	return false;
 }
 
+Vector2 Game::worldToScreenCoordinate(Vector2 point) {
+	float percentX = (((point.x - WORLD_UNIT_MIN) * 100) / (WORLD_UNIT_MAX - WORLD_UNIT_MIN)) / 100;
+	float percentY = (((point.y - WORLD_UNIT_MIN) * 100) / (WORLD_UNIT_MAX - WORLD_UNIT_MIN)) / 100;
+	
+	float screenX = width * percentX;
+	float screenY = height * percentY;
+
+
+	return Vector2(screenX, screenY);
+}
+
 void Game::drawString(float x, float y, std::string str)
 {
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0.0, width, 0.0, height, 0, 1);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
 	glColor3f(1.0f, 1.0f, 1.0f);
 	float currentX = x;
 	for (size_t i = 0; i < str.length(); i++)
@@ -310,6 +357,10 @@ void Game::drawString(float x, float y, std::string str)
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, str[i]);
 		currentX += glutBitmapWidth(GLUT_BITMAP_TIMES_ROMAN_24, str[i]);
 	}
+
+	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
 	
 }
 

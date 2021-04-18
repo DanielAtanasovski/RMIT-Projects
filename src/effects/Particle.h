@@ -5,8 +5,8 @@
 class Particle : public Entity
 {
 public:
-	Particle(Vector2 position, Vector2 direction, Vector3 colour, float speed, float maxLifeTime, float size);
-	Particle(Vector2 position, Vector2 direction, Vector3 colourStart, Vector3 colourEnd, float speed, float maxLifeTime, float size);
+	Particle(Vector2 position, Vector2 direction, Vector3 colour, float SPEED, float maxLifeTime, float SIZE);
+	Particle(Vector2 position, Vector2 direction, Vector3 colourStart, Vector3 colourEnd, float SPEED, float maxLifeTime, float SIZE);
 	~Particle() {};
 
 	void draw() override;
@@ -20,7 +20,7 @@ private:
 	Vector3 colourStep = Vector3();
 
 	Vector2 direction = Vector2(0, 0);
-	float speed = 80.0f;
+	float SPEED = 80.0f;
 	float maxLifetime = 1.0f;
 	float currentLifetime = 0.0f;
 

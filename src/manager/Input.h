@@ -9,11 +9,13 @@ public:
 	static bool onPressed(char key);
 	static bool onReleased(char key);
 	static bool onMouseLeftDown();
+	static bool onAnyKey();
 
 private:
 	static void clearKeyFromKeys(char key);
 	static int mouseLeft;
 	static std::vector<char> keysPressed;
+	static bool waitForDifferentKey;
 };
 
  

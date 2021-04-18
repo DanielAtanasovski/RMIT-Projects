@@ -28,6 +28,9 @@ Player::Player(Game& game, Vector2 position, float rotation) : game(game), Colli
 
 void Player::draw()
 {
+	if (dead)
+		return;
+
 	glPushMatrix();
 
 	// Apply Rotation and position
@@ -70,6 +73,10 @@ void Player::draw()
 }
 
 void Player::update(float deltaTime) {
+
+	if (dead)
+		return;
+
 	getInput();
 	move(deltaTime);
 

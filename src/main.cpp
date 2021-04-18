@@ -22,6 +22,7 @@ void setupCallbacks() {
 	glutDisplayFunc(GlutCallbackInterface::displayCallback);
 	glutKeyboardFunc(GlutCallbackInterface::keyboardPressedCallback);
 	glutKeyboardUpFunc(GlutCallbackInterface::keyboardReleasedCallback);
+	glutMouseFunc(GlutCallbackInterface::mouseFuncCallback);
 	glutReshapeFunc(GlutCallbackInterface::displayReshapeCallback);
 	glutIdleFunc(GlutCallbackInterface::updateCallback);
 }

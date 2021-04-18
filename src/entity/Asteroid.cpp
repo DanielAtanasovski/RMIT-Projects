@@ -16,10 +16,25 @@
 #include <iostream>
 
 
-Asteroid::Asteroid(Game& game, Vector2 position, float rotation) : game(game), CollidableEntity(position, rotation) {
+Asteroid::Asteroid(Game& game, Vector2 position, bool canSpawnAsteroid) : game(game), CollidableEntity(position, 0) {
+	direction = (game.getPlayer().getPosition() - position).normalised();
+	this->canSpawnAsteroid = canSpawnAsteroid;
+	velocity = direction * SPEED;
+	size = Math::getRandomFloat(MIN_SIZE, MAX_SIZE);
 	collisionRadius = size;
-	direction = (Vector2(0, 0) - position).normalised();
-	velocity = Vector2(direction) * speed;
+	health = ceil(size / 4);
+	generateAsteroid();
+	tag = "Asteroid";
+}
+
+Asteroid::Asteroid(Game& game, Vector2 position, float size, bool canSpawnAsteroid) : game(game), CollidableEntity(position, 0) {
+	this->size = size;
+	this->canSpawnAsteroid = canSpawnAsteroid;
+	// Set direction to player position
+	direction = (game.getPlayer().getPosition() - position).normalised(); 
+	velocity = Vector2(direction) * SPEED;
+	collisionRadius = size;
+	health = ceil(size / 4);
 	generateAsteroid();
 	tag = "Asteroid";
 }
@@ -30,9 +45,21 @@ void Asteroid::draw() {
 	glRotatef(rotation, 0.0f, 0.0f, -1.0f);
 
 	CollidableEntity::draw();
+	
+	/* Draw Healt Value above Asteroid */
+	Vector2 screenCoords = game.worldToScreenCoordinate(position);
+	game.drawString(screenCoords.x, screenCoords.y, std::to_string((int)health));
+
 	drawAsteroid();
 
 	glPopMatrix();
+
+	
+}
+
+void Asteroid::setDirection(Vector2 direction) {
+	this->direction = direction;
+	this->velocity = direction * SPEED;
 }
 
 void Asteroid::generateAsteroid()
@@ -40,12 +67,27 @@ void Asteroid::generateAsteroid()
 	for (size_t i = 0; i < MAX_POINTS; i++)
 	{
 		float radius = size + Math::getRandomFloat(MIN_SIZE_OFFSET, MAX_SIZE_OFFSET);
+
 		float step = (float)i / MAX_POINTS * 2 * (float)M_PI;
 		float x = radius * cosf(step);
 		float y = radius * sinf(step);
+		
 		drawPoints.push_back(Vector2(x, y));
 	}
-	
+
+}
+
+void Asteroid::generateAsteroid(float size)
+{
+	for (size_t i = 0; i < MAX_POINTS; i++)
+	{
+		float radius = size + Math::getRandomFloat(size / 4, MAX_SIZE_OFFSET);
+		float step = (float)i / MAX_POINTS * 2 * (float)M_PI;
+		float x = radius * cosf(step);
+		float y = radius * sinf(step);
+
+		drawPoints.push_back(Vector2(x, y));
+	}
 }
 
 void Asteroid::drawAsteroid() {
@@ -71,7 +113,6 @@ void Asteroid::drawAsteroid() {
 	}
 	glEnd();
 
-
 	glPopMatrix();
 }
 
@@ -81,10 +122,10 @@ void Asteroid::update(float deltaTime) {
 	position.y += velocity.y * deltaTime;
 
 	// Rotate
-	if (rotateClockwise)
-		rotation += rotationSpeed * deltaTime;
+	if (ROTATE_CLOCKWISE)
+		rotation += ROTATION_SPEED * deltaTime;
 	else
-		rotation -= rotationSpeed * deltaTime;
+		rotation -= ROTATION_SPEED * deltaTime;
 }
 
 void Asteroid::onCollide(CollidableEntity& other)
@@ -108,8 +149,33 @@ void Asteroid::onCollide(CollidableEntity& other)
 	}
 	else if (other.getTag() == "Bullet") {
 		// break
-		game.deleteCollidableEntity(this);
-		game.increaseScore(1);
+		health--;
+		if (health <= 0) {
+			if (canSpawnAsteroid) {
+				// TODO CALCULATE POSITIONS TO SPAWN AND NEW DIRECTIONS
+				// Spawn Positions
+				Vector2 perpDirection = Vector2(-direction.y, direction.x);
+				Vector2 position1 = Vector2(position.x + (perpDirection.x * (size + 5)), position.y + (perpDirection.y * (size + 5)));
+				Vector2 position2 = Vector2(position.x - (perpDirection.x * (size - 5)), position.y - (perpDirection.y * (size - 5)));
+
+				// Create and set directions
+				Asteroid* a1 = new Asteroid(game, position1, size / 2, false);
+				float newDirx = cosf(Math::degToRad(45)) * direction.x - (sinf(Math::degToRad(45)) * direction.y);
+				float newDiry = sinf(Math::degToRad(45)) * direction.x + (cosf(Math::degToRad(45)) * direction.y);
+				a1->setDirection(Vector2(newDirx, newDiry));
+				Asteroid* a2 = new Asteroid(game, position2, size / 2, false);
+				newDirx = cosf(Math::degToRad(-45)) * direction.x - (sinf(Math::degToRad(-45)) * direction.y);
+				newDiry = sinf(Math::degToRad(-45)) * direction.x + (cosf(Math::degToRad(-45)) * direction.y);
+				a2->setDirection(Vector2(newDirx, newDiry));
+			
+				game.createCollidableEntity(a1);
+				game.createCollidableEntity(a2);
+			}
+				
+			game.deleteCollidableEntity(this);
+			game.increaseScore(1);
+		}
+			
 	}
 
 }

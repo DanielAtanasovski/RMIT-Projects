@@ -7,16 +7,19 @@
 class Asteroid : public CollidableEntity
 {
 public:
-	Asteroid(Game& game, Vector2 position, float rotation);
+	Asteroid(Game& game, Vector2 position, bool canSpawnAsteroid = true);
+	Asteroid(Game& game, Vector2 position, float size, bool canSpawnAsteroid = true);
 	~Asteroid() {};
 	void generateAsteroid();
+	void generateAsteroid(float size);
 	void drawAsteroid();
 	void draw() override;
 	void update(float deltaTime) override;
 	void onCollide(CollidableEntity& other) override;
+	void setDirection(Vector2 direction);
 
 	// Useful values to be seen everywhere
-	static constexpr float MAX_SIZE = 14.0f;
+	static constexpr float MAX_SIZE = 14.0f; // Used by Arena to determine safe spawn area
 
 private:
 	const int MAX_POINTS = 14; // Amount of points used to draw asteroid
@@ -32,10 +35,14 @@ private:
 	const Vector3 FILL_COLOUR = Vector3(0.4f, 0.4f, 0.4f);
 	const Vector3 OUTLINE_COLOUR = Vector3(0.8f, 0.8f, 0.8f);
 
-	const bool rotateClockwise = Math::getRandomBool();
-	const float size = Math::getRandomFloat(MIN_SIZE, MAX_SIZE);
-	const float speed = Math::getRandomFloat(MIN_SPEED, MAX_SPEED);
-	const float rotationSpeed = Math::getRandomFloat(MIN_ROTATION_SPEED, MAX_ROTATION_SPEED);
+	const bool ROTATE_CLOCKWISE = Math::getRandomBool();
+
+	const float SPEED = Math::getRandomFloat(MIN_SPEED, MAX_SPEED);
+	const float ROTATION_SPEED = Math::getRandomFloat(MIN_ROTATION_SPEED, MAX_ROTATION_SPEED);
+
+	float health = 1;
+	float size = Math::getRandomFloat(MIN_SIZE, MAX_SIZE);
+	bool canSpawnAsteroid = true;
 	std::vector<Vector2> drawPoints = std::vector<Vector2>();
 	Game& game;
 };

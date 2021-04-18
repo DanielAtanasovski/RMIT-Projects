@@ -18,6 +18,7 @@ public:
 	~Arena() {};
 	void draw();
 	void update(float deltaTime);
+	void restart();
 
 	// Consts
 	const float WIDTH = 198;
@@ -36,7 +37,7 @@ private:
 	// Consts
 	const float WARNING_DISTANCE = 30.0f;
 	const float WAVE_SPAWN_TIME = 5.0f;
-	const int WAVE_MAX_ASTEROIDS = 10;
+	const int WAVE_MAX_ASTEROIDS = 5;
 
 	const Vector3 DEFAULT_LINE_COLOUR = Vector3(1.0f, 1.0f, 1.0f);
 	const Vector3 WARNING_LINE_COLOUR = Vector3(1.0f, 0.0f, 0.0f);
