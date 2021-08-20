@@ -3,6 +3,7 @@
 #pragma once
 
 #include "App.h"
+#include "util/Input.h"
 #include "Camera.h"
 #include "drawing/Shapes.h"
 #include <vector>
@@ -40,9 +41,10 @@ private:
 
 	// Camera Controls 
 	// todo: move to camera class
-	glm::vec3 _inputDirection = glm::vec3(0,0,0);
+	glm::vec3 _inputDirection = glm::vec3(0);
 	float _cameraSpeed = 5.0f;
 	//int _subdivisions = 0;
+	Input _input = Input();
 
 };
 

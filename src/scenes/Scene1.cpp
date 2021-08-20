@@ -15,9 +15,8 @@ void Scene1::Init()
 	glCullFace(GL_BACK);
 
 	// TODO:Enable Lights
-	_triangleCount = 0;
-	_cubeCount = 0;
-	CalculateMengerSponge(_position, _size, _subdivisions);
+	Recalculate();
+
 	std::cout << "Final Triangle Count: " << _triangleCount << std::endl;
 	std::cout << "Final Cube Count: " << _cubeCount << std::endl;
 }
@@ -33,11 +32,12 @@ void Scene1::Run()
 	//glm::mat4 _positionMatrix = glm::translate(_localModelMatrix, _position);
 	//_localModelMatrix = _positionMatrix * _scaleMatrix;
 	//glMultMatrixf(glm::value_ptr(_localModelMatrix)); // Multiply so as to get contribute to projectionMatrix
-	for (size_t i = 0; i < _mengerCubesArray.size(); i++)
-	{
-		_mengerCubesArray[i]->draw();
-	}
+	//for (size_t i = 0; i < _mengerCubesArray.size(); i++)
+	//{
+	//	_mengerCubesArray[i]->draw();
+	//}
 	//glPopMatrix();
+	DrawMengerSpongeEfficient();
 }
 
 void Scene1::Done()
@@ -47,11 +47,35 @@ void Scene1::Done()
 
 void Scene1::Recalculate()
 {
-	_mengerCubesArray.clear();
-	_mengerCubesArray.shrink_to_fit();
+	_verticesArray.clear();
+	_verticesArray.shrink_to_fit();
+	_facesArray.clear();
+	_facesArray.shrink_to_fit();
+
 	_triangleCount = 0;
 	_cubeCount = 0;
-	CalculateMengerSponge(_position, _size, _subdivisions);
+	if (_subdivisions > 0) {
+		CalculateMengerSponge(_position, _size, _subdivisions - 1);
+	}
+	else {
+		Cube cube = Cube(_position, glm::vec3(_size));
+		// Add to index and vertices list
+		std::vector<glm::vec3> cubeVertices = cube.getVertices();
+		int oldSize = _verticesArray.size();
+		_verticesArray.insert(_verticesArray.end(), cubeVertices.begin(), cubeVertices.end());
+		std::vector<glm::ivec3> cubeFaces = cube.getFaces();
+
+		// Convert local face ids to global face ids
+		for (size_t i = 0; i < cubeFaces.size(); i++)
+		{
+			cubeFaces[i] += oldSize;
+		}
+		_facesArray.insert(_facesArray.end(), cubeFaces.begin(), cubeFaces.end());
+		
+		// Increase Stats
+		_triangleCount += cube.getTriangleCount();
+		_cubeCount++;
+	}
 	std::cout << "Final Triangle Count: " << _triangleCount << std::endl;
 	std::cout << "Final Cube Count: " << _cubeCount << std::endl;
 }
@@ -108,13 +132,27 @@ void Scene1::CalculateOuterLayer(float xMin, float xMax, float y, float zMin, fl
 			if (row == 1 && col == 1)
 				continue; // No Center Block
 
-			Cube* cube = new Cube(
+			// Get Cube Vertices
+			Cube cube = Cube(
 				glm::vec3( xMin + ((col * xInterval) + xOffset),
 					y, zMin + ((row * zInterval) + zOffset)),
 				size, CalculateDisabledFaces(row, col, top));
 
-			_mengerCubesArray.push_back(cube);
-			_triangleCount += cube->getTriangleCount();
+			// Add to index and vertices list
+			std::vector<glm::vec3> cubeVertices = cube.getVertices();
+			int oldSize = _verticesArray.size();
+			_verticesArray.insert(_verticesArray.end(), cubeVertices.begin(), cubeVertices.end());
+			std::vector<glm::ivec3> cubeFaces = cube.getFaces();
+			// Convert local face ids to global face ids
+			for (size_t i = 0; i < cubeFaces.size(); i++)
+			{
+				cubeFaces[i] += oldSize;
+			}
+			_facesArray.insert(_facesArray.end(), cubeFaces.begin(), cubeFaces.end());
+
+			// Old Way
+			//_mengerCubesArray.push_back(cube);
+			_triangleCount += cube.getTriangleCount();
 			_cubeCount++;
 		}
 	}
@@ -140,12 +178,24 @@ void Scene1::CalculateMiddleLayer(float xMin, float xMax, float y, float zMin, f
 				row == 2 && col == 1)
 				continue;
 
-			Cube* cube = new Cube(
+			Cube cube = Cube(
 				glm::vec3(xMin + ((col * xInterval) + xOffset), y, zMin + ((row * zInterval) + zOffset)),
 				size, disabledFaces);
 
-			_mengerCubesArray.push_back(cube);
-			_triangleCount += cube->getTriangleCount();
+			// Add to index and vertices list
+			std::vector<glm::vec3> cubeVertices = cube.getVertices();
+			int oldSize = _verticesArray.size();
+			_verticesArray.insert(_verticesArray.end(), cubeVertices.begin(), cubeVertices.end());
+			std::vector<glm::ivec3> cubeFaces = cube.getFaces();
+			// Convert local face ids to global face ids
+			for (size_t i = 0; i < cubeFaces.size(); i++)
+			{
+				cubeFaces[i] += oldSize;
+			}
+			_facesArray.insert(_facesArray.end(), cubeFaces.begin(), cubeFaces.end());
+
+			//_mengerCubesArray.push_back(cube);
+			_triangleCount += cube.getTriangleCount();
 			_cubeCount++;
 		}
 	}
@@ -187,8 +237,54 @@ std::vector<CubeFaces> Scene1::CalculateDisabledFaces(int row, int col, bool top
 
 void Scene1::DrawMengerSpongeEfficient()
 {
-	for (size_t i = 0; i < _mengerCubesArray.size(); i++)
+	glPushMatrix();
+	// Draw Shape
+	glBegin(GL_TRIANGLES);
+
+	glColor3f(1.0f, 1.0f, 1.0f);
+	for (size_t i = 0; i < _facesArray.size(); i++)
 	{
-		_mengerCubesArray[i]->draw();
+		//_mengerCubesArray[i]->draw();
+		// Get Triangle Vertexes
+		glm::ivec3 faceIndex = _facesArray[i];
+		glm::vec3 pointA = _verticesArray[faceIndex.x];
+		glm::vec3 pointB = _verticesArray[faceIndex.y];
+		glm::vec3 pointC = _verticesArray[faceIndex.z];
+
+		// Determine Colour
+		if (pointA.x == pointB.x && pointA.x == pointC.x) {
+			// Left / Right
+			_newColour = _CUBE_COLOURS[0];
+		}
+		else if (pointA.y == pointB.y && pointA.y == pointC.y) {
+			// Top / Bottom
+			_newColour = _CUBE_COLOURS[1];
+		}
+		else if (pointA.z == pointB.z && pointA.z == pointC.z) {
+			// Front / Back
+			_newColour = _CUBE_COLOURS[2];
+		}
+
+		// Set Colour
+		if (_newColour.r != _currentColour.r || _newColour.g != _currentColour.g || _newColour.b != _currentColour.b) {
+			_currentColour = _newColour;
+			glColor3f(_currentColour.r, _currentColour.g, _currentColour.b);
+		}
+
+		// Draw Vertex
+		glVertex3f(
+			pointA.x,
+			pointA.y,
+			pointA.z);
+		glVertex3f(
+			pointB.x,
+			pointB.y,
+			pointB.z);
+		glVertex3f(
+			pointC.x,
+			pointC.y,
+			pointC.z);
 	}
+	glEnd();
+	glPopMatrix();
 }

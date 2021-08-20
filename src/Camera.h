@@ -12,7 +12,7 @@
 class Camera
 {
 public:
-	Camera(float width, float height) : _position(glm::vec3(0,0,5)) {
+	Camera(float width, float height) {
 
 		_perspectiveMatrix = glm::perspective(glm::radians<float>(45.0f), width / height, 0.1f, 100.0f);
 		glMatrixMode(GL_PROJECTION);
@@ -36,5 +36,12 @@ public:
 private:
 	glm::mat4 _perspectiveMatrix;
 	glm::mat4 _viewMatrix;
-	glm::vec3 _position;
+	glm::vec3 _position = glm::vec3(0, 0, 15);
+	glm::vec3 _cameraTarget = glm::vec3(0.0f, 0.0f, -1.0f);
+	glm::vec3 _cameraDirection = glm::normalize(_position - _cameraTarget);
+	glm::vec3 _up = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 _cameraRight = glm::normalize(glm::cross(_up, _cameraDirection));
+	glm::vec3 _cameraUp = glm::cross(_cameraDirection, _cameraRight);
+
+
 };
