@@ -33,9 +33,6 @@
     <ClCompile Include="src\drawing\Shapes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\util\Input.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\scenes\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -43,6 +40,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\util\Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawing\HUD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,8 +68,11 @@
     <ClInclude Include="src\scenes\Scene1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\KeyState.h">
+    <ClInclude Include="src\drawing\HUD.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\Input.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

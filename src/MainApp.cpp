@@ -1,5 +1,4 @@
 // Daniel Atanasovski
-
 #include <iostream>
 #include <glad/glad.h>
 #include <glm/gtx/string_cast.hpp>
@@ -7,7 +6,6 @@
 #include <sdl/SDL.h>
 #include "MainApp.h"
 #include "util/GLMUtil.h"
-
 #include "drawing/Shapes.h"
 
 int MainApp::Init() {
@@ -15,8 +13,14 @@ int MainApp::Init() {
 		return err;
 	}
 
+	_input = new Input();
+	_hud = new HUD();
+	_hud->Init();
+	_hud->SetResolution(_windowWidth, _windowHeight);
+	_hud->SetScene(_currentScene);
+
 	_camera = new Camera(_windowWidth, _windowHeight);
-	_scenes[_currentScene]->Init();
+	_scenes[_currentScene]->Init(*_hud);
 	return 0;
 }
 
@@ -33,52 +37,52 @@ bool MainApp::Tick(unsigned int td_milli) {
 
 void MainApp::CheckInput() {
 	_inputDirection *= 0;
-	_input.Update();
+	_input->Update();
 
 	// Quit
-	if (_input.IsKeyReleased(SDL_SCANCODE_ESCAPE)) {
+	if (_input->IsKeyReleased(SDL_SCANCODE_ESCAPE)) {
 		_quitApp = true;
 	}
 
 	// Strafe 
-	if (_input.IsKeyPressed(SDL_SCANCODE_A)) {
+	if (_input->IsKeyPressed(SDL_SCANCODE_A)) {
 		_inputDirection.x = -1;
 	}
-	else if (_input.IsKeyPressed(SDL_SCANCODE_D)) {
+	else if (_input->IsKeyPressed(SDL_SCANCODE_D)) {
 		_inputDirection.x = 1;
 	}
 
 	// Vertical
-	if (_input.IsKeyPressed(SDL_SCANCODE_S)) {
+	if (_input->IsKeyPressed(SDL_SCANCODE_S)) {
 		_inputDirection.y = -1;
 	}
-	else if (_input.IsKeyPressed(SDL_SCANCODE_W)) {
+	else if (_input->IsKeyPressed(SDL_SCANCODE_W)) {
 		_inputDirection.y = 1;
 	}
 
 	// Zoom
-	if (_input.IsKeyPressed(SDL_SCANCODE_Q)) {
+	if (_input->IsKeyPressed(SDL_SCANCODE_Q)) {
 		_inputDirection.z = -1;
 	}
-	else if (_input.IsKeyPressed(SDL_SCANCODE_E)) {
+	else if (_input->IsKeyPressed(SDL_SCANCODE_E)) {
 		_inputDirection.z = 1;
 	}
 
 	// Depth Test
-	if (_input.IsKeyReleased(SDL_SCANCODE_Z)) {
+	if (_input->IsKeyReleased(SDL_SCANCODE_Z)) {
 		_scenes[_currentScene]->ToggleDepthTest();
 	}
 
 	// Culling
-	if (_input.IsKeyReleased(SDL_SCANCODE_C)) {
+	if (_input->IsKeyReleased(SDL_SCANCODE_C)) {
 		_scenes[_currentScene]->ToggleCullFaces();
 	}
 
 	// Subdivisions
-	if (_input.IsKeyReleased(SDL_SCANCODE_EQUALS)) {
+	if (_input->IsKeyReleased(SDL_SCANCODE_EQUALS)) {
 		_scenes[_currentScene]->SetSubdivisions(_scenes[_currentScene]->GetSubdivisions() + 1);
 		_scenes[_currentScene]->Recalculate();
-	} else if (_input.IsKeyReleased(SDL_SCANCODE_MINUS)) {
+	} else if (_input->IsKeyReleased(SDL_SCANCODE_MINUS)) {
 		_scenes[_currentScene]->SetSubdivisions(_scenes[_currentScene]->GetSubdivisions() - 1);
 		_scenes[_currentScene]->Recalculate();
 	}
@@ -98,9 +102,11 @@ void MainApp::Update(unsigned int td_milli) {
 }
 
 void MainApp::Draw() {
-	glClearColor(0.0, 0.2, 0.5, 1.0);
+	glClearColor(0.0, 0.6, 0.6, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, _windowWidth, _windowHeight);
+
+	_hud->Draw();
 
 	glBegin(GL_LINES);
 
@@ -121,7 +127,9 @@ void MainApp::Draw() {
 
 	glEnd();
 
+
 	_scenes[_currentScene]->Run();
+
 
 	SDL_GL_SwapWindow(_window);
 }

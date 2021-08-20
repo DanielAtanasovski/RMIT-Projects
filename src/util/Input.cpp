@@ -1,5 +1,7 @@
 #include "Input.h"
 
+#include <cstring>
+
 void Input::Init() {
 	memset(_previousInput, 0, sizeof(Uint8) * SDL_NUM_SCANCODES);
 	memcpy(_currentInput, SDL_GetKeyboardState(NULL), sizeof(Uint8) * SDL_NUM_SCANCODES);

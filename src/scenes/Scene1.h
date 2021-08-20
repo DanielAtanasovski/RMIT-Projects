@@ -4,7 +4,9 @@
 
 class Scene1 : public Scene {
 public:
-	void Init() override;
+	using Scene::Scene;
+
+	void Init(HUD& hud) override;
 	void Run() override;
 	void Done() override;
 	void Recalculate() override;

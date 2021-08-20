@@ -9,6 +9,7 @@
 #include<iostream>
 #include<glad/glad.h>
 #include<sdl/SDL.h>
+
 #include "App.h"
 
 App::App(const char* title, bool fullscreen, int width, int height) {

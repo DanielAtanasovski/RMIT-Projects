@@ -14,7 +14,7 @@
 class App
 {
 public:
-	App(const char* title, bool fullscreen = false, int width = 1024, int height = 768);
+	App(const char* title, bool fullscreen = true, int width = 1024, int height = 768);
 	virtual int Init();
 	void Run();
 	virtual void Done();

@@ -1,13 +1,15 @@
 #pragma once
+
 #include <vector>
 #include "../drawing/Shapes.h"
+#include "../drawing/HUD.h"
 
 class Scene
 {
 public:
 	Scene() {};
 	~Scene() {};
-	virtual void Init() {}; // Initialise
+	virtual void Init(HUD& hud) {}; // Initialise
 	virtual void Run() {}; // Loop
 	virtual void Done() {}; // Unbind stuff
 	virtual void Recalculate() abstract;
@@ -22,11 +24,14 @@ public:
 	void SetSubdivisions(int subdivisions) { _subdivisions = subdivisions; };
 
 protected:
+	HUD _hud;
+
 	int _subdivisions = 0;
 	bool _cullFaces = true;
 	bool _depthTest = true;
 	bool _lighting = false;
 	int _triangleCount = 0;
+
 
 
 };

@@ -13,7 +13,6 @@ class Camera
 {
 public:
 	Camera(float width, float height) {
-
 		_perspectiveMatrix = glm::perspective(glm::radians<float>(45.0f), width / height, 0.1f, 100.0f);
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glm::value_ptr(_perspectiveMatrix));

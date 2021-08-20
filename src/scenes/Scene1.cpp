@@ -4,8 +4,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-void Scene1::Init()
+void Scene1::Init(HUD& hud)
 {
+	_hud = hud;
 	_lighting = false;
 	_cullFaces = true;
 	_depthTest = true;
@@ -14,11 +15,11 @@ void Scene1::Init()
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
+	_hud.SetDrawAttributes(_depthTest, _lighting, _cullFaces);
+	_hud.SetSubdivisions(_subdivisions);
+
 	// TODO:Enable Lights
 	Recalculate();
-
-	std::cout << "Final Triangle Count: " << _triangleCount << std::endl;
-	std::cout << "Final Cube Count: " << _cubeCount << std::endl;
 }
 
 void Scene1::Run()
@@ -76,6 +77,8 @@ void Scene1::Recalculate()
 		_triangleCount += cube.getTriangleCount();
 		_cubeCount++;
 	}
+
+	_hud.SetData(_triangleCount, _cubeCount, _verticesArray.size(), sizeof(_verticesArray));
 	std::cout << "Final Triangle Count: " << _triangleCount << std::endl;
 	std::cout << "Final Cube Count: " << _cubeCount << std::endl;
 }
