@@ -22,13 +22,15 @@ void HUD::Draw()
 	gltBeginDraw();
 	gltColor(1, 0, 0, 1);
 
-	gltDrawText2D(_fpsText, xOffset, yOffset, scale);
-	gltDrawText2D(_resolutionText, xOffset, yOffset + (yStep * 1), scale);
-	gltDrawText2D(_drawText, xOffset, yOffset + (yStep * 2), scale);
-	gltDrawText2D(_dataText, xOffset, yOffset + (yStep * 3), scale);
-	gltDrawText2D(_subdivisionsText, xOffset, yOffset + (yStep * 4), scale);
-	gltDrawText2D(_attributesText, xOffset, yOffset + (yStep * 5), scale);
-	gltDrawText2D(_sceneText, xOffset, yOffset + (yStep * 6), scale);
+	gltDrawText2D(_fpsText, _xOffset, _yOffset, _scale);
+	if (_fullHUD) {
+		gltDrawText2D(_resolutionText, _xOffset, _yOffset + (_yStep * 1), _scale);
+		gltDrawText2D(_drawText, _xOffset, _yOffset + (_yStep * 2), _scale);
+		gltDrawText2D(_dataText, _xOffset, _yOffset + (_yStep * 3), _scale);
+		gltDrawText2D(_subdivisionsText, _xOffset, _yOffset + (_yStep * 4), _scale);
+		gltDrawText2D(_attributesText, _xOffset, _yOffset + (_yStep * 5), _scale);
+		gltDrawText2D(_sceneText, _xOffset, _yOffset + (_yStep * 6), _scale);
+	}
 
 	gltEndDraw();
 	glUseProgram(0);
@@ -37,11 +39,13 @@ void HUD::Draw()
 void HUD::UpdateState()
 {
 	std::ostringstream stringStream;
-	stringStream << "Cubes: " << _cubes << " | Triangles: " << _triangles << " | Vertices: " << _vertices;
+	stringStream << "Cubes: " << ValueToThousandsSeperator(_cubes) << " | Triangles: "
+		<< ValueToThousandsSeperator(_triangles) << " | Vertices: " 
+		<< ValueToThousandsSeperator(_vertices);
 	gltSetText(_drawText, stringStream.str().c_str());
 
 	stringStream.str("");
-	stringStream << "Data: " << _vertexData;
+	stringStream << "Data: " << ValueToThousandsSeperator(_vertexData) << " bytes";
 	gltSetText(_dataText, stringStream.str().c_str());
 
 	stringStream.str("");
@@ -63,4 +67,15 @@ void HUD::UpdateState()
 	stringStream.str("");
 	stringStream << "Lighting: " << _lighting << " | Depth Testing: " << _depth << " | Backface Culling: " << _cull;
 	gltSetText(_attributesText, stringStream.str().c_str());
+}
+
+std::string HUD::ValueToThousandsSeperator(unsigned int data)
+{
+	std::string retValue = std::to_string(data);
+	int seperator = retValue.length() - 3;
+	while (seperator > 0) {
+		retValue.insert(seperator, ",");
+		seperator -= 3;
+	}
+	return retValue;
 }

@@ -3,30 +3,30 @@
 
 void Scene::ToggleLighting()
 {
+	_lighting = !_lighting;
+
 	if (_lighting)
 		glDisable(GL_LIGHTING);
 	else
 		glEnable(GL_LIGHTING);
-
-	_lighting = !_lighting;
 }
 
 void Scene::ToggleCullFaces()
 {
+	_cullFaces = !_cullFaces;
+
 	if (_cullFaces)
 		glEnable(GL_CULL_FACE);
 	else
 		glDisable(GL_CULL_FACE);
-
-	_cullFaces = !_cullFaces;
 }
 
 void Scene::ToggleDepthTest()
 {
+	_depthTest = !_depthTest;
+
 	if (_depthTest)
 		glEnable(GL_DEPTH_TEST);
 	else
 		glDisable(GL_DEPTH_TEST);
-
-	_depthTest = !_depthTest;
 }

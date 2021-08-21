@@ -9,6 +9,9 @@
 #include "scenes/Scene1.h"
 #include "drawing/HUD.h"
 
+// Macros
+#define FPSSAMPLES 100
+
 class MainApp : public App
 {
 public:
@@ -37,6 +40,11 @@ private:
 	void CheckEvents();
 	void Update(unsigned int td_milli);
 	void Draw();
+	//double CalculateF(int delta);
+
+	// fps
+	int _fps = 0;
+	int _timeCount = 0;
 
 	Camera *_camera = nullptr;
 	HUD *_hud = nullptr;

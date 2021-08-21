@@ -33,11 +33,6 @@ void Cube::draw() {
 	glColor3f(1.0f, 1.0f, 1.0f);
 	for (size_t i = 0; i < _currentCubeIndices.size(); i++)
 	{
-		// Change Colour
-		//glColor3f(_CUBE_COLOURS[i % _CUBE_COLOURS.size()].r,
-		//	_CUBE_COLOURS[i % _CUBE_COLOURS.size()].g,
-		//	_CUBE_COLOURS[i % _CUBE_COLOURS.size()].b);
-
 		// Get Triangle Vertexes
 		glm::ivec3 faceIndex = _currentCubeIndices[i];
 		glm::vec3 pointA = _currentCubeVertices[faceIndex.x];
@@ -63,7 +58,6 @@ void Cube::draw() {
 			glColor3f(_currentColour.r, _currentColour.g, _currentColour.b);
 		}
 			
-
 		// Draw Vertex
 		glVertex3f(
 			pointA.x,

@@ -20,7 +20,7 @@ int MainApp::Init() {
 	_hud->SetScene(_currentScene);
 
 	_camera = new Camera(_windowWidth, _windowHeight);
-	_scenes[_currentScene]->Init(*_hud);
+	_scenes[_currentScene]->Init(_hud);
 	return 0;
 }
 
@@ -31,6 +31,15 @@ bool MainApp::Tick(unsigned int td_milli) {
 	CheckInput();
 	Update(td_milli);
 	Draw();
+
+	_fps++;
+	_timeCount += td_milli;
+	if ((_timeCount / 1000) >= 1.0) {
+		_timeCount = 0;
+		_hud->SetFPS(_fps);
+		_fps = 0;
+	}
+	//_hud->SetFPS(1.0 / (CalculateFrameTimeAverage(td_milli) / 1000.0f));
 
 	return _quitApp;
 }
@@ -71,20 +80,34 @@ void MainApp::CheckInput() {
 	// Depth Test
 	if (_input->IsKeyReleased(SDL_SCANCODE_Z)) {
 		_scenes[_currentScene]->ToggleDepthTest();
+		_hud->SetDrawAttributes(_scenes[_currentScene]->isDepthTesting(),
+			_scenes[_currentScene]->isLighting(), _scenes[_currentScene]->isCulling());
 	}
 
 	// Culling
 	if (_input->IsKeyReleased(SDL_SCANCODE_C)) {
 		_scenes[_currentScene]->ToggleCullFaces();
+		_hud->SetDrawAttributes(_scenes[_currentScene]->isDepthTesting(),
+			_scenes[_currentScene]->isLighting(), _scenes[_currentScene]->isCulling());
 	}
 
 	// Subdivisions
 	if (_input->IsKeyReleased(SDL_SCANCODE_EQUALS)) {
 		_scenes[_currentScene]->SetSubdivisions(_scenes[_currentScene]->GetSubdivisions() + 1);
+		_hud->SetSubdivisions(_scenes[_currentScene]->GetSubdivisions());
 		_scenes[_currentScene]->Recalculate();
-	} else if (_input->IsKeyReleased(SDL_SCANCODE_MINUS)) {
-		_scenes[_currentScene]->SetSubdivisions(_scenes[_currentScene]->GetSubdivisions() - 1);
-		_scenes[_currentScene]->Recalculate();
+	}
+	else if (_input->IsKeyReleased(SDL_SCANCODE_MINUS)) {
+		if (_scenes[_currentScene]->GetSubdivisions() > 0) {
+			_scenes[_currentScene]->SetSubdivisions(_scenes[_currentScene]->GetSubdivisions() - 1);
+			_hud->SetSubdivisions(_scenes[_currentScene]->GetSubdivisions());
+			_scenes[_currentScene]->Recalculate();
+		}
+	}
+
+	// HUD
+	if (_input->IsKeyReleased(SDL_SCANCODE_H)) {
+		_hud->ToggleFullHUD();
 	}
 }
 
@@ -105,8 +128,6 @@ void MainApp::Draw() {
 	glClearColor(0.0, 0.6, 0.6, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, _windowWidth, _windowHeight);
-
-	_hud->Draw();
 
 	glBegin(GL_LINES);
 
@@ -130,11 +151,15 @@ void MainApp::Draw() {
 
 	_scenes[_currentScene]->Run();
 
+	_hud->Draw();
 
 	SDL_GL_SwapWindow(_window);
 }
 
 void MainApp::Done() {
 	App::Done();
+	delete _hud;
+	delete _input;
+	delete _camera;
 }
 

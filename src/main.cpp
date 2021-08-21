@@ -6,7 +6,7 @@
 int main(int argc, char **argv)
 {
     //App* app = new App("Default App");
-    App* app = new MainApp("Hello World", false);
+    App* app = new MainApp("Hello World", false, 1920, 1080);
 
     if (app->Init() != 0) {
         std::cout << "APP::INIT::ERROR: Failed to init app" << std::endl;

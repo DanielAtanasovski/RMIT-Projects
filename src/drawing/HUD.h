@@ -35,6 +35,9 @@ public:
 	void SetScene(int scene) { _scene = scene; }
 	void SetSubdivisions(int subdivisions) { _subdivisions = subdivisions; }
 	void SetDrawAttributes(bool depth, bool lighting, bool cull) { _depth = depth; _lighting = lighting; _cull = cull; }
+	void ToggleFullHUD() {
+		_fullHUD = !_fullHUD;
+	}
 	void Draw();
 	void UpdateState();
 private:
@@ -45,8 +48,12 @@ private:
 		*_fpsText, *_resolutionText, *_sceneText, *_subdivisionsText,
 		*_attributesText;
 
-	float xOffset = 2;
-	float yOffset = 2;
-	float yStep = 40;
-	float scale = 2;
+	float _xOffset = 2;
+	float _yOffset = 2;
+	float _yStep = 40;
+	float _scale = 2;
+
+	bool _fullHUD = true;
+
+	std::string ValueToThousandsSeperator(unsigned int data);
 };

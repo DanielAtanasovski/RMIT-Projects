@@ -4,7 +4,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-void Scene1::Init(HUD& hud)
+void Scene1::Init(HUD* hud)
 {
 	_hud = hud;
 	_lighting = false;
@@ -15,8 +15,8 @@ void Scene1::Init(HUD& hud)
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
-	_hud.SetDrawAttributes(_depthTest, _lighting, _cullFaces);
-	_hud.SetSubdivisions(_subdivisions);
+	_hud->SetDrawAttributes(_depthTest, _lighting, _cullFaces);
+	_hud->SetSubdivisions(_subdivisions);
 
 	// TODO:Enable Lights
 	Recalculate();
@@ -24,20 +24,6 @@ void Scene1::Init(HUD& hud)
 
 void Scene1::Run()
 {
-	// TODO: Convert Menger cube vertexes to be in world coordinates to make it easier
-	// 	   to return an array of vertexes
-	//glPushMatrix();
-	//glMatrixMode(GL_MODELVIEW);
-	//glm::mat4 _localModelMatrix = glm::mat4(1.0f);
-	//glm::mat4 _scaleMatrix = glm::scale(_localModelMatrix, glm::vec3(1.0f));
-	//glm::mat4 _positionMatrix = glm::translate(_localModelMatrix, _position);
-	//_localModelMatrix = _positionMatrix * _scaleMatrix;
-	//glMultMatrixf(glm::value_ptr(_localModelMatrix)); // Multiply so as to get contribute to projectionMatrix
-	//for (size_t i = 0; i < _mengerCubesArray.size(); i++)
-	//{
-	//	_mengerCubesArray[i]->draw();
-	//}
-	//glPopMatrix();
 	DrawMengerSpongeEfficient();
 }
 
@@ -78,9 +64,8 @@ void Scene1::Recalculate()
 		_cubeCount++;
 	}
 
-	_hud.SetData(_triangleCount, _cubeCount, _verticesArray.size(), sizeof(_verticesArray));
-	std::cout << "Final Triangle Count: " << _triangleCount << std::endl;
-	std::cout << "Final Cube Count: " << _cubeCount << std::endl;
+	unsigned int data = _verticesArray.capacity() * sizeof(glm::vec3) + sizeof(_verticesArray);
+	_hud->SetData(_triangleCount, _cubeCount, _verticesArray.size(), data);
 }
 
 void Scene1::CalculateMengerSponge(glm::vec3 position, float size, int subdivisions)
@@ -152,9 +137,6 @@ void Scene1::CalculateOuterLayer(float xMin, float xMax, float y, float zMin, fl
 				cubeFaces[i] += oldSize;
 			}
 			_facesArray.insert(_facesArray.end(), cubeFaces.begin(), cubeFaces.end());
-
-			// Old Way
-			//_mengerCubesArray.push_back(cube);
 			_triangleCount += cube.getTriangleCount();
 			_cubeCount++;
 		}
@@ -195,9 +177,8 @@ void Scene1::CalculateMiddleLayer(float xMin, float xMax, float y, float zMin, f
 			{
 				cubeFaces[i] += oldSize;
 			}
-			_facesArray.insert(_facesArray.end(), cubeFaces.begin(), cubeFaces.end());
 
-			//_mengerCubesArray.push_back(cube);
+			_facesArray.insert(_facesArray.end(), cubeFaces.begin(), cubeFaces.end());
 			_triangleCount += cube.getTriangleCount();
 			_cubeCount++;
 		}

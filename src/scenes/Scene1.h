@@ -6,7 +6,7 @@ class Scene1 : public Scene {
 public:
 	using Scene::Scene;
 
-	void Init(HUD& hud) override;
+	void Init(HUD* hud) override;
 	void Run() override;
 	void Done() override;
 	void Recalculate() override;
