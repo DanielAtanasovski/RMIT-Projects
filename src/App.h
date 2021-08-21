@@ -52,6 +52,7 @@ protected:
 	float _screenHeight;
 	float _windowWidth;
 	float _windowHeight;
+	int _refreshRate;
 	bool _fullScreen;
 };
 

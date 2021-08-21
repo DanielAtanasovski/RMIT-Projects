@@ -73,6 +73,7 @@ int App::Init() {
 			_windowWidth = _screenWidth;
 			_windowHeight = _screenHeight;
 		}
+		_refreshRate = displayMode.refresh_rate;
 	}
 	else {
 		std::cerr << "APP::WARNING: SDL2 couldn't recieve current display mode information" 

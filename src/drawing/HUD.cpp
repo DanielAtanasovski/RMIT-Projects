@@ -9,7 +9,7 @@ void HUD::Init() {
 	_dataText = gltCreateText();
 	_cubesText = gltCreateText();
 	_fpsText = gltCreateText();
-	_resolutionText = gltCreateText();
+	_displayText = gltCreateText();
 	_sceneText = gltCreateText();
 	_subdivisionsText = gltCreateText();
 	_attributesText = gltCreateText();
@@ -24,7 +24,7 @@ void HUD::Draw()
 
 	gltDrawText2D(_fpsText, _xOffset, _yOffset, _scale);
 	if (_fullHUD) {
-		gltDrawText2D(_resolutionText, _xOffset, _yOffset + (_yStep * 1), _scale);
+		gltDrawText2D(_displayText, _xOffset, _yOffset + (_yStep * 1), _scale);
 		gltDrawText2D(_drawText, _xOffset, _yOffset + (_yStep * 2), _scale);
 		gltDrawText2D(_dataText, _xOffset, _yOffset + (_yStep * 3), _scale);
 		gltDrawText2D(_subdivisionsText, _xOffset, _yOffset + (_yStep * 4), _scale);
@@ -53,8 +53,8 @@ void HUD::UpdateState()
 	gltSetText(_fpsText, stringStream.str().c_str());
 
 	stringStream.str("");
-	stringStream << "Resolution: " << _width << "x" << _height;
-	gltSetText(_resolutionText, stringStream.str().c_str());
+	stringStream << "Resolution: " << _width << "x" << _height << " " << _refreshRate << "Hz";
+	gltSetText(_displayText, stringStream.str().c_str());
 
 	stringStream.str("");
 	stringStream << "Scene: " << _scene;

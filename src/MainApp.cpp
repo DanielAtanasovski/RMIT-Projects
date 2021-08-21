@@ -16,7 +16,7 @@ int MainApp::Init() {
 	_input = new Input();
 	_hud = new HUD();
 	_hud->Init();
-	_hud->SetResolution(_windowWidth, _windowHeight);
+	_hud->SetDisplay(_windowWidth, _windowHeight, _refreshRate);
 	_hud->SetScene(_currentScene);
 
 	_camera = new Camera(_windowWidth, _windowHeight);

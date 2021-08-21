@@ -15,7 +15,7 @@ public:
 		gltDeleteText(_dataText);
 		gltDeleteText(_cubesText);
 		gltDeleteText(_fpsText);
-		gltDeleteText(_resolutionText);
+		gltDeleteText(_displayText);
 		gltDeleteText(_sceneText);
 		gltDeleteText(_subdivisionsText);
 		gltDeleteText(_attributesText);
@@ -31,7 +31,7 @@ public:
 	}
 
 	void SetFPS(int fps) { _fps = fps; }
-	void SetResolution(int width, int height) { _width = width; _height = height; }
+	void SetDisplay(int width, int height, int refreshRate) { _width = width; _height = height; _refreshRate = refreshRate; }
 	void SetScene(int scene) { _scene = scene; }
 	void SetSubdivisions(int subdivisions) { _subdivisions = subdivisions; }
 	void SetDrawAttributes(bool depth, bool lighting, bool cull) { _depth = depth; _lighting = lighting; _cull = cull; }
@@ -41,11 +41,11 @@ public:
 	void Draw();
 	void UpdateState();
 private:
-	int _triangles = 0, _cubes = 0, _vertices = 0, _fps = 0,
+	int _triangles = 0, _cubes = 0, _vertices = 0, _fps = 0, _refreshRate = 0,
 	_width = 0, _height = 0, _scene = 0, _subdivisions = 0, _vertexData = 0;
 	bool _depth = false, _lighting = false, _cull = false;
 	GLTtext *_drawText, *_dataText, *_cubesText,
-		*_fpsText, *_resolutionText, *_sceneText, *_subdivisionsText,
+		*_fpsText, *_displayText, *_sceneText, *_subdivisionsText,
 		*_attributesText;
 
 	float _xOffset = 2;
