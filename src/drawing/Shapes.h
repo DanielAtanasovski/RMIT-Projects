@@ -4,6 +4,7 @@
 #include <glm/mat4x4.hpp>
 #include <array>
 #include <vector>
+#include "Material.h"
 
 enum CubeFaces
 {
@@ -76,5 +77,14 @@ private:
 		glm::vec3(0.3f, 1.0f,  0.3f),
 		glm::vec3(1.0f, 1.0f,  0.3f),
 		glm::vec3(1.0f, 0.5f,  0.3f)
+	};
+
+	const std::array<Material, 3> _CUBE_MATERIALS = {
+		Material(glm::vec4(0.8 ,0.3,0.3,1), glm::vec4(1,1,1,1), // X-Axis Material
+			glm::vec4(1), glm::vec4(1), glm::vec4(1)),
+		Material(glm::vec4(0.8 ,0.3,0.3,1), glm::vec4(1,1,1,1), // Y-Axis Material
+			glm::vec4(1), glm::vec4(1), glm::vec4(1)),
+		Material(glm::vec4(0.8 ,0.3,0.3,1), glm::vec4(1,1,1,1), // Z-Axis Material
+			glm::vec4(1), glm::vec4(1), glm::vec4(1))
 	};
 };

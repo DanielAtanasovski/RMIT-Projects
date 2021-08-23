@@ -90,6 +90,8 @@ int App::Init() {
 
 	std::cout << "APP::INFO: OpenGL Version: " << GLVersion.major << "." << GLVersion.minor 
 		<< " Initialised." << std::endl;
+	std::cout << "APP::INFO: Using GPU - " << glGetString(GL_VENDOR) << " " 
+		<< glGetString(GL_RENDERER) << " -" << std::endl;
 
 	return 0;
 }

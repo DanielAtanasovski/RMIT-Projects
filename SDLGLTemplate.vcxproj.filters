@@ -74,5 +74,8 @@
     <ClInclude Include="src\util\Input.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\drawing\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

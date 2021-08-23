@@ -29,6 +29,7 @@
     <ClCompile Include="src\scenes\Scene.cpp" />
     <ClCompile Include="src\scenes\Scene1.cpp" />
     <ClCompile Include="src\util\Input.cpp" />
+    <ClInclude Include="src\drawing\Material.h" />
     <ClInclude Include="src\util\Input.h" />
   </ItemGroup>
   <ItemGroup>
