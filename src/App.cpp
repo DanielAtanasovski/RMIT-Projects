@@ -80,6 +80,9 @@ int App::Init() {
 			<< std::endl;
 	}
 
+	// Vsync
+	SDL_GL_SetSwapInterval(_vsyncOn);
+
 	// Set OpenGL Defaults
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);

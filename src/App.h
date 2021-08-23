@@ -54,5 +54,5 @@ protected:
 	float _windowHeight;
 	int _refreshRate;
 	bool _fullScreen;
+	bool _vsyncOn = false;
 };
-
