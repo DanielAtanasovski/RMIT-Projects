@@ -13,24 +13,56 @@ class Camera
 {
 public:
 	Camera(float width, float height) {
+		glViewport(0, 0, width, height);
+		//UpdatePosition(_position);
 		_perspectiveMatrix = glm::perspective(glm::radians<float>(45.0f), width / height, 0.1f, 100.0f);
+		_viewMatrix = glm::lookAt(_position, _position + _cameraTarget, _up);
 		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
 		glLoadMatrixf(glm::value_ptr(_perspectiveMatrix));
 		glMatrixMode(GL_MODELVIEW);
-		_viewMatrix = glm::lookAt(_position, _position + glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
+		glLoadIdentity();
 		glLoadMatrixf(glm::value_ptr(_viewMatrix));
 	};
 	~Camera() {};
 	void UpdatePosition(glm::vec3 newPosition) { 
 
 		_position = newPosition;
-		_viewMatrix = glm::lookAt(_position, _position + glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
+		_viewMatrix = glm::lookAt(_position, _position + _cameraTarget, _up);
 		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
 		glLoadMatrixf(glm::value_ptr(_perspectiveMatrix));
+
 		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf(glm::value_ptr(_viewMatrix));
+		glLoadIdentity();
+
+		GLfloat light_position[] = { 0.0, 0.0, 0.0, 1.0 };
+		glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 	};
+
+	void UpdateDirection(float xRot, float yRot) {
+		_yaw += xRot * _yawSensitivity;
+		_pitch += -yRot * _pitchSensitivity;
+
+		if (_pitch > 89.0f)
+			_pitch = 89.0f;
+		if (_pitch < -89.0f)
+			_pitch = -89.0f;
+
+		glm::vec3 direction;
+		direction.x = cos(glm::radians(_yaw)) * cos(glm::radians(_pitch));
+		direction.y = sin(glm::radians(_pitch));
+		direction.z = sin(glm::radians(_yaw)) * cos(glm::radians(_pitch));
+		_cameraTarget = glm::normalize(direction);
+		UpdatePosition(_position);
+	}
+
 	glm::vec3 GetPosition() { return _position; };
+	float GetYawSpeed() { return _yawSensitivity; }
+	float GetPitchSpeed() { return _pitchSensitivity; }
+	glm::vec3 GetFront() { return _cameraTarget; }
+	glm::vec3 GetUp() { return _cameraUp; }
+	glm::mat4 getViewMatrix() { return _viewMatrix; }
 
 private:
 	glm::mat4 _perspectiveMatrix;
@@ -41,6 +73,12 @@ private:
 	glm::vec3 _up = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 _cameraRight = glm::normalize(glm::cross(_up, _cameraDirection));
 	glm::vec3 _cameraUp = glm::cross(_cameraDirection, _cameraRight);
+
+	float _yawSensitivity = 0.15f;
+	float _pitchSensitivity = 0.15f;
+
+	float _yaw = -90.0f;
+	float _pitch = 0.0f;
 
 
 };

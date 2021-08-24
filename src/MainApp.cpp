@@ -20,7 +20,7 @@ int MainApp::Init() {
 	_hud->SetScene(_currentScene);
 
 	_camera = new Camera(_windowWidth, _windowHeight);
-	_scenes[_currentScene]->Init(_hud);
+	_scenes[_currentScene]->Init(_hud, _camera);
 	return 0;
 }
 
@@ -39,7 +39,6 @@ bool MainApp::Tick(unsigned int td_milli) {
 		_hud->SetFPS(_fps);
 		_fps = 0;
 	}
-	//_hud->SetFPS(1.0 / (CalculateFrameTimeAverage(td_milli) / 1000.0f));
 
 	return _quitApp;
 }
@@ -62,24 +61,31 @@ void MainApp::CheckInput() {
 	}
 
 	// Vertical
-	if (_input->IsKeyPressed(SDL_SCANCODE_S)) {
+	if (_input->IsKeyPressed(SDL_SCANCODE_E)) {
 		_inputDirection.y = -1;
 	}
-	else if (_input->IsKeyPressed(SDL_SCANCODE_W)) {
+	else if (_input->IsKeyPressed(SDL_SCANCODE_Q)) {
 		_inputDirection.y = 1;
 	}
 
-	// Zoom
-	if (_input->IsKeyPressed(SDL_SCANCODE_Q)) {
+	// Forward
+	if (_input->IsKeyPressed(SDL_SCANCODE_S)) {
 		_inputDirection.z = -1;
 	}
-	else if (_input->IsKeyPressed(SDL_SCANCODE_E)) {
+	else if (_input->IsKeyPressed(SDL_SCANCODE_W)) {
 		_inputDirection.z = 1;
 	}
 
 	// Depth Test
 	if (_input->IsKeyReleased(SDL_SCANCODE_Z)) {
 		_scenes[_currentScene]->ToggleDepthTest();
+		_hud->SetDrawAttributes(_scenes[_currentScene]->isDepthTesting(),
+			_scenes[_currentScene]->isLighting(), _scenes[_currentScene]->isCulling());
+	}
+
+	// Lighting
+	if (_input->IsKeyReleased(SDL_SCANCODE_L)) {
+		_scenes[_currentScene]->ToggleLighting();
 		_hud->SetDrawAttributes(_scenes[_currentScene]->isDepthTesting(),
 			_scenes[_currentScene]->isLighting(), _scenes[_currentScene]->isCulling());
 	}
@@ -116,18 +122,38 @@ void MainApp::CheckEvents()
 	SDL_Event windowEvent;
 	while (SDL_PollEvent(&windowEvent)) {
 		if (windowEvent.type == SDL_QUIT) _quitApp = true;
+		if (windowEvent.type == SDL_MOUSEMOTION) {
+			// Yaw & Pitch
+			_camera->UpdateDirection(windowEvent.motion.xrel, windowEvent.motion.yrel);
+		}
 	}
 }
 
 void MainApp::Update(unsigned int td_milli) {
 	float step = td_milli / 1000.0f;
-	_camera->UpdatePosition(_camera->GetPosition() + (_inputDirection * _cameraSpeed * step));
+
+	if (_inputDirection.x > 0)
+		_camera->UpdatePosition(_camera->GetPosition() + (glm::normalize(glm::cross(_camera->GetFront(), _camera->GetUp())) * _cameraSpeed * step));
+	else if (_inputDirection.x < 0)
+		_camera->UpdatePosition(_camera->GetPosition() - (glm::normalize(glm::cross(_camera->GetFront(), _camera->GetUp())) * _cameraSpeed * step));
+
+	if (_inputDirection.y > 0)
+		_camera->UpdatePosition(_camera->GetPosition() + (_camera->GetUp() * _cameraSpeed * step));
+	else if (_inputDirection.y < 0)
+		_camera->UpdatePosition(_camera->GetPosition() - (_camera->GetUp() * _cameraSpeed * step));
+
+	if (_inputDirection.z > 0)
+		_camera->UpdatePosition(_camera->GetPosition() + (_camera->GetFront() * _cameraSpeed * step));
+	else if (_inputDirection.z < 0)
+		_camera->UpdatePosition(_camera->GetPosition() - (_camera->GetFront() * _cameraSpeed * step));
 }
 
 void MainApp::Draw() {
+	glPushMatrix();
 	glClearColor(0.0, 0.6, 0.6, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glViewport(0, 0, _windowWidth, _windowHeight);
+
+	glLoadMatrixf(glm::value_ptr(_camera->getViewMatrix()));
 
 	glBegin(GL_LINES);
 
@@ -148,10 +174,11 @@ void MainApp::Draw() {
 
 	glEnd();
 
-
 	_scenes[_currentScene]->Run();
 
 	_hud->Draw();
+
+	glPopMatrix();
 
 	SDL_GL_SwapWindow(_window);
 }

@@ -3,13 +3,14 @@
 #include <vector>
 #include "../drawing/Shapes.h"
 #include "../drawing/HUD.h"
+#include "../Camera.h"
 
 class Scene
 {
 public:
 	Scene() {};
 	~Scene() {};
-	virtual void Init(HUD* hud) {}; // Initialise
+	virtual void Init(HUD* hud, Camera* camera) { _hud = hud; _camera = camera; }; // Initialise
 	virtual void Run() {}; // Loop
 	virtual void Done() {}; // Unbind stuff
 	virtual void Recalculate() abstract;
@@ -28,6 +29,7 @@ public:
 
 protected:
 	HUD* _hud = nullptr;
+	Camera* _camera = nullptr;
 
 	int _subdivisions = 0;
 	bool _cullFaces = true;

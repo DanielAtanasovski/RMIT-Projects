@@ -6,7 +6,7 @@ class Scene1 : public Scene {
 public:
 	using Scene::Scene;
 
-	void Init(HUD* hud) override;
+	void Init(HUD* hud, Camera* camera) override;
 	void Run() override;
 	void Done() override;
 	void Recalculate() override;
@@ -25,10 +25,15 @@ private:
 	//std::vector<Cube*> _mengerCubesArray = std::vector<Cube*>();
 	std::vector<glm::vec3> _verticesArray = std::vector<glm::vec3>();
 	std::vector<glm::ivec3> _facesArray = std::vector<glm::ivec3>();
+	std::vector<int> _materialIds = std::vector<int>();
 
 	glm::vec3 _position = glm::vec3(0);
-	float _size = 5.0f;
+	float _size = 10.0f;
 	int _cubeCount = 0;
+
+	GLfloat _cameraLightPosition[4] = { 0, 0, 0, 0 };
+	GLfloat _cameraLightDirection[3] = { 0, 0, 0 };
+
 
 	const std::array<glm::vec3, 6> _CUBE_COLOURS = {
 	glm::vec3(1.0f, 0.3f,  0.3f),

@@ -33,7 +33,7 @@ int App::Init() {
 	}
 
 	// Create Window
-	if (_fullScreen == true) {
+	if (_fullScreen) {
 		_window = SDL_CreateWindow(
 			_mainWindowTitle.c_str(),
 			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
@@ -82,6 +82,7 @@ int App::Init() {
 
 	// Vsync
 	SDL_GL_SetSwapInterval(_vsyncOn);
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	// Set OpenGL Defaults
 	glEnable(GL_DEPTH_TEST);

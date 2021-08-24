@@ -16,6 +16,15 @@ enum CubeFaces
 	RIGHT_FACE
 };
 
+// ambient, diffuse, specular, shininess, emission
+const std::array<Material, 3> _CUBE_MATERIALS = {
+	Material(glm::vec4(0.8, 0.3, 0.3, 1), glm::vec4(0.2, 0.2, 0.2, 0.2), // X-Axis Material 
+		glm::vec4(0.2, 0.2, 0.2, 0.2), 10.0f, glm::vec4(1)),
+	Material(glm::vec4(0.3, 0.8, 0.3, 1), glm::vec4(0.2, 0.2, 0.2, 0.2), // Y-Axis Material
+		glm::vec4(0.2, 0.2, 0.2, 0.2), 10.0f, glm::vec4(1)),
+	Material(glm::vec4(0.3, 0.3, 0.8, 1), glm::vec4(0.2, 0.2, 0.2, 0.2), // Z-Axis Material
+		glm::vec4(0.2, 0.2, 0.2, 0.2), 10.0f, glm::vec4(1))
+};
 
 class Cube {
 public:
@@ -26,8 +35,9 @@ public:
 	glm::vec3 getSize() { return _size; }
 	int getTriangleCount() { return _currentCubeIndices.size(); }
 
-	std::vector<glm::vec3> getVertices() { return _currentCubeVertices; };
-	std::vector<glm::ivec3> getFaces() { return _currentCubeIndices; };
+	const std::vector<glm::vec3> &getVertices() const { return _currentCubeVertices; };
+	const std::vector<glm::ivec3> &getFaces() const { return _currentCubeIndices; };
+	const std::vector<int> &getMaterialIds() const { return _currentMaterialIds; }
 
 protected:
 	glm::vec3 _size;
@@ -38,6 +48,8 @@ protected:
 	std::vector<CubeFaces> _disabledFaces;
 	std::vector<glm::ivec3> _currentCubeIndices;
 	std::vector<glm::vec3> _currentCubeVertices;
+	std::vector<int> _currentMaterialIds;
+
 private:
 	void calculateCurrentCubeIndices();
 	glm::vec3 _currentColour = glm::vec3(1.0f);
@@ -52,7 +64,7 @@ private:
 			glm::vec3(0.5, -0.5, -0.5), // 5. Far Bottom Right
 			glm::vec3(0.5,  0.5, -0.5), // 6. Far Top Right
 			glm::vec3(-0.5,  0.5, -0.5)  // 7. Far Top Left
-	}; 
+	};
 
 	// To Draw Rectangles
 	const std::array<glm::ivec3, 12> _CUBE_INDICES = {
@@ -79,12 +91,4 @@ private:
 		glm::vec3(1.0f, 0.5f,  0.3f)
 	};
 
-	const std::array<Material, 3> _CUBE_MATERIALS = {
-		Material(glm::vec4(0.8 ,0.3,0.3,1), glm::vec4(1,1,1,1), // X-Axis Material
-			glm::vec4(1), glm::vec4(1), glm::vec4(1)),
-		Material(glm::vec4(0.8 ,0.3,0.3,1), glm::vec4(1,1,1,1), // Y-Axis Material
-			glm::vec4(1), glm::vec4(1), glm::vec4(1)),
-		Material(glm::vec4(0.8 ,0.3,0.3,1), glm::vec4(1,1,1,1), // Z-Axis Material
-			glm::vec4(1), glm::vec4(1), glm::vec4(1))
-	};
 };

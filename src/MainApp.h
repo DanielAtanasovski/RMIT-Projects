@@ -21,26 +21,14 @@ public:
 	void Done();
 	bool Tick(unsigned int td_milli);
 	HUD& getHUD() { return *_hud; }
+	Camera& getCamera() { return *_camera; }
 private:
 	bool _quitApp = false;
-
-	// --- First Attempt Legacy ---
-	//void DrawMengerSponge(glm::vec3 position, float size, int subdivisions);
-	//void CalculateMengerSponge(glm::vec3 position, float size, int subdivisions);
-	//void DrawMengerSpongeEfficient();
-	//void CalculateOuterLayer(float xMin, float xMax, float y, float zMin, float zMax, bool top);
-	//void CalculateMiddleLayer(float xMin, float xMax, float y, float zMin, float zMax);
-	//std::vector<CubeFaces> CalculateDisabledFaces(int row, int col, bool topLayer);
-	//void DrawOuterLayer(float xMin, float xMax, float y, float zMin, float zMax);
-	//void DrawMiddleLayer(float xMin, float xMax, float y, float zMin, float zMax);
-	//void DrawCenteredCube(float x, float y, float z, float size); // todo: move to renderer class?
-	//void DrawCube(float minX, float minY, float minZ, float maxX, float maxY, float maxZ); // todo: move to renderer class?
 	
 	void CheckInput();
 	void CheckEvents();
 	void Update(unsigned int td_milli);
 	void Draw();
-	//double CalculateF(int delta);
 
 	// fps
 	int _fps = 0;
@@ -52,14 +40,9 @@ private:
 
 	std::array<Scene*, 1> _scenes = { new Scene1( ) };
 	int _currentScene = 0;
-	//std::vector<Cube*> _mengerCubesArray = std::vector<Cube*>();
 
 	// Camera Controls 
-	// todo: move to camera class
 	glm::vec3 _inputDirection = glm::vec3(0);
 	float _cameraSpeed = 5.0f;
-	//int _subdivisions = 0;
-
-
 };
 
