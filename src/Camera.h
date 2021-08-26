@@ -14,30 +14,14 @@ class Camera
 public:
 	Camera(float width, float height) {
 		glViewport(0, 0, width, height);
-		//UpdatePosition(_position);
 		_perspectiveMatrix = glm::perspective(glm::radians<float>(45.0f), width / height, 0.1f, 100.0f);
 		_viewMatrix = glm::lookAt(_position, _position + _cameraTarget, _up);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glLoadMatrixf(glm::value_ptr(_perspectiveMatrix));
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		glLoadMatrixf(glm::value_ptr(_viewMatrix));
+
 	};
 	~Camera() {};
 	void UpdatePosition(glm::vec3 newPosition) { 
-
 		_position = newPosition;
 		_viewMatrix = glm::lookAt(_position, _position + _cameraTarget, _up);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glLoadMatrixf(glm::value_ptr(_perspectiveMatrix));
-
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		GLfloat light_position[] = { 0.0, 0.0, 0.0, 1.0 };
-		glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 	};
 
 	void UpdateDirection(float xRot, float yRot) {
@@ -63,6 +47,7 @@ public:
 	glm::vec3 GetFront() { return _cameraTarget; }
 	glm::vec3 GetUp() { return _cameraUp; }
 	glm::mat4 getViewMatrix() { return _viewMatrix; }
+	glm::mat4 getPerspectiveMatrix() { return _perspectiveMatrix; }
 
 private:
 	glm::mat4 _perspectiveMatrix;

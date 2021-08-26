@@ -13,14 +13,18 @@ int MainApp::Init() {
 		return err;
 	}
 
+	_scenes = { new Scene1(), new Scene2() };
+	_currentScene = 1; // Set to Modern Scene for renderdoc
+
 	_input = new Input();
 	_hud = new HUD();
 	_hud->Init();
 	_hud->SetDisplay(_windowWidth, _windowHeight, _refreshRate);
-	_hud->SetScene(_currentScene);
+	_hud->SetScene(_currentScene + 1);
 
 	_camera = new Camera(_windowWidth, _windowHeight);
 	_scenes[_currentScene]->Init(_hud, _camera);
+	_scenes[_currentScene]->Recalculate();
 	return 0;
 }
 
@@ -115,6 +119,20 @@ void MainApp::CheckInput() {
 	if (_input->IsKeyReleased(SDL_SCANCODE_H)) {
 		_hud->ToggleFullHUD();
 	}
+
+	// Scenes
+	if (_input->IsKeyReleased(SDL_SCANCODE_1)) {
+		_scenes[_currentScene]->Done();
+		_currentScene = 0;
+		_scenes[_currentScene]->Init(_hud, _camera);
+		_hud->SetScene(_currentScene + 1);
+	}
+	else if (_input->IsKeyReleased(SDL_SCANCODE_2)) {
+		_scenes[_currentScene]->Done();
+		_currentScene = 1;
+		_scenes[_currentScene]->Init(_hud, _camera);
+		_hud->SetScene(_currentScene + 1);
+	}
 }
 
 void MainApp::CheckEvents()
@@ -149,36 +167,13 @@ void MainApp::Update(unsigned int td_milli) {
 }
 
 void MainApp::Draw() {
-	glPushMatrix();
-	glClearColor(0.0, 0.6, 0.6, 1.0);
+	glClearColor(0.2, 0.2, 0.2, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glLoadMatrixf(glm::value_ptr(_camera->getViewMatrix()));
-
-	glBegin(GL_LINES);
-
-	// X-AXIS
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(-10.0f, 0.0f, 0.0f);
-	glVertex3f(10.0f, 0.0f, 0.0f);
-
-	// Y-AXIS
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(0.0f, -10.0f, 0.0f);
-	glVertex3f(0.0f, 10.0f, 0.0f);
-
-	// Z-AXIS
-	glColor3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, -10.0f);
-	glVertex3f(0.0f, 0.0f, 10.0f);
-
-	glEnd();
 
 	_scenes[_currentScene]->Run();
 
 	_hud->Draw();
 
-	glPopMatrix();
 
 	SDL_GL_SwapWindow(_window);
 }

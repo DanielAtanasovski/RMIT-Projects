@@ -36,13 +36,19 @@ Cube::Cube(glm::vec3 position, glm::vec3 size, std::vector<CubeFaces> disabledFa
 		if (pointA.x == pointB.x && pointA.x == pointC.x) {
 			// Left / Right
 			_currentMaterialIds.push_back(0);
+			_currentMaterialIds.push_back(0);
+			_currentMaterialIds.push_back(0);
 		}
 		else if (pointA.y == pointB.y && pointA.y == pointC.y) {
 			// Top / Bottom
 			_currentMaterialIds.push_back(1);
+			_currentMaterialIds.push_back(1);
+			_currentMaterialIds.push_back(1);
 		}
 		else if (pointA.z == pointB.z && pointA.z == pointC.z) {
 			// Front / Back
+			_currentMaterialIds.push_back(2);
+			_currentMaterialIds.push_back(2);
 			_currentMaterialIds.push_back(2);
 		}
 	}

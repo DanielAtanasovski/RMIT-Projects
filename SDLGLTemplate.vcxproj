@@ -28,8 +28,12 @@
     <ClCompile Include="src\MainApp.cpp" />
     <ClCompile Include="src\scenes\Scene.cpp" />
     <ClCompile Include="src\scenes\Scene1.cpp" />
+    <ClCompile Include="src\scenes\Scene2.cpp" />
+    <ClCompile Include="src\shaders\Shader.cpp" />
     <ClCompile Include="src\util\Input.cpp" />
     <ClInclude Include="src\drawing\Material.h" />
+    <ClInclude Include="src\scenes\Scene2.h" />
+    <ClInclude Include="src\shaders\Shader.h" />
     <ClInclude Include="src\util\Input.h" />
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +45,10 @@
     <ClInclude Include="src\scenes\Scene.h" />
     <ClInclude Include="src\scenes\Scene1.h" />
     <ClInclude Include="src\util\GLMUtil.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\shaders\Colour.frag" />
+    <None Include="src\shaders\Colour.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

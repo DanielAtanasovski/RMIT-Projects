@@ -25,12 +25,18 @@ App::App(const char* title, bool fullscreen, int width, int height) {
 }
 
 int App::Init() {
+
 	// Init SDL
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		std::cerr << "APP::SDL::ERROR: SDL2 video subsystem failed to init. ERROR: " 
 			<< SDL_GetError() << std::endl;
 		return -1;
 	}
+
+	// Render Doc
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
 
 	// Create Window
 	if (_fullScreen) {
@@ -83,6 +89,14 @@ int App::Init() {
 	// Vsync
 	SDL_GL_SetSwapInterval(_vsyncOn);
 	SDL_SetRelativeMouseMode(SDL_TRUE);
+
+	// SDL Attributes
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(MessageCallback, 0);
 
 	// Set OpenGL Defaults
 	glEnable(GL_DEPTH_TEST);

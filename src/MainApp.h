@@ -7,6 +7,7 @@
 #include "drawing/Shapes.h"
 #include <vector>
 #include "scenes/Scene1.h"
+#include "scenes/Scene2.h"
 #include "drawing/HUD.h"
 
 // Macros
@@ -38,7 +39,7 @@ private:
 	HUD *_hud = nullptr;
 	Input *_input = nullptr;
 
-	std::array<Scene*, 1> _scenes = { new Scene1( ) };
+	std::array<Scene*, 2> _scenes;
 	int _currentScene = 0;
 
 	// Camera Controls 

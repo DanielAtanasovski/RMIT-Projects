@@ -8,12 +8,13 @@
 class Scene
 {
 public:
+	// Scene
 	Scene() {};
 	~Scene() {};
-	virtual void Init(HUD* hud, Camera* camera) { _hud = hud; _camera = camera; }; // Initialise
-	virtual void Run() {}; // Loop
-	virtual void Done() {}; // Unbind stuff
-	virtual void Recalculate() abstract;
+	virtual void Init(HUD* hud, Camera* camera) = 0; // Initialise
+	virtual void Run() = 0; // Loop
+	virtual void Done() = 0; // Unbind stuff
+	virtual void Recalculate();
 
 	// Toggles
 	void ToggleLighting();
@@ -36,4 +37,22 @@ protected:
 	bool _depthTest = true;
 	bool _lighting = false;
 	int _triangleCount = 0;
+	int _cubeCount = 0;
+
+	// Calculating Menger Sponge
+	void CalculateMengerSponge(glm::vec3 position, float size, int subdivisions);
+	virtual void DrawMengerSponge() {};
+
+	// Menger Sponge Arrays
+	std::vector<glm::vec3> _verticesArray = std::vector<glm::vec3>();
+	std::vector<glm::ivec3> _facesArray = std::vector<glm::ivec3>();
+	std::vector<int> _materialIds = std::vector<int>();
+
+	glm::vec3 _position = glm::vec3(0);
+	float _size = 10.0f;
+
+private:
+	void CalculateOuterLayer(float xMin, float xMax, float y, float zMin, float zMax, bool top);
+	void CalculateMiddleLayer(float xMin, float xMax, float y, float zMin, float zMax);
+	std::vector<CubeFaces> CalculateDisabledFaces(int row, int col, bool topLayer);
 };
