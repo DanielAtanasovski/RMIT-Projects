@@ -7,13 +7,16 @@
 #include "MainApp.h"
 #include "util/GLMUtil.h"
 #include "drawing/Shapes.h"
+#include "scenes/Scene1.h"
+#include "scenes/Scene2.h"
+#include "scenes/Scene3.h"
 
 int MainApp::Init() {
 	if (int err = App::Init() != 0) {
 		return err;
 	}
 
-	_scenes = { new Scene1(), new Scene2() };
+	_scenes = { new Scene1(), new Scene2(), new Scene3() };
 	_currentScene = 1; // Set to Modern Scene for renderdoc
 
 	_input = new Input();
@@ -130,6 +133,11 @@ void MainApp::CheckInput() {
 	else if (_input->IsKeyReleased(SDL_SCANCODE_2)) {
 		_scenes[_currentScene]->Done();
 		_currentScene = 1;
+		_scenes[_currentScene]->Init(_hud, _camera);
+		_hud->SetScene(_currentScene + 1);
+	} else if (_input->IsKeyReleased(SDL_SCANCODE_3)) {
+		_scenes[_currentScene]->Done();
+		_currentScene = 2;
 		_scenes[_currentScene]->Init(_hud, _camera);
 		_hud->SetScene(_currentScene + 1);
 	}

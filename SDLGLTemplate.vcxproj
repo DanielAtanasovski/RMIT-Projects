@@ -29,11 +29,13 @@
     <ClCompile Include="src\scenes\Scene.cpp" />
     <ClCompile Include="src\scenes\Scene1.cpp" />
     <ClCompile Include="src\scenes\Scene2.cpp" />
+    <ClCompile Include="src\scenes\Scene3.cpp" />
     <ClCompile Include="src\shaders\Shader.cpp" />
     <ClCompile Include="src\util\Input.cpp" />
     <ClInclude Include="src\drawing\Light.h" />
     <ClInclude Include="src\drawing\Material.h" />
     <ClInclude Include="src\scenes\Scene2.h" />
+    <ClInclude Include="src\scenes\Scene3.h" />
     <ClInclude Include="src\shaders\Shader.h" />
     <ClInclude Include="src\util\Input.h" />
   </ItemGroup>
