@@ -115,7 +115,8 @@ void Scene1::DrawMengerSponge()
 		glm::vec3 pointB = _verticesArray[faceIndex.y];
 		glm::vec3 pointC = _verticesArray[faceIndex.z];
 
-		// Material
+		// Material TODO: Remove the complications and just make it simpler
+		// AKA - if X-Axis (pointA.x == pointB.x == pointC.x) use material 0 etc...
 		Material material = _CUBE_MATERIALS[_materialIds[i*3]];
 		if (_lighting)
 		{ 

@@ -31,6 +31,7 @@
     <ClCompile Include="src\scenes\Scene2.cpp" />
     <ClCompile Include="src\shaders\Shader.cpp" />
     <ClCompile Include="src\util\Input.cpp" />
+    <ClInclude Include="src\drawing\Light.h" />
     <ClInclude Include="src\drawing\Material.h" />
     <ClInclude Include="src\scenes\Scene2.h" />
     <ClInclude Include="src\shaders\Shader.h" />
@@ -47,8 +48,9 @@
     <ClInclude Include="src\util\GLMUtil.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\shaders\Colour.frag" />
-    <None Include="src\shaders\Colour.vert" />
+    <None Include="src\shaders\MengerShader.frag" />
+    <None Include="src\shaders\MengerShader.vert" />
+    <None Include="src\shaders\MengerShader.geom" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -89,9 +89,13 @@
     <ClInclude Include="src\shaders\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\drawing\Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\shaders\Colour.frag" />
-    <None Include="src\shaders\Colour.vert" />
+    <None Include="src\shaders\MengerShader.frag" />
+    <None Include="src\shaders\MengerShader.vert" />
+    <None Include="src\shaders\MengerShader.geom" />
   </ItemGroup>
 </Project>

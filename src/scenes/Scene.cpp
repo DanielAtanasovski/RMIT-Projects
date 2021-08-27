@@ -1,5 +1,7 @@
 #include "Scene.h"
 #include <glad/glad.h>
+#include <glm/gtx/hash.hpp>
+#include <unordered_map>
 
 void Scene::ToggleLighting()
 {
@@ -66,6 +68,8 @@ void Scene::Recalculate()
 		_triangleCount += cube.getTriangleCount();
 		_cubeCount++;
 	}
+
+	PruneVertices();
 
 	unsigned int data = _verticesArray.size() * sizeof(glm::vec3);
 	_hud->SetData(_triangleCount, _cubeCount, _verticesArray.size(), data);
@@ -227,4 +231,40 @@ std::vector<CubeFaces> Scene::CalculateDisabledFaces(int row, int col, bool topL
 			disabledFaces = std::vector<CubeFaces>{ CubeFaces::BACK_FACE, CubeFaces::LEFT_FACE, CubeFaces::TOP_FACE }; // FRONT RIGHT
 	}
 	return disabledFaces;
+}
+
+void Scene::PruneVertices()
+{
+	int vCount = 0;
+
+	std::vector<glm::vec3> newVerticesArray = std::vector<glm::vec3>();
+	std::vector<unsigned int> reIndexArray = std::vector<unsigned int>();
+	std::unordered_map<glm::vec3, unsigned int> lookupMap = std::unordered_map<glm::vec3, unsigned int>();
+
+	// Setup new vertices array and convert indices
+	for (size_t i = 0; i < _verticesArray.size(); i++)
+	{
+		// Check if vert is accounted for
+		auto found = lookupMap.find(_verticesArray[i]);
+		if (found != lookupMap.end()) {
+			// Make sure to add to reIndex array
+			reIndexArray.push_back(found->second);
+		}
+		else {
+			// Add to lookup table and re
+			lookupMap.insert({ _verticesArray[i], vCount });
+			newVerticesArray.push_back(_verticesArray[i]);
+			reIndexArray.push_back(vCount);
+			vCount++;
+		}
+	}
+
+	// Update Index Array
+	for (size_t i = 0; i < _facesArray.size(); i++)
+	{
+		_facesArray[i].x = reIndexArray[_facesArray[i].x];
+		_facesArray[i].y = reIndexArray[_facesArray[i].y];
+		_facesArray[i].z = reIndexArray[_facesArray[i].z];
+	}
+	_verticesArray = newVerticesArray;
 }

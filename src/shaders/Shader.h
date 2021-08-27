@@ -13,7 +13,7 @@ public:
 	// Program ID
 	unsigned int ID;
 	// Builds Shader
-	Shader(const char* vertexPath, const char* fragmentPath);
+	Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath);
 	// Activate Shader
 	void use();
 

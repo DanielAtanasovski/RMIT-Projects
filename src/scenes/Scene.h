@@ -55,4 +55,5 @@ private:
 	void CalculateOuterLayer(float xMin, float xMax, float y, float zMin, float zMax, bool top);
 	void CalculateMiddleLayer(float xMin, float xMax, float y, float zMin, float zMax);
 	std::vector<CubeFaces> CalculateDisabledFaces(int row, int col, bool topLayer);
+	void PruneVertices();
 };
