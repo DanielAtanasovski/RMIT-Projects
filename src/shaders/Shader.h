@@ -14,6 +14,7 @@ public:
 	unsigned int ID;
 	// Builds Shader
 	Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath);
+	Shader(const char* vertexPath, const char* fragmentPath); // No Geometry Shader
 	// Activate Shader
 	void use();
 
