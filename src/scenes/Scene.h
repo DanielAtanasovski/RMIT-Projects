@@ -32,6 +32,7 @@ protected:
 	HUD* _hud = nullptr;
 	Camera* _camera = nullptr;
 
+	// Settings
 	int _subdivisions = 0;
 	bool _cullFaces = true;
 	bool _depthTest = true;
@@ -39,9 +40,13 @@ protected:
 	int _triangleCount = 0;
 	int _cubeCount = 0;
 
+	// Matrix
+	glm::mat4 _modelMatrix = glm::mat4(1);
+
+
 	// Calculating Menger Sponge
 	void CalculateMengerSponge(glm::vec3 position, float size, int subdivisions);
-	virtual void DrawMengerSponge() {};
+	virtual void Draw() {};
 
 	// Menger Sponge Arrays
 	std::vector<glm::vec3> _verticesArray = std::vector<glm::vec3>();

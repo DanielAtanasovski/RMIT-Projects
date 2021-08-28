@@ -72,7 +72,7 @@ void Scene1::Run()
 
 	glEnd();
 
-	DrawMengerSponge();
+	Draw();
 
 	glPopMatrix();
 }
@@ -93,7 +93,7 @@ void Scene1::Done()
 	_subdivisions = 0;
 }
 
-void Scene1::DrawMengerSponge()
+void Scene1::Draw()
 {
 	glPushMatrix();
 

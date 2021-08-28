@@ -10,7 +10,7 @@ public:
 	void Run() override;
 	void Done() override;
 private:
-	virtual void DrawMengerSponge() override;
+	virtual void Draw() override;
 
 	GLfloat _cameraLightPosition[4] = { 0, 0, 0, 0 };
 	GLfloat _cameraLightDirection[3] = { 0, 0, 0 };

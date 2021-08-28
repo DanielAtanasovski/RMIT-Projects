@@ -17,7 +17,7 @@ int MainApp::Init() {
 	}
 
 	_scenes = { new Scene1(), new Scene2(), new Scene3() };
-	_currentScene = 1; // Set to Modern Scene for renderdoc
+	_currentScene = 0; // Set to Modern Scene for renderdoc
 
 	_input = new Input();
 	_hud = new HUD();
