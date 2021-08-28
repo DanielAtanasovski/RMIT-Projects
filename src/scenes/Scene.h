@@ -12,6 +12,7 @@ public:
 	Scene() {};
 	~Scene() {};
 	virtual void Init(HUD* hud, Camera* camera) = 0; // Initialise
+	virtual void Update(unsigned int td_milli) = 0; // Use to update with delta
 	virtual void Run() = 0; // Loop
 	virtual void Done() = 0; // Unbind stuff
 	virtual void Recalculate();
@@ -42,7 +43,6 @@ protected:
 
 	// Matrix
 	glm::mat4 _modelMatrix = glm::mat4(1);
-
 
 	// Calculating Menger Sponge
 	void CalculateMengerSponge(glm::vec3 position, float size, int subdivisions);

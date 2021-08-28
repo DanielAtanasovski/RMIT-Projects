@@ -10,6 +10,7 @@ void Scene1::Init(HUD* hud, Camera* camera)
 {
 	_hud = hud;
 	_camera = camera;
+	_camera->UpdatePosition(glm::vec3(0, 0, 25));
 
 	_lighting = false;
 	_cullFaces = true;
@@ -186,4 +187,8 @@ void Scene1::Draw()
 	glEnd();
 
 	glPopMatrix();
+}
+
+void Scene1::Update(unsigned int td_milli)
+{
 }

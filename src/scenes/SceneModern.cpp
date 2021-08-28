@@ -4,6 +4,7 @@ void SceneModern::Init(HUD* hud, Camera* camera)
 {
 	_hud = hud;
 	_camera = camera;
+	_camera->UpdatePosition(glm::vec3(0, 0, 25));
 
 	_shader = new Shader("./src/shaders/MengerShader.vert",
 		"./src/shaders/MengerShader.frag",

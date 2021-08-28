@@ -25,6 +25,10 @@ void Scene2::Draw()
 	SceneModern::Draw();
 }
 
+void Scene2::Update(unsigned int td_milli)
+{
+}
+
 void Scene2::Recalculate()
 {
 	SceneModern::Recalculate();

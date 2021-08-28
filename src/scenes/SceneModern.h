@@ -9,6 +9,7 @@ public:
 	// Inherited via Scene
 	virtual void Init(HUD* hud, Camera* camera) override;
 	virtual void Run() override;
+	virtual void Update(unsigned int td_milli) = 0;
 	virtual void Done() override;
 	virtual void Recalculate() override;
 

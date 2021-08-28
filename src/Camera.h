@@ -52,7 +52,7 @@ public:
 private:
 	glm::mat4 _perspectiveMatrix;
 	glm::mat4 _viewMatrix;
-	glm::vec3 _position = glm::vec3(0, 0, 15);
+	glm::vec3 _position = glm::vec3(0, 0, 25);
 	glm::vec3 _cameraTarget = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 _cameraDirection = glm::normalize(_position - _cameraTarget);
 	glm::vec3 _up = glm::vec3(0.0f, 1.0f, 0.0f);

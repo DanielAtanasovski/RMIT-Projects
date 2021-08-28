@@ -158,6 +158,7 @@ void MainApp::CheckEvents()
 void MainApp::Update(unsigned int td_milli) {
 	float step = td_milli / 1000.0f;
 
+	// Update Camera
 	if (_inputDirection.x > 0)
 		_camera->UpdatePosition(_camera->GetPosition() + (glm::normalize(glm::cross(_camera->GetFront(), _camera->GetUp())) * _cameraSpeed * step));
 	else if (_inputDirection.x < 0)
@@ -172,6 +173,9 @@ void MainApp::Update(unsigned int td_milli) {
 		_camera->UpdatePosition(_camera->GetPosition() + (_camera->GetFront() * _cameraSpeed * step));
 	else if (_inputDirection.z < 0)
 		_camera->UpdatePosition(_camera->GetPosition() - (_camera->GetFront() * _cameraSpeed * step));
+
+	// Update Scene
+	_scenes[_currentScene]->Update(td_milli);
 }
 
 void MainApp::Draw() {
