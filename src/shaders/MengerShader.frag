@@ -1,5 +1,11 @@
 #version 330 core
 
+// With the help of learnopengl.com
+#define DIRECTIONAL_LIGHT 0
+#define POINT_LIGHT 1
+#define MAX_LIGHTS 10
+#define MATERIAL_COUNT 3
+
 struct Material {
 	vec3 Ambient;
 	vec3 Diffuse;
@@ -7,15 +13,6 @@ struct Material {
 	vec3 Emission;
 	float Shininess;
 };
-
-
-flat in int MaterialID;
-in vec3 outNormal;
-in vec3 FragPos;
-
-// Lighting
-#define DirectionalLight 0
-#define PointLight 1
 
 struct Light {
 	int Type;
@@ -29,49 +26,98 @@ struct Light {
 	float Quadratic;
 };
 
-#define MAX_LIGHTS 10
+// In
+flat in int MaterialID;
+in vec3 geomNormal;
+in vec3 fragPos;
+
+// Uniform
+uniform Material materials[MATERIAL_COUNT];
 uniform Light Lights[MAX_LIGHTS];
 uniform int NumberOfLights;
 uniform mat4 modelMatrix;
+uniform bool lightingEnabled;
+uniform bool directionalEnabled;
 
+// Out
 out vec4 FragColor;
 
-#define MATERIAL_COUNT 3
-
-uniform Material materials[MATERIAL_COUNT];
-
-
 // Light Functions
-vec3 CalculateDirectionalLight() {
-	return vec3(0);
-}
-
-vec3 CalculatePointLight() {
-	return vec3(0);
-}
+vec3 CalculateDirectionalLight(Light light, vec3 normal, vec3 viewDirection, Material mat);
+vec3 CalculatePointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDirection, Material mat);
 
 void main()
 {
 	Material mat = materials[MaterialID];
+	vec3 result = vec3(0);
+	vec3 norm = normalize(geomNormal);
+	
+	if (lightingEnabled) {
+		// Props
 
-	// Ambient
-	vec3 a = mat.Ambient * Lights[0].Ambient;
+		vec3 viewDir = normalize(Lights[0].Position - fragPos);
+
+		// Directional
+		if (directionalEnabled)
+			result = CalculateDirectionalLight(Lights[0], norm, viewDir, mat);
+
+		// Point Lights (Skip first as that is directional)
+		for (int i = 1; i < NumberOfLights; i++) {
+			result += CalculatePointLight(Lights[i], norm, fragPos, viewDir, mat);
+		}
+	} else {
+		result = mat.Ambient * mat.Diffuse;
+	}
+
+
+//	FragColor.xyz += abs(norm.xyz); Debug
+	FragColor = vec4(result, 1.0);
+}
+
+
+vec3 CalculateDirectionalLight(Light light, vec3 normal, vec3 viewDirection, Material mat) {
+
+	vec3 lightDirection = normalize(-light.Direction);
 
 	// Diffuse
-	vec3 norm = normalize(mat3(transpose(inverse(modelMatrix))) * outNormal);
-	vec3 lightDirection = normalize(Lights[0].Direction);
-
-	float diff = max(dot(norm, lightDirection), 0.0);
-	vec3 d = Lights[0].Diffuse * (diff * mat.Diffuse);
+	float diff = max(dot(normal, lightDirection), 0.0);
 
 	// Specular
-//	vec3 lightDir = normalize(Lights[0].Position - FragPos);
-//	vec3 viewDir = normalize(-Lights[0].Direction);
-//	vec3 halfwayDir = normalize(lightDir + viewDir);
-//	vec3 reflectDirection = reflect(lightDirection, norm);
-//	float spec = pow(max(dot(viewDir, reflectDirection), 0.0), mat.Shininess);
-//	vec3 s = Lights[0].Specular * (spec * mat.Specular);
+	vec3 reflectDirection = reflect(-lightDirection, normal);
+	float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), mat.Shininess);
 
-	vec3 result = a;
-	FragColor = vec4(result, 1.0);
+	// Combination
+	vec3 ambient = light.Ambient * mat.Ambient;
+	vec3 diffuse = light.Diffuse * diff * mat.Diffuse;
+	vec3 specular = light.Specular * spec * mat.Specular;
+	return (ambient + diffuse + specular);
+}
+
+vec3 CalculatePointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDirection, Material mat) {
+
+	vec3 lightDirection = normalize(light.Position - fragPos);
+
+    // diffuse shading
+    float diff = max(dot(normal, lightDirection), 0.0);
+
+    // specular shading
+    vec3 reflectDirection = reflect(-lightDirection, normal);
+    float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), mat.Shininess);
+
+    // attenuation
+    float distance    = length(light.Position - fragPos);
+    float attenuation = 1.0 / (light.Constant + light.Linear * distance + 
+  			     light.Quadratic * (distance * distance));    
+
+    // combine results
+    vec3 ambient  = light.Ambient  * mat.Ambient;
+    vec3 diffuse  = light.Diffuse  * diff * mat.Diffuse;
+    vec3 specular = light.Specular * spec * mat.Specular;
+
+	// Set Range
+    ambient  *= attenuation;
+    diffuse  *= attenuation;
+    specular *= attenuation;
+
+    return (ambient + diffuse + specular);
 }

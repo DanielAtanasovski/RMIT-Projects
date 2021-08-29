@@ -3,7 +3,7 @@ layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
 
 flat out int MaterialID;
-out vec3 outNormal;
+out vec3 geomNormal;
 
 uniform mat4 viewMatrix;
 uniform mat4 perspectiveMatrix;
@@ -32,7 +32,7 @@ void main() {
     for(int i=0; i < gl_in.length(); ++i) 
     {
         gl_Position = perspectiveMatrix * viewMatrix * modelMatrix * gl_in[i].gl_Position;
-        outNormal = Normal;
+        geomNormal = Normal;
         EmitVertex();
     }
 

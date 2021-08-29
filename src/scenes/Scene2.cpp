@@ -29,6 +29,10 @@ void Scene2::Update(unsigned int td_milli)
 {
 	_shader->use();
 	_shader->setVec3("lights[0].Direction", _camera->GetFront());
+	_shader->setVec3("lights[0].Position", _camera->GetPosition());
+	_shader->setBool("lightingEnabled", _lighting);
+	_shader->setBool("directionalEnabled", true);
+	_shader->setInt("NumberOfLights", _numLights);
 	glUseProgram(0);
 }
 

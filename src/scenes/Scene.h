@@ -63,7 +63,7 @@ protected:
 	// Lights
 	int _numLights = 0;
 	bool _directional = false;
-	float _lightPositionOffset = _size * 10.0f;
+	float _lightPositionOffset = 0;
 
 	// Debug Colours
 	const std::array<glm::vec3, 5> _Colours = {
@@ -76,14 +76,14 @@ protected:
 
 	//				Type,					Ambient,				      Diffuse,					Specular,		Direction, Position, Constant, Linear, Quadratic
 	std::array<Light, 8> _lights = {
-		Light(LightType::Directional, _Colours[4] * glm::vec3(0.7), glm::vec3(0.7, 0.4, 0.2), glm::vec3(0.6, 0.6, 0.6), glm::vec3(0, 0, 1), glm::vec3(0),                                 0, 0, 0),
-		Light(LightType::Point,       _Colours[2] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(_size + _lightPositionOffset, 0, 0), 0, 0, 0),
-		Light(LightType::Point,       _Colours[1] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(-_size - _lightPositionOffset, 0, 0), 0, 0, 0),
-		Light(LightType::Point,       _Colours[0] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(0, _size + _lightPositionOffset, 0), 0, 0, 0),
-		Light(LightType::Point,       _Colours[3] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(0, -_size - _lightPositionOffset, 0), 0, 0, 0),
-		Light(LightType::Point,       _Colours[4] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(0, 0, _size + _lightPositionOffset), 0, 0, 0),
-		Light(LightType::Point,       _Colours[3] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(0, 0, -_size - _lightPositionOffset), 0, 0, 0),
-		Light(LightType::Point,       _Colours[1] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(0, _size + _lightPositionOffset, -_size - _lightPositionOffset), 0, 0, 0),
+		Light(LightType::Directional, _Colours[4] * glm::vec3(1), glm::vec3(0.4, 0.4, 0.4), glm::vec3(0.4, 0.4, 0.4), glm::vec3(0, 0, 1), glm::vec3(0),                                 0, 0, 0),
+		Light(LightType::Point,       _Colours[2] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(_size + _lightPositionOffset, 0, 0), 1.0f, 0.09, 0.032),
+		Light(LightType::Point,       _Colours[1] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(-_size - _lightPositionOffset, 0, 0), 1.0f, 0.09, 0.032),
+		Light(LightType::Point,       _Colours[0] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(0, _size + _lightPositionOffset, 0), 1.0f, 0.09, 0.032),
+		Light(LightType::Point,       _Colours[3] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(0, -_size - _lightPositionOffset, 0), 1.0f, 0.09, 0.032),
+		Light(LightType::Point,       _Colours[4] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(0, 0, _size + _lightPositionOffset), 1.0f, 0.09, 0.032),
+		Light(LightType::Point,       _Colours[3] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(0, 0, -_size - _lightPositionOffset), 1.0f, 0.09, 0.032),
+		Light(LightType::Point,       _Colours[1] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(0, _size + _lightPositionOffset, -_size - _lightPositionOffset), 1.0f, 0.09, 0.032),
 	};
 
 private:

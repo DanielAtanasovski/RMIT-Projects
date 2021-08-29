@@ -10,7 +10,6 @@ void SceneModern::Init(HUD* hud, Camera* camera)
 		"./src/shaders/MengerShader.frag",
 		"./src/shaders/MengerShader.geom");
 
-	glShadeModel(GL_SMOOTH);
 	Recalculate();
 	SetupBuffers();
 	SetupMaterials();
@@ -113,12 +112,18 @@ void SceneModern::SetupMaterials()
 	_shader->use();
 	_shader->setVec3("materials[0].Ambient", glm::vec3(0.8, 0.3, 0.3));
 	_shader->setVec3("materials[0].Diffuse", glm::vec3(0.2, 0.2, 0.2));
+	_shader->setVec3("materials[0].Specular", glm::vec3(0.2, 0.2, 0.2));
+	_shader->setFloat("materials[0].Shiniess", 45.0f);
 
 	_shader->setVec3("materials[1].Ambient", glm::vec3(0.3, 0.8, 0.3));
 	_shader->setVec3("materials[1].Diffuse", glm::vec3(0.2, 0.2, 0.2));
+	_shader->setVec3("materials[0].Specular", glm::vec3(0.2, 0.2, 0.2));
+	_shader->setFloat("materials[0].Shiniess", 33.0f);
 
 	_shader->setVec3("materials[2].Ambient", glm::vec3(0.3, 0.3, 0.8));
 	_shader->setVec3("materials[2].Diffuse", glm::vec3(0.5, 0.5, 0.5));
+	_shader->setVec3("materials[0].Specular", glm::vec3(0.2, 0.2, 0.2));
+	_shader->setFloat("materials[0].Shiniess", 50.0f);
 	glUseProgram(0);
 }
 
