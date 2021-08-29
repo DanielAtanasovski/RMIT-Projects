@@ -16,8 +16,8 @@ public:
 	virtual void Recalculate() override;
 
 private:
-	void setupBuffers();
-	void setupMaterials();
+	void SetupBuffers();
+	void SetupMaterials();
 	void SetupLights();
 
 	// Inherited via Scene

@@ -1,13 +1,13 @@
 #include "Scene2.h"
 
-void Scene2::setupBuffers()
+void Scene2::SetupBuffers()
 {
-	SceneModern::setupBuffers();
+	SceneModern::SetupBuffers();
 }
 
-void Scene2::setupMaterials()
+void Scene2::SetupMaterials()
 {
-	SceneModern::setupMaterials();
+	SceneModern::SetupMaterials();
 }
 
 void Scene2::SetupLights()
@@ -27,6 +27,9 @@ void Scene2::Draw()
 
 void Scene2::Update(unsigned int td_milli)
 {
+	_shader->use();
+	_shader->setVec3("lights[0].Direction", _camera->GetFront());
+	glUseProgram(0);
 }
 
 void Scene2::Recalculate()

@@ -19,8 +19,8 @@ void Scene4::Init(HUD* hud, Camera* camera)
 		_instanceModelMatrices[i] = glm::translate(_instanceModelMatrices[i], _modelTranslationValue[i]);
 	}
 
-	setupBuffers();
-	setupMaterials();
+	SetupBuffers();
+	SetupMaterials();
 	SetupLights();
 }
 
@@ -77,9 +77,8 @@ void Scene4::Update(unsigned int td_milli)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Scene4::setupBuffers()
+void Scene4::SetupBuffers()
 {
-	std::cout << "setup " << std::endl;
 	// Buffers 
 	// Vertices
 	glGenBuffers(1, &_vertexBuffer);
@@ -131,9 +130,9 @@ void Scene4::setupBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Scene4::setupMaterials()
+void Scene4::SetupMaterials()
 {
-	SceneModern::setupMaterials();
+	SceneModern::SetupMaterials();
 }
 
 void Scene4::SetupLights()

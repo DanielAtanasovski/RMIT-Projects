@@ -57,7 +57,6 @@ void Scene1::SetupLights()
 			w = 1;
 		}
 
-		std::cout << w << std::endl;
 		GLfloat ambient[] = { _lights[i].getAmbient().r,_lights[0].getAmbient().g, _lights[0].getAmbient().b, 1.0f };
 		GLfloat diffuse[] = { _lights[i].getDiffuse().r,_lights[0].getDiffuse().g, _lights[0].getDiffuse().b, 1.0f };
 		GLfloat specular[] = { _lights[i].getSpecular().r,_lights[0].getSpecular().g, _lights[0].getSpecular().b, 1.0f };

@@ -16,8 +16,8 @@ public:
 	virtual void Update(unsigned int td_milli) override;
 
 private:
-	void setupBuffers();
-	void setupMaterials();
+	void SetupBuffers();
+	void SetupMaterials();
 	void SetupLights();
 
 	// Inherited via Scene

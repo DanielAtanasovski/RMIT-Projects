@@ -51,14 +51,14 @@ void Scene3::Draw()
 	glBindVertexArray(0);
 }
 
-void Scene3::setupBuffers()
+void Scene3::SetupBuffers()
 {
-	SceneModern::setupBuffers();
+	SceneModern::SetupBuffers();
 }
 
-void Scene3::setupMaterials()
+void Scene3::SetupMaterials()
 {
-	SceneModern::setupMaterials();
+	SceneModern::SetupMaterials();
 }
 
 void Scene3::SetupLights()

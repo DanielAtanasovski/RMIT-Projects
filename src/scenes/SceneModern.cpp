@@ -12,8 +12,8 @@ void SceneModern::Init(HUD* hud, Camera* camera)
 
 	glShadeModel(GL_SMOOTH);
 	Recalculate();
-	setupBuffers();
-	setupMaterials();
+	SetupBuffers();
+	SetupMaterials();
 	SetupLights();
 }
 
@@ -79,7 +79,7 @@ void SceneModern::Recalculate()
 		firstRun = false;
 }
 
-void SceneModern::setupBuffers()
+void SceneModern::SetupBuffers()
 {
 	// Buffers
 	glGenBuffers(1, &_vertexBuffer);
@@ -108,7 +108,7 @@ void SceneModern::setupBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void SceneModern::setupMaterials()
+void SceneModern::SetupMaterials()
 {
 	_shader->use();
 	_shader->setVec3("materials[0].Ambient", glm::vec3(0.8, 0.3, 0.3));
@@ -126,18 +126,47 @@ void SceneModern::SetupLights()
 {
 	_shader->use();
 
-	// TODO: Move to function
 	_shader->setInt("NumberOfLights", _numLights);
-	Light l = _lights[0];
-	_shader->setInt("Lights[0].Type", (int)l.getType());
-	_shader->setVec3("Lights[0].Ambient", l.getAmbient());
-	_shader->setVec3("Lights[0].Diffuse", l.getDiffuse());
-	_shader->setVec3("Lights[0].Specular", l.getSpecular());
-	_shader->setVec3("Lights[0].Direction", _camera->GetFront());
-	_shader->setVec3("Lights[0].Position", _camera->GetPosition());
-	_shader->setFloat("Lights[0].Constant", l.getConstant());
-	_shader->setFloat("Lights[0].Linear", l.getLinear());
-	_shader->setFloat("Lights[0].Quadratic", l.getQuadratic());
+	for (size_t i = 0; i < _lights.size(); i++)
+	{
+		Light l = _lights[i];
+		std::ostringstream stringStream;
+		// Build Light Uniform
+		stringStream << "Lights[" << i << "].Type";
+		_shader->setInt(stringStream.str().c_str(), (int)l.getType());
+
+		stringStream.str("");
+		stringStream << "Lights[" << i << "].Ambient";
+		_shader->setVec3(stringStream.str().c_str(), l.getAmbient());
+
+		stringStream.str("");
+		stringStream << "Lights[" << i << "].Diffuse";
+		_shader->setVec3(stringStream.str().c_str(), l.getDiffuse());
+
+		stringStream.str("");
+		stringStream << "Lights[" << i << "].Specular";
+		_shader->setVec3(stringStream.str().c_str(), l.getSpecular());
+
+		stringStream.str("");
+		stringStream << "Lights[" << i << "].Direction";
+		_shader->setVec3(stringStream.str().c_str(), l.getDirection());
+
+		stringStream.str("");
+		stringStream << "Lights[" << i << "].Position";
+		_shader->setVec3(stringStream.str().c_str(), l.getPosition());
+
+		stringStream.str("");
+		stringStream << "Lights[" << i << "].Constant";
+		_shader->setFloat(stringStream.str().c_str(), l.getConstant());
+
+		stringStream.str("");
+		stringStream << "Lights[" << i << "].Linear";
+		_shader->setFloat(stringStream.str().c_str(), l.getLinear());
+
+		stringStream.str("");
+		stringStream << "Lights[" << i << "].Quadratic";
+		_shader->setFloat(stringStream.str().c_str(), l.getQuadratic());
+	}
 
 	glUseProgram(0);
 }

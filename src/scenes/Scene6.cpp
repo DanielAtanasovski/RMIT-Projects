@@ -40,14 +40,14 @@ void Scene6::Draw()
 	glBindVertexArray(0);
 }
 
-void Scene6::setupBuffers()
+void Scene6::SetupBuffers()
 {
-	SceneModern::setupBuffers();
+	SceneModern::SetupBuffers();
 }
 
-void Scene6::setupMaterials()
+void Scene6::SetupMaterials()
 {
-	SceneModern::setupMaterials();
+	SceneModern::SetupMaterials();
 }
 
 void Scene6::SetupLights()
