@@ -18,7 +18,7 @@ public:
 private:
 	void setupBuffers();
 	void setupMaterials();
-	void setupLights();
+	void SetupLights();
 
 	// Inherited via Scene
 	virtual void SetupDraw() override;

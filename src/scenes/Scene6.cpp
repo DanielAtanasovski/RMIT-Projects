@@ -50,8 +50,8 @@ void Scene6::setupMaterials()
 	SceneModern::setupMaterials();
 }
 
-void Scene6::setupLights()
+void Scene6::SetupLights()
 {
-	SceneModern::setupLights();
+	SceneModern::SetupLights();
 }
 

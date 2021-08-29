@@ -61,7 +61,7 @@ void Scene3::setupMaterials()
 	SceneModern::setupMaterials();
 }
 
-void Scene3::setupLights()
+void Scene3::SetupLights()
 {
-	SceneModern::setupLights();
+	SceneModern::SetupLights();
 }

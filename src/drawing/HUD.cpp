@@ -13,6 +13,7 @@ void HUD::Init() {
 	_sceneText = gltCreateText();
 	_subdivisionsText = gltCreateText();
 	_attributesText = gltCreateText();
+	_lightCountText = gltCreateText();
 };
 
 void HUD::Draw()
@@ -30,6 +31,7 @@ void HUD::Draw()
 		gltDrawText2D(_subdivisionsText, _xOffset, _yOffset + (_yStep * 4), _scale);
 		gltDrawText2D(_attributesText, _xOffset, _yOffset + (_yStep * 5), _scale);
 		gltDrawText2D(_sceneText, _xOffset, _yOffset + (_yStep * 6), _scale);
+		gltDrawText2D(_lightCountText, _xOffset, _yOffset + (_yStep * 7), _scale);
 	}
 
 	gltEndDraw();
@@ -67,6 +69,11 @@ void HUD::UpdateState()
 	stringStream.str("");
 	stringStream << "Lighting: " << _lighting << " | Depth Testing: " << _depth << " | Backface Culling: " << _cull;
 	gltSetText(_attributesText, stringStream.str().c_str());
+
+	stringStream.str("");
+	stringStream << "Lights: " << _lightCount;
+	gltSetText(_lightCountText, stringStream.str().c_str());
+
 }
 
 std::string HUD::ValueToThousandsSeperator(unsigned int data)

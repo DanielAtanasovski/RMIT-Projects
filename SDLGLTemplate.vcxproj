@@ -21,7 +21,6 @@
   <ItemGroup>
     <ClCompile Include="include\glad\glad.c" />
     <ClCompile Include="src\App.cpp" />
-    <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\drawing\HUD.cpp" />
     <ClCompile Include="src\drawing\Shapes.cpp" />
     <ClCompile Include="src\main.cpp" />

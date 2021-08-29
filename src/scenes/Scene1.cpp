@@ -23,17 +23,65 @@ void Scene1::Init(HUD* hud, Camera* camera)
 	_hud->SetDrawAttributes(_depthTest, _lighting, _cullFaces);
 	_hud->SetSubdivisions(_subdivisions);
 
-	// Directional Camera
-	GLfloat ambient[] = { 0.5f, 0.5f, 0.4f, 0.2f };
-	GLfloat diffuse[] = { 0.5f, 0.5f, 0.2f, 0.2f };
-	GLfloat specular[] = { 0.4f, 0.4f, 0.4f, 1.0f };
-
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-	glEnable(GL_LIGHT0);
+	SetupLights();
+	UpdateLights();
 
 	Recalculate();
+}
+
+void Scene1::UpdateLights()
+{
+	for (size_t i = 0; i < _lights.size(); i++)
+	{
+		if (i == 0 && !_directional) {
+			glDisable(GL_LIGHT0);
+			continue;
+		}
+			
+		// Update State of lights
+		if (i < _numLights) {
+			glEnable(GL_LIGHT0 + i);
+		}
+		else {
+			glDisable(GL_LIGHT0 + i);
+		}
+	}
+}
+
+void Scene1::SetupLights()
+{
+	for (size_t i = 0; i < _lights.size(); i++)
+	{
+		int w = 0;
+		if (_lights[i].getType() == LightType::Point) {
+			w = 1;
+		}
+
+		std::cout << w << std::endl;
+		GLfloat ambient[] = { _lights[i].getAmbient().r,_lights[0].getAmbient().g, _lights[0].getAmbient().b, 1.0f };
+		GLfloat diffuse[] = { _lights[i].getDiffuse().r,_lights[0].getDiffuse().g, _lights[0].getDiffuse().b, 1.0f };
+		GLfloat specular[] = { _lights[i].getSpecular().r,_lights[0].getSpecular().g, _lights[0].getSpecular().b, 1.0f };
+		GLfloat position[] = { _lights[i].getPosition().x, _lights[i].getPosition().y, _lights[i].getPosition().z, w};
+
+		glLightfv(GL_LIGHT0 + i, GL_AMBIENT, ambient);
+		glLightfv(GL_LIGHT0 + i, GL_DIFFUSE, diffuse);
+		glLightfv(GL_LIGHT0 + i, GL_SPECULAR, specular);
+		glLightfv(GL_LIGHT0 + i, GL_POSITION, position);
+	}
+}
+
+void Scene1::SetLightCount(int count)
+{
+	_numLights = count;
+
+	// Set within range
+	if (_numLights < 0)
+		_numLights = 0;
+	if (_numLights > _lights.size())
+		_numLights = _lights.size();
+
+	// Enable / Disable Lights
+	UpdateLights();
 }
 
 void Scene1::Run()
@@ -46,9 +94,6 @@ void Scene1::Run()
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
-	GLfloat light_position[] = { 0.0, 0.0, 0.0, 1.0 };
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
 	// Set View Matrix
 	glLoadMatrixf(glm::value_ptr(_camera->getViewMatrix()));
@@ -92,6 +137,7 @@ void Scene1::Done()
 	_triangleCount = 0;
 	_cubeCount = 0;
 	_subdivisions = 0;
+	SetLightCount(0);
 }
 
 void Scene1::Draw()
@@ -186,9 +232,45 @@ void Scene1::Draw()
 	}
 	glEnd();
 
+	// Draw Lights
+	glBegin(GL_TRIANGLES);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	for (size_t i = 0; i < _numLights; i++) {
+		if (i == 0)
+			continue;
+
+		Cube cube = Cube(_lights[i].getPosition(), glm::vec3(10.0f, 10.0f, 10.0f));
+		for (int j = 0; j < cube.getFaces().size(); j++) {
+			// Get Triangle Vertexes
+			glm::ivec3 faceIndex = cube.getFaces()[j];
+			glm::vec3 pointA = cube.getVertices()[faceIndex.x];
+			glm::vec3 pointB = cube.getVertices()[faceIndex.y];
+			glm::vec3 pointC = cube.getVertices()[faceIndex.z];
+
+			// Draw Vertex
+			glVertex3f(
+				pointA.x,
+				pointA.y,
+				pointA.z);
+			glVertex3f(
+				pointB.x,
+				pointB.y,
+				pointB.z);
+			glVertex3f(
+				pointC.x,
+				pointC.y,
+				pointC.z);
+		}
+	}
+	glEnd();
+
 	glPopMatrix();
 }
 
 void Scene1::Update(unsigned int td_milli)
 {
+	// Update Camera Light Position
+	_lights[0].setDirection(_camera->GetFront());
+	GLfloat direction[] = { _lights[0].getDirection().x, _lights[0].getDirection().y, _lights[0].getDirection().z, 0 };
+	glLightfv(GL_LIGHT0, GL_POSITION, direction);
 }

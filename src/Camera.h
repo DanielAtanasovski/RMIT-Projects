@@ -14,7 +14,7 @@ class Camera
 public:
 	Camera(float width, float height) {
 		glViewport(0, 0, (GLsizei)width, (GLsizei)height);
-		_perspectiveMatrix = glm::perspective(glm::radians<float>(45.0f), width / height, 0.1f, 100.0f);
+		_perspectiveMatrix = glm::perspective(glm::radians<float>(45.0f), width / height, 0.1f, 1000.0f);
 		_viewMatrix = glm::lookAt(_position, _position + _cameraTarget, _up);
 
 	};

@@ -21,7 +21,7 @@ void Scene4::Init(HUD* hud, Camera* camera)
 
 	setupBuffers();
 	setupMaterials();
-	setupLights();
+	SetupLights();
 }
 
 void Scene4::Run()
@@ -136,7 +136,7 @@ void Scene4::setupMaterials()
 	SceneModern::setupMaterials();
 }
 
-void Scene4::setupLights()
+void Scene4::SetupLights()
 {
-	SceneModern::setupLights();
+	SceneModern::SetupLights();
 }

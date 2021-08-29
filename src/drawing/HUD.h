@@ -19,6 +19,7 @@ public:
 		gltDeleteText(_sceneText);
 		gltDeleteText(_subdivisionsText);
 		gltDeleteText(_attributesText);
+		gltDeleteText(_lightCountText);
 		gltTerminate();
 	};
 	void Init();
@@ -35,6 +36,7 @@ public:
 	void SetScene(int scene) { _scene = scene; }
 	void SetSubdivisions(int subdivisions) { _subdivisions = subdivisions; }
 	void SetDrawAttributes(bool depth, bool lighting, bool cull) { _depth = depth; _lighting = lighting; _cull = cull; }
+	void SetLightCount(int count) { _lightCount = count; }
 	void ToggleFullHUD() {
 		_fullHUD = !_fullHUD;
 	}
@@ -42,11 +44,11 @@ public:
 	void UpdateState();
 private:
 	int _triangles = 0, _cubes = 0, _vertices = 0, _fps = 0, _refreshRate = 0,
-	_width = 0, _height = 0, _scene = 0, _subdivisions = 0, _vertexData = 0;
+	_width = 0, _height = 0, _scene = 0, _subdivisions = 0, _vertexData = 0, _lightCount = 0;
 	bool _depth = false, _lighting = false, _cull = false;
 	GLTtext *_drawText, *_dataText, *_cubesText,
 		*_fpsText, *_displayText, *_sceneText, *_subdivisionsText,
-		*_attributesText;
+		*_attributesText, *_lightCountText;
 
 	float _xOffset = 2;
 	float _yOffset = 2;

@@ -4,6 +4,7 @@
 #include "../drawing/Shapes.h"
 #include "../drawing/HUD.h"
 #include "../Camera.h"
+#include "../drawing/Light.h"
 
 class Scene
 {
@@ -27,6 +28,8 @@ public:
 
 	// Getters / Setters
 	int GetSubdivisions() { return _subdivisions; }
+	int GetLightCount() { return _numLights; }
+	virtual void SetLightCount(int count) = 0;
 	void SetSubdivisions(int subdivisions) { _subdivisions = subdivisions; };
 
 protected:
@@ -47,6 +50,7 @@ protected:
 	// Calculating Menger Sponge
 	void CalculateMengerSponge(glm::vec3 position, float size, int subdivisions);
 	virtual void Draw() {};
+	virtual void SetupLights() = 0;
 
 	// Menger Sponge Arrays
 	std::vector<glm::vec3> _verticesArray = std::vector<glm::vec3>();
@@ -55,6 +59,32 @@ protected:
 
 	glm::vec3 _position = glm::vec3(0);
 	float _size = 10.0f;
+
+	// Lights
+	int _numLights = 0;
+	bool _directional = false;
+	float _lightPositionOffset = _size * 10.0f;
+
+	// Debug Colours
+	const std::array<glm::vec3, 5> _Colours = {
+		glm::vec3(1.0, 0.0, 0.0), // RED
+		glm::vec3(0.0, 1.0, 0.0), // GREEN
+		glm::vec3(0.0, 0.0, 1.0), // BLUE
+		glm::vec3(1.0, 1.0, 0.0), // YELLOW
+		glm::vec3(1.0, 1.0, 1.0), // WHITE
+	};
+
+	//				Type,					Ambient,				      Diffuse,					Specular,		Direction, Position, Constant, Linear, Quadratic
+	std::array<Light, 8> _lights = {
+		Light(LightType::Directional, _Colours[4] * glm::vec3(0.7), glm::vec3(0.7, 0.4, 0.2), glm::vec3(0.6, 0.6, 0.6), glm::vec3(0, 0, 1), glm::vec3(0),                                 0, 0, 0),
+		Light(LightType::Point,       _Colours[2] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(_size + _lightPositionOffset, 0, 0), 0, 0, 0),
+		Light(LightType::Point,       _Colours[1] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(-_size - _lightPositionOffset, 0, 0), 0, 0, 0),
+		Light(LightType::Point,       _Colours[0] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(0, _size + _lightPositionOffset, 0), 0, 0, 0),
+		Light(LightType::Point,       _Colours[3] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(0, -_size - _lightPositionOffset, 0), 0, 0, 0),
+		Light(LightType::Point,       _Colours[4] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(0, 0, _size + _lightPositionOffset), 0, 0, 0),
+		Light(LightType::Point,       _Colours[3] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(0, 0, -_size - _lightPositionOffset), 0, 0, 0),
+		Light(LightType::Point,       _Colours[1] * glm::vec3(0.4), glm::vec3(0.2, 0.2, 0.2), glm::vec3(0.3, 0.3, 0.3), glm::vec3(0),       glm::vec3(0, _size + _lightPositionOffset, -_size - _lightPositionOffset), 0, 0, 0),
+	};
 
 private:
 	void CalculateOuterLayer(float xMin, float xMax, float y, float zMin, float zMax, bool top);

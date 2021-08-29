@@ -12,9 +12,9 @@ public:
 	void Done() override;
 private:
 	virtual void Draw() override;
+	void UpdateLights();
 
-	GLfloat _cameraLightPosition[4] = { 0, 0, 0, 0 };
-	GLfloat _cameraLightDirection[3] = { 0, 0, 0 };
-
-
+	// Inherited via Scene
+	virtual void SetupLights() override;
+	virtual void SetLightCount(int count) override;
 };

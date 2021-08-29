@@ -34,9 +34,9 @@ int App::Init() {
 	}
 
 	// Render Doc
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
+	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
 
 	// Create Window
 	if (_fullScreen) {
@@ -105,6 +105,7 @@ int App::Init() {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
+	glShadeModel(GL_SMOOTH);
 
 	std::cout << "APP::INFO: OpenGL Version: " << GLVersion.major << "." << GLVersion.minor 
 		<< " Initialised." << std::endl;

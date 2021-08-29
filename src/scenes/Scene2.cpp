@@ -10,9 +10,9 @@ void Scene2::setupMaterials()
 	SceneModern::setupMaterials();
 }
 
-void Scene2::setupLights()
+void Scene2::SetupLights()
 {
-	SceneModern::setupLights();
+	SceneModern::SetupLights();
 }
 
 void Scene2::SetupDraw()

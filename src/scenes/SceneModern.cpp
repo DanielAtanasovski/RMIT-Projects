@@ -14,7 +14,7 @@ void SceneModern::Init(HUD* hud, Camera* camera)
 	Recalculate();
 	setupBuffers();
 	setupMaterials();
-	setupLights();
+	SetupLights();
 }
 
 void SceneModern::Run()
@@ -122,7 +122,7 @@ void SceneModern::setupMaterials()
 	glUseProgram(0);
 }
 
-void SceneModern::setupLights()
+void SceneModern::SetupLights()
 {
 	_shader->use();
 
@@ -161,4 +161,16 @@ void SceneModern::Draw()
 	glBindVertexArray(_vertexArray);
 	glDrawElements(GL_TRIANGLES, _faceIds.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+}
+
+void SceneModern::SetLightCount(int count)
+{
+	_numLights = count;
+
+	// Set within range
+	if (_numLights < 0)
+		_numLights = 0;
+	if (_numLights > _lights.size())
+		_numLights = _lights.size();
+
 }

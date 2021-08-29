@@ -100,6 +100,15 @@ void MainApp::CheckInput() {
 			_scenes[_currentScene]->isLighting(), _scenes[_currentScene]->isCulling());
 	}
 
+	if (_input->IsKeyReleased(SDL_SCANCODE_COMMA)) {
+		_scenes[_currentScene]->SetLightCount(_scenes[_currentScene]->GetLightCount() - 1);
+		_hud->SetLightCount(_scenes[_currentScene]->GetLightCount());
+	}
+	else if (_input->IsKeyReleased(SDL_SCANCODE_PERIOD)) {
+		_scenes[_currentScene]->SetLightCount(_scenes[_currentScene]->GetLightCount() + 1);
+		_hud->SetLightCount(_scenes[_currentScene]->GetLightCount());
+	}
+
 	// Culling
 	if (_input->IsKeyReleased(SDL_SCANCODE_C)) {
 		_scenes[_currentScene]->ToggleCullFaces();
@@ -132,32 +141,38 @@ void MainApp::CheckInput() {
 		_currentScene = 0;
 		_scenes[_currentScene]->Init(_hud, _camera);
 		_hud->SetScene(_currentScene + 1);
+		_hud->SetLightCount(_scenes[_currentScene]->GetLightCount());
 	}
 	else if (_input->IsKeyReleased(SDL_SCANCODE_2)) {
 		_scenes[_currentScene]->Done();
 		_currentScene = 1;
 		_scenes[_currentScene]->Init(_hud, _camera);
 		_hud->SetScene(_currentScene + 1);
+		_hud->SetLightCount(_scenes[_currentScene]->GetLightCount());
 	} else if (_input->IsKeyReleased(SDL_SCANCODE_3)) {
 		_scenes[_currentScene]->Done();
 		_currentScene = 2;
 		_scenes[_currentScene]->Init(_hud, _camera);
 		_hud->SetScene(_currentScene + 1);
+		_hud->SetLightCount(_scenes[_currentScene]->GetLightCount());
 	} else if (_input->IsKeyReleased(SDL_SCANCODE_4)) {
 		_scenes[_currentScene]->Done();
 		_currentScene = 3;
 		_scenes[_currentScene]->Init(_hud, _camera);
 		_hud->SetScene(_currentScene + 1);
+		_hud->SetLightCount(_scenes[_currentScene]->GetLightCount());
 	} else if (_input->IsKeyReleased(SDL_SCANCODE_5)) {
 		_scenes[_currentScene]->Done();
 		_currentScene = 4;
 		_scenes[_currentScene]->Init(_hud, _camera);
 		_hud->SetScene(_currentScene + 1);
+		_hud->SetLightCount(_scenes[_currentScene]->GetLightCount());
 	} else if (_input->IsKeyReleased(SDL_SCANCODE_6)) {
 		_scenes[_currentScene]->Done();
 		_currentScene = 5;
 		_scenes[_currentScene]->Init(_hud, _camera);
 		_hud->SetScene(_currentScene + 1);
+		_hud->SetLightCount(_scenes[_currentScene]->GetLightCount());
 	}
 }
 
