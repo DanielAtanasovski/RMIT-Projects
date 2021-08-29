@@ -43,6 +43,7 @@ protected:
 
 	// Type, Ambient, Diffuse, Specular, Direction, Position, Constant, Linear, Quadratic
 	std::array<Light, 1> _lights = {
-		Light(LightType::Directional, _Colours[4] * glm::vec3(0.6), glm::vec3(0.7, 0.4, 0.2), glm::vec3(0.8, 0.8, 0.8), glm::vec3(0, 0, 1), glm::vec3(0), 0, 0, 0)
+		Light(LightType::Directional, _Colours[4] * glm::vec3(0.6),
+		glm::vec3(0.7, 0.4, 0.2), glm::vec3(0.8, 0.8, 0.8), glm::vec3(0, 0, 1), glm::vec3(0), 0, 0, 0)
 	};
 };

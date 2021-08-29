@@ -24,9 +24,9 @@ void Scene1::Init(HUD* hud, Camera* camera)
 	_hud->SetSubdivisions(_subdivisions);
 
 	// Directional Camera
-	GLfloat ambient[] = { 0.5, 0.5, 0.4, 0.2 };
-	GLfloat diffuse[] = { 0.5, 0.5, 0.2, 0.2 };
-	GLfloat specular[] = { 0.4, 0.4, 0.4, 1.0 };
+	GLfloat ambient[] = { 0.5f, 0.5f, 0.4f, 0.2f };
+	GLfloat diffuse[] = { 0.5f, 0.5f, 0.2f, 0.2f };
+	GLfloat specular[] = { 0.4f, 0.4f, 0.4f, 1.0f };
 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);

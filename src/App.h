@@ -33,7 +33,7 @@ public:
 		// Draw
 		glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		glViewport(0, 0, _windowWidth, _windowHeight);
+		glViewport(0, 0, (GLsizei)_windowWidth, (GLsizei)_windowHeight);
 
 		// Swap Buffers
 		SDL_GL_SwapWindow(_window);

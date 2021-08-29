@@ -38,7 +38,7 @@ protected:
 	bool _cullFaces = true;
 	bool _depthTest = true;
 	bool _lighting = false;
-	int _triangleCount = 0;
+	size_t _triangleCount = 0;
 	int _cubeCount = 0;
 
 	// Matrix

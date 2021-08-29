@@ -33,7 +33,7 @@ public:
 	void draw();
 	glm::vec3 getPosition() { return _position; }
 	glm::vec3 getSize() { return _size; }
-	int getTriangleCount() { return _currentCubeIndices.size(); }
+	size_t getTriangleCount() { return _currentCubeIndices.size(); }
 
 	const std::vector<glm::vec3> &getVertices() const { return _currentCubeVertices; };
 	const std::vector<glm::ivec3> &getFaces() const { return _currentCubeIndices; };

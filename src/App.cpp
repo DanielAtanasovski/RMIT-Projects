@@ -15,8 +15,8 @@
 App::App(const char* title, bool fullscreen, int width, int height) {
 	_mainWindowTitle = title;
 	_fullScreen = fullscreen;
-	_windowWidth = width;
-	_windowHeight = height;
+	_windowWidth = (float)width;
+	_windowHeight = (float)height;
 	_screenWidth = 0;
 	_screenHeight = 0;
 	_window = nullptr;
@@ -34,9 +34,9 @@ int App::Init() {
 	}
 
 	// Render Doc
-	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
 
 	// Create Window
 	if (_fullScreen) {
@@ -50,7 +50,7 @@ int App::Init() {
 		_window = SDL_CreateWindow(
 			_mainWindowTitle.c_str(),
 			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-			_windowWidth, _windowHeight,
+			(int)_windowWidth, (int)_windowHeight,
 			SDL_WINDOW_OPENGL);
 	}
 
@@ -73,8 +73,8 @@ int App::Init() {
 	// Set Display Settings
 	SDL_DisplayMode displayMode;
 	if (SDL_GetCurrentDisplayMode(0, &displayMode) == 0) {
-		_screenWidth = displayMode.w;
-		_screenHeight = displayMode.h;
+		_screenWidth = (float)displayMode.w;
+		_screenHeight = (float)displayMode.h;
 		if (_fullScreen) {
 			_windowWidth = _screenWidth;
 			_windowHeight = _screenHeight;

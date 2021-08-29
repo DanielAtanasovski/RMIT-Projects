@@ -31,14 +31,18 @@
     <ClCompile Include="src\scenes\Scene2.cpp" />
     <ClCompile Include="src\scenes\Scene3.cpp" />
     <ClCompile Include="src\scenes\Scene4.cpp" />
+    <ClCompile Include="src\scenes\Scene5.cpp" />
+    <ClCompile Include="src\scenes\Scene6.cpp" />
     <ClCompile Include="src\scenes\SceneModern.cpp" />
     <ClCompile Include="src\shaders\Shader.cpp" />
     <ClCompile Include="src\util\Input.cpp" />
     <ClInclude Include="src\drawing\Light.h" />
     <ClInclude Include="src\drawing\Material.h" />
+    <ClInclude Include="src\scenes\Scene5.h" />
     <ClInclude Include="src\scenes\Scene2.h" />
     <ClInclude Include="src\scenes\Scene3.h" />
     <ClInclude Include="src\scenes\Scene4.h" />
+    <ClInclude Include="src\scenes\Scene6.h" />
     <ClInclude Include="src\scenes\SceneModern.h" />
     <ClInclude Include="src\shaders\Shader.h" />
     <ClInclude Include="src\util\Input.h" />
@@ -54,6 +58,9 @@
     <ClInclude Include="src\util\GLMUtil.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\shaders\InstancedMengerShader.frag" />
+    <None Include="src\shaders\InstancedMengerShader.geom" />
+    <None Include="src\shaders\InstancedMengerShader.vert" />
     <None Include="src\shaders\MengerShader.frag" />
     <None Include="src\shaders\MengerShader.vert" />
     <None Include="src\shaders\MengerShader.geom" />

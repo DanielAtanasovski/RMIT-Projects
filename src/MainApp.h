@@ -38,7 +38,7 @@ private:
 	HUD *_hud = nullptr;
 	Input *_input = nullptr;
 
-	std::array<Scene*, 3> _scenes;
+	std::array<Scene*, 6> _scenes;
 	int _currentScene = 0;
 
 	// Camera Controls 

@@ -72,7 +72,7 @@ void HUD::UpdateState()
 std::string HUD::ValueToThousandsSeperator(unsigned int data)
 {
 	std::string retValue = std::to_string(data);
-	int seperator = retValue.length() - 3;
+	int seperator = (int)retValue.length() - 3;
 	while (seperator > 0) {
 		retValue.insert(seperator, ",");
 		seperator -= 3;

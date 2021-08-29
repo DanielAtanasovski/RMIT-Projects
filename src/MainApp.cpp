@@ -10,19 +10,22 @@
 #include "scenes/Scene1.h"
 #include "scenes/Scene2.h"
 #include "scenes/Scene3.h"
+#include "scenes/Scene4.h"
+#include "scenes/Scene5.h"
+#include "scenes/Scene6.h"
 
 int MainApp::Init() {
 	if (int err = App::Init() != 0) {
 		return err;
 	}
 
-	_scenes = { new Scene1(), new Scene2(), new Scene3() };
-	_currentScene = 0; // Set to Modern Scene for renderdoc
+	_scenes = { new Scene1(), new Scene2(), new Scene3(), new Scene4(), new Scene5, new Scene6 };
+	_currentScene = 1; // Set to Modern Scene for renderdoc
 
 	_input = new Input();
 	_hud = new HUD();
 	_hud->Init();
-	_hud->SetDisplay(_windowWidth, _windowHeight, _refreshRate);
+	_hud->SetDisplay((int)_windowWidth, (int)_windowHeight, _refreshRate);
 	_hud->SetScene(_currentScene + 1);
 
 	_camera = new Camera(_windowWidth, _windowHeight);
@@ -140,6 +143,21 @@ void MainApp::CheckInput() {
 		_currentScene = 2;
 		_scenes[_currentScene]->Init(_hud, _camera);
 		_hud->SetScene(_currentScene + 1);
+	} else if (_input->IsKeyReleased(SDL_SCANCODE_4)) {
+		_scenes[_currentScene]->Done();
+		_currentScene = 3;
+		_scenes[_currentScene]->Init(_hud, _camera);
+		_hud->SetScene(_currentScene + 1);
+	} else if (_input->IsKeyReleased(SDL_SCANCODE_5)) {
+		_scenes[_currentScene]->Done();
+		_currentScene = 4;
+		_scenes[_currentScene]->Init(_hud, _camera);
+		_hud->SetScene(_currentScene + 1);
+	} else if (_input->IsKeyReleased(SDL_SCANCODE_6)) {
+		_scenes[_currentScene]->Done();
+		_currentScene = 5;
+		_scenes[_currentScene]->Init(_hud, _camera);
+		_hud->SetScene(_currentScene + 1);
 	}
 }
 
@@ -150,7 +168,7 @@ void MainApp::CheckEvents()
 		if (windowEvent.type == SDL_QUIT) _quitApp = true;
 		if (windowEvent.type == SDL_MOUSEMOTION) {
 			// Yaw & Pitch
-			_camera->UpdateDirection(windowEvent.motion.xrel, windowEvent.motion.yrel);
+			_camera->UpdateDirection((float)windowEvent.motion.xrel, (float)windowEvent.motion.yrel);
 		}
 	}
 }
@@ -179,7 +197,7 @@ void MainApp::Update(unsigned int td_milli) {
 }
 
 void MainApp::Draw() {
-	glClearColor(0.2, 0.2, 0.2, 1.0);
+	glClearColor((GLfloat)0.2, (GLfloat)0.2, (GLfloat)0.2, (GLfloat)1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	_scenes[_currentScene]->Run();

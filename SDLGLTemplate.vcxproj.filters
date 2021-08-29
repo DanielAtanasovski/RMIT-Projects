@@ -60,6 +60,12 @@
     <ClCompile Include="src\scenes\SceneModern.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\scenes\Scene5.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenes\Scene6.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\App.h">
@@ -110,10 +116,19 @@
     <ClInclude Include="src\scenes\SceneModern.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\scenes\Scene5.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\Scene6.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\MengerShader.frag" />
     <None Include="src\shaders\MengerShader.vert" />
     <None Include="src\shaders\MengerShader.geom" />
+    <None Include="src\shaders\InstancedMengerShader.frag" />
+    <None Include="src\shaders\InstancedMengerShader.vert" />
+    <None Include="src\shaders\InstancedMengerShader.geom" />
   </ItemGroup>
 </Project>

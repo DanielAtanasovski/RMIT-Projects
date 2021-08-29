@@ -9,6 +9,7 @@ void SceneModern::Init(HUD* hud, Camera* camera)
 	_shader = new Shader("./src/shaders/MengerShader.vert",
 		"./src/shaders/MengerShader.frag",
 		"./src/shaders/MengerShader.geom");
+
 	glShadeModel(GL_SMOOTH);
 	Recalculate();
 	setupBuffers();
@@ -152,7 +153,6 @@ void SceneModern::SetupDraw()
 
 	// Update Lights
 	_shader->setVec3("Lights[0].Direction", _camera->GetFront());
-	_shader->setVec3("LightCameraDirection", _camera->GetFront());
 	_shader->setVec3("Lights[0].Position", _camera->GetPosition());
 }
 

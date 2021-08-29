@@ -71,8 +71,8 @@ void Scene::Recalculate()
 
 	PruneVertices();
 
-	unsigned int data = _verticesArray.size() * sizeof(glm::vec3);
-	_hud->SetData(_triangleCount, _cubeCount, _verticesArray.size(), data);
+	unsigned int data = (unsigned int)_verticesArray.size() * sizeof(glm::vec3);
+	_hud->SetData((int)_triangleCount, _cubeCount, (int)_verticesArray.size(), data);
 }
 
 void Scene::CalculateMengerSponge(glm::vec3 position, float size, int subdivisions)
@@ -131,7 +131,7 @@ void Scene::CalculateOuterLayer(float xMin, float xMax, float y, float zMin, flo
 			Cube cube = Cube(
 				glm::vec3(xMin + ((col * xInterval) + xOffset),
 					y, zMin + ((row * zInterval) + zOffset)),
-				size, CalculateDisabledFaces(row, col, top));
+				size, CalculateDisabledFaces((int)row, (int)col, top));
 
 			// Convert local face ids to global face ids
 			std::vector<glm::ivec3> cubeFaces = cube.getFaces();
