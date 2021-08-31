@@ -17,7 +17,7 @@ public:
 	bool IsKeyReleased(const SDL_Scancode keyCode) const;
 
 private:
-	Uint8 _previousInput[SDL_NUM_SCANCODES];
-	Uint8 _currentInput[SDL_NUM_SCANCODES];
+	Uint8 _previousInput[SDL_NUM_SCANCODES] = {};
+	Uint8 _currentInput[SDL_NUM_SCANCODES] = {};
 
 };

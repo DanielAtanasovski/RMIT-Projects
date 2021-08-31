@@ -44,6 +44,10 @@
     <ClInclude Include="src\game\MainApp.h" />
     <ClInclude Include="src\engine\scenes\Scene.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\Standard.frag" />
+    <None Include="assets\shaders\Standard.vert" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

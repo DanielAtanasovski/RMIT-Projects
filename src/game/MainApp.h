@@ -23,7 +23,7 @@ private:
 	void Draw();
 
 	std::unique_ptr<Game> _game;
-	std::unique_ptr<Input> _input;
+	std::shared_ptr<Input> _input;
 
 	// fps
 	int _fps = 0;

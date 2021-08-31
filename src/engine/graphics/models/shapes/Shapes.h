@@ -2,6 +2,7 @@
 
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <array>
 #include <vector>
 #include "../../Material.h"
@@ -28,25 +29,37 @@ const std::array<Material, 3> _CUBE_MATERIALS = {
 
 class Cube {
 public:
-	Cube(glm::vec3 position, glm::vec3 size = glm::vec3(1, 1, 1), std::vector<CubeFaces> disableFaces = {});
+	Cube(glm::vec3 position = glm::vec3(0,0,0), glm::vec3 size = glm::vec3(1, 1, 1), std::vector<CubeFaces> disableFaces = {});
 
-	void draw();
+	void Draw();
+
+	// Getters
 	glm::vec3 getPosition() { return _position; }
-	glm::vec3 getSize() { return _size; }
+	glm::vec3 getScale() { return _scale; }
 	size_t getTriangleCount() { return _faces.size(); }
+	const std::vector<glm::vec3>& getVertices() const { return _vertices; };
+	const std::vector<unsigned int>& getFaces() const { return _faces; };
+	const glm::mat4 getModelMatrix() {
+		glm::mat4 modelMatrix = glm::mat4(1);
+		modelMatrix = glm::scale(modelMatrix, _scale);
+		modelMatrix = glm::translate(modelMatrix, _position);
+		return modelMatrix;
+	}
 
-	const std::vector<glm::vec3> &getVertices() const { return _vertices; };
-	const std::vector<glm::ivec3> &getFaces() const { return _faces; };
+	// Setters
+	void SetPosition(glm::vec3 position) { _position = position; }
+	void SetScale(glm::vec3 scale) { _scale = scale; }
 
 protected:
-	glm::vec3 _size;
+	glm::vec3 _scale;
 	glm::vec3 _position;
 	std::vector<CubeFaces> _disabledFaces;
-	std::vector<glm::ivec3> _faces;
+	std::vector<unsigned int> _faces;
 	std::vector<glm::vec3> _vertices;
 
 private:
 	void PruneFaces();
+	void ConvertFaces(std::vector<glm::ivec3> &vecFaces);
 
 	const glm::vec3 _CUBE_VERTICES[8] = {
 			glm::vec3(-0.5, -0.5,  0.5), // 0. Close Bottom Left

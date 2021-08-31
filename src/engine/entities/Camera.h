@@ -13,23 +13,27 @@ const float DEFAULT_YAW = -90.0f;
 const float DEFAULT_PITCH = 0.0f;
 const float DEFAULT_SPEED = -90.0f;
 const glm::vec3 DEFAULT_POSITION = glm::vec3(0, 0, 10);
-const glm::vec3 DEFAULT_UP = glm::vec3(0,1,0);
+const glm::vec3 DEFAULT_WORLD_UP = glm::vec3(0,1,0);
 
 class Camera
 {
 public:
-	Camera(glm::vec3 position = DEFAULT_POSITION, glm::vec3 up = DEFAULT_UP,
+	Camera(glm::vec3 position = DEFAULT_POSITION, glm::vec3 worldUp = DEFAULT_WORLD_UP,
 		float yaw = DEFAULT_YAW, float pitch = DEFAULT_PITCH) {
 		_position = position;
-		_up = up;
+		_worldUp = worldUp;
 		_yaw = yaw;
 		_pitch = pitch;
 		UpdateCamera();
 	}
 
+	// Movement
+	void Move(glm::vec3 direction, float delta);
+
 	// Setters
 	void SetPosition(glm::vec3 position) { _position = position; };
 	void SetDirection(float xRot, float yRot);
+	void SetSpeed(float speed) { _speed = speed; }
 
 	// Getters
 	glm::mat4 GetViewMatrix() { return glm::lookAt(_position, _position + _front, _up); }
@@ -47,6 +51,7 @@ private:
 	glm::vec3 _up;
 
 	// Controls
+	float _speed = 10.0f;
 	float _yawSensitivity = 0.15f;
 	float _pitchSensitivity = 0.15f;
 	float _yaw = -90.0f;

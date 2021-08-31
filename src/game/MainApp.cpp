@@ -7,8 +7,12 @@ int MainApp::Init() {
 		return err;
 	}
 
+	_input = std::make_shared<Input>();
+	_input->Init();
+
 	_game = std::make_unique<Game>();
-	_game->Init();
+	_game->Init(_windowWidth, _windowHeight, _input);
+
 
 	return 0;
 }
@@ -34,6 +38,9 @@ bool MainApp::Tick(unsigned int td_milli) {
 
 void MainApp::CheckInput() {
 	_input->Update();
+
+	if (_input->IsKeyReleased(SDL_SCANCODE_ESCAPE))
+		_quitApp = true;
 }
 
 void MainApp::CheckEvents()
@@ -51,7 +58,7 @@ void MainApp::Update(unsigned int td_milli) {
 }
 
 void MainApp::Draw() {
-	glClearColor((GLfloat)0.1, (GLfloat)0.1, (GLfloat)0.6, (GLfloat)1.0);
+	glClearColor((GLfloat)0.1, (GLfloat)0.1, (GLfloat)0.1, (GLfloat)1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	_game->Render();
