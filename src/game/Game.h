@@ -2,10 +2,13 @@
 #include <sdl/SDL_events.h>
 #include <memory>
 
-#include "../engine/graphics/models/shapes/Shapes.h"
-#include "../engine/graphics/Shader.h"
+#include "../engine/graphics/shaders/Shader.h"
 #include "../engine/entities/Camera.h"
 #include "../engine/utilities/Input.h"
+#include "../engine/entities/CubeEntity.h"
+
+#include "entities/LightCube.h"
+#include "../engine/scenes/Scene.h"
 
 enum class GameState {
 	GAME_ACTIVE,
@@ -23,9 +26,7 @@ public:
 
 private:
 	GameState _state;
-	
-	std::unique_ptr<Cube> _cube;
-	std::unique_ptr<Camera> _camera;
+
 	std::shared_ptr<Input> _input;
 
 	// Matrix
@@ -33,6 +34,9 @@ private:
 
 	// Screen
 	float _width, _height;
+
+	std::vector<std::unique_ptr<Scene>> _scenes;
+	unsigned int _currentScene;
 
 	// Temporary
 	unsigned int VBO, VAO, EBO;

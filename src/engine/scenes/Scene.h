@@ -1,17 +1,27 @@
 #pragma once
 
 #include <vector>
+#include "../graphics/Light.h"
+#include "../entities/Entity.h"
 
 class Scene
 {
 public:
 	// Scene
-	Scene() {};
+	Scene() { _entities = std::vector<Entity>(); _pointLights = std::vector<PointLight>(); };
 	virtual void Init() = 0; // Initialise
-	virtual void Update(unsigned int td_milli) = 0; // Use to update with delta
-	virtual void Run() = 0; // Loop
+	virtual void Update(float delta) = 0; // Use to update with delta
+	virtual void Draw() = 0;
 	virtual void Done() = 0; // Unbind stuff
 
+	void SetPerspective(glm::mat4 perspectiveMatrix) { _perspectiveMatrix = perspectiveMatrix; };
+
 protected:
-	virtual void Draw() {};
+	DirectionalLight _directionalLight;
+	std::vector<PointLight> _pointLights;
+	std::vector<Entity> _entities;
+
+	// TODO:
+	// TEMPORARY
+	glm::mat4 _perspectiveMatrix;
 };

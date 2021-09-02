@@ -36,7 +36,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
 		geometryCode = geometryShaderStream.str();
 	}
 	catch (std::ifstream::failure& e) {
-		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << std::endl;
+		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
 	}
 
 	const char* vShaderCode = vertexCode.c_str();
@@ -137,7 +137,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 		fragmentCode = fragmentShaderStream.str();
 	}
 	catch (std::ifstream::failure& e) {
-		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << std::endl;
+		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ " << e.what() << std::endl;
 	}
 
 	const char* vShaderCode = vertexCode.c_str();

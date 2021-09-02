@@ -13,15 +13,14 @@ int MainApp::Init() {
 	_game = std::make_unique<Game>();
 	_game->Init(_windowWidth, _windowHeight, _input);
 
-
 	return 0;
 }
 
 bool MainApp::Tick(unsigned int td_milli) {
 	_quitApp = false;
 
-	CheckEvents();
 	CheckInput();
+	CheckEvents();
 	Update(td_milli);
 	Draw();
 
@@ -30,6 +29,7 @@ bool MainApp::Tick(unsigned int td_milli) {
 	_timeCount += td_milli;
 	if ((_timeCount / (float)1000) >= 1.0) {
 		_timeCount = 0;
+		std::cout << _fps << std::endl;
 		_fps = 0;
 	}
 
@@ -48,6 +48,9 @@ void MainApp::CheckEvents()
 	SDL_Event windowEvent;
 	while (SDL_PollEvent(&windowEvent)) {
 		if (windowEvent.type == SDL_QUIT) _quitApp = true;
+		if (windowEvent.type == SDL_MOUSEMOTION) {
+			_input->SetLastMouseMotion(windowEvent.motion.xrel, windowEvent.motion.yrel);
+		}
 		_game->OnEvent(windowEvent);
 	}
 }

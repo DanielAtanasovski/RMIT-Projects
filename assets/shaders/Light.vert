@@ -7,10 +7,7 @@ uniform mat4 perspectiveMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 
-out vec3 Normal;
-
 void main()
 {
 	gl_Position = perspectiveMatrix * viewMatrix * modelMatrix * vec4(aPos, 1.0f);
-	Normal = aNormal;
 }

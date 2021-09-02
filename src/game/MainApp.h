@@ -24,6 +24,8 @@ private:
 
 	std::unique_ptr<Game> _game;
 	std::shared_ptr<Input> _input;
+	std::vector<Scene> _scenes;
+	unsigned int _currentScene = 0;
 
 	// fps
 	int _fps = 0;

@@ -36,10 +36,11 @@ public:
 	void SetSpeed(float speed) { _speed = speed; }
 
 	// Getters
-	glm::mat4 GetViewMatrix() { return glm::lookAt(_position, _position + _front, _up); }
-	glm::vec3 GetPosition() { return _position; };
-	glm::vec3 GetFront() { return _front; }
-	glm::vec3 GetUp() { return _up; }
+	glm::mat4 GetViewMatrix() const { return glm::lookAt(_position, _position + _front, _up); }
+	const glm::mat4& GetPerspectiveMatrix() const {}
+	const glm::vec3& GetPosition() const { return _position; }
+	const glm::vec3& GetFront() const { return _front; }
+	const glm::vec3& GetUp() const { return _up; }
 
 private:
 	void UpdateCamera();
