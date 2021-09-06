@@ -5,8 +5,7 @@
 
 class CubeEntity : public Entity {
 public:
-	CubeEntity() : Entity(CubeMesh(), Shader("./src/engine/graphics/shaders/Default.vert",
-		"./src/engine/graphics/shaders/Default.frag")) {};
+	CubeEntity();
 private:
 
 };

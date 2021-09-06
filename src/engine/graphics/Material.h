@@ -3,9 +3,9 @@
 #include <glm/vec4.hpp>
 
 struct Material {
-	glm::vec4 Ambient;
-	glm::vec4 Diffuse;
-	glm::vec4 Specular;
+	glm::vec3 Ambient;
+	glm::vec3 Diffuse;
+	glm::vec3 Specular;
 	float Shininess;
-	glm::vec4 Emission;
+	glm::vec3 Emission;
 };

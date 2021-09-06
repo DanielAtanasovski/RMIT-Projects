@@ -14,15 +14,17 @@ public:
 	virtual void Draw();
 
 	// Setters
-	void SetScale(glm::vec3 scale) { _scale = scale; };
-	void SetPosition(glm::vec3 position) { _position = position; };
-	void SetRotation(glm::vec3 rotation) { _rotation = rotation; };
-	void SetPerspectiveMatrix(glm::mat4 perspectiveMatrix) { _shader.use(); _shader.setMatrix4("perspectiveMatrix", perspectiveMatrix); }
-	void SetViewMatrix(glm::mat4 viewMatrix) { _shader.use(); _shader.setMatrix4("viewMatrix", viewMatrix); }
-	void SetShader(Shader shader) { _shader = shader; }
+	virtual void SetScale(glm::vec3 scale) { _scale = scale; };
+	virtual void SetPosition(glm::vec3 position) { _position = position; };
+	virtual void SetRotation(glm::vec3 rotation) { _rotation = rotation; };
+	virtual void SetPerspectiveMatrix(glm::mat4 perspectiveMatrix) { _shader.use(); _shader.setMatrix4("perspectiveMatrix", perspectiveMatrix); }
+	virtual void SetViewMatrix(glm::mat4 viewMatrix) { _shader.use(); _shader.setMatrix4("viewMatrix", viewMatrix); }
+	virtual void SetShader(Shader shader) { _shader = shader; } // TODO: Use Resource Manager to ensure no duplicate shader programs
+	virtual void SetMaterial(Material material) { _model.SetMaterial(material); }
 
 	// Getters
 	glm::mat4 GetModelMatrix();
+	Shader& GetShader() { return _shader; };
 
 protected:
 	Shader _shader;

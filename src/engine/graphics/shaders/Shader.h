@@ -24,4 +24,22 @@ public:
 	void setFloat(const std::string& name, float value) const;
 	void setMatrix4(const std::string& name, glm::mat4 value) const;
 	void setVec3(const std::string& name, glm::vec3 value) const;
+
+	const std::string GetVertexPath() const { return _vertexPath; }
+	const std::string GetFragmentPath() const { return _fragmentPath; }
+	const std::string GetGeometryPath() const { return _geometryPath; }
+
+	inline bool operator==(const Shader& other)
+	{
+		if (other.GetVertexPath() == _vertexPath)
+			if (other.GetFragmentPath() == _fragmentPath)
+				if (other.GetGeometryPath() == _geometryPath)
+					return true;
+		return false;
+	};
+
+private:
+	std::string _vertexPath = "";
+	std::string _fragmentPath = "";
+	std::string _geometryPath = "";
 };

@@ -31,4 +31,5 @@ private:
 	std::shared_ptr<Input> _input;
 
 	void UpdateCamera(float delta);
+	float _timeCount = 0.0f;
 };

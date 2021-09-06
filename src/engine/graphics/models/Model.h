@@ -13,10 +13,14 @@ public:
 	Model(Mesh mesh);
 	Model(char* path);
 
+	// Setters
+	void SetMaterial(Material material) { _material = material; };
+
 	virtual void Draw(Shader &shader);
 protected:
 	std::vector<Mesh> _meshes;
-	std::string directory;
+	std::string _directory;
+	Material _material;
 
 	void LoadModel(std::string path);
 	void ProcessNode(aiNode* node, const aiScene* scene);
@@ -24,6 +28,5 @@ protected:
 
 	std::vector<Texture> LoadMaterialTextures(aiMaterial* material, aiTextureType type, std::string typeName);
 	Material LoadMaterial(aiMaterial* material);
-
 };
 
