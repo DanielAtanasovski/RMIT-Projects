@@ -7,7 +7,14 @@ uniform mat4 perspectiveMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 
+out vec3 Normal;
+out vec3 FragPos;
+out vec2 TexCoords;
+
 void main()
 {
 	gl_Position = perspectiveMatrix * viewMatrix * modelMatrix * vec4(aPos, 1.0f);
+	Normal = aNormal;
+	FragPos = vec3(modelMatrix * vec4(aPos, 1.0f));
+	TexCoords = aTexCoords;
 }

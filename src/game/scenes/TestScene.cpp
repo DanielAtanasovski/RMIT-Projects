@@ -1,24 +1,29 @@
 #include "TestScene.h"
 
-TestScene::TestScene(std::shared_ptr<Input> input) : _input(input)
+TestScene::TestScene(std::shared_ptr<Input> input, std::shared_ptr<Renderer> renderer) : _input(input), _renderer(renderer)
 {
 
 }
 
-void TestScene::Init()
+void TestScene::Init(std::shared_ptr<ResourceManager> resourceManager)
 {
+
+
 	// Entities
 	_camera = std::make_unique<Camera>();
-	_centerCube = std::make_unique<CubeEntity>();
-	_centerCube->SetShader(Shader("./assets/shaders/Standard.vert", "./assets/shaders/Standard.frag"));
+	_centerCube = std::make_unique<CubeEntity>(resourceManager);
+	_centerCube->SetShader(resourceManager->LoadShader(Shader("./assets/shaders/StandardTextured.vert", "./assets/shaders/StandardTextured.frag")));
 	_centerCube->SetMaterial({
-		glm::vec3(1.0f, 0.5f, 0.32f),
-		glm::vec3(1.0f, 0.5f, 0.32f),
-		glm::vec3(0.5f, 0.5f, 0.5f),
+		glm::vec3(0.4f),
+		resourceManager->LoadTexture("./assets/textures/bricks.jpg"),
+		resourceManager->LoadTexture("./assets/textures/bricks_specular.jpg"),
 		32.0f,
-		glm::vec3(1),
-		});
-	_lightCube = std::make_unique<LightCube>(glm::vec3(10, 6, 10));
+	});
+	_verticalLightCube = std::make_unique<LightCube>(glm::vec3(0, 10, 0), resourceManager);
+	_horizonalLightCube = std::make_unique<LightCube>(glm::vec3(10, 2, 10), resourceManager);
+
+	// Skybox
+	_skyBox = std::make_unique<SkyBoxEntity>(_filePaths, resourceManager);
 
 	// Transformations
 	_camera->SetPosition(glm::vec3(0, 0, 10));
@@ -27,22 +32,30 @@ void TestScene::Init()
 	// TODO: Move to Renderer
 	// Set Perspective Matrix 
 	_centerCube->SetPerspectiveMatrix(_perspectiveMatrix);
-	_lightCube->SetPerspectiveMatrix(_perspectiveMatrix);
+	_horizonalLightCube->SetPerspectiveMatrix(_perspectiveMatrix);
+	_verticalLightCube->SetPerspectiveMatrix(_perspectiveMatrix);
+	_skyBox->SetPerspectiveMatrix(_perspectiveMatrix);
 
 	// Add lights
-	_pointLights.push_back(_lightCube->GetLight());
+	_pointLights.push_back(_horizonalLightCube->GetLight());
+	_pointLights.push_back(_verticalLightCube->GetLight());
 
-	// TODO: Add lights to Renderer
 }
 
 void TestScene::Update(float delta)
 {
 	UpdateCamera(delta);
 	_centerCube->SetViewMatrix(_camera->GetViewMatrix());
-	_lightCube->SetViewMatrix(_camera->GetViewMatrix());
+	_horizonalLightCube->SetViewMatrix(_camera->GetViewMatrix());
+	_verticalLightCube->SetViewMatrix(_camera->GetViewMatrix());
+
+	// No translation view matrix
+	glm::mat4 viewNoTranslation = glm::mat4(glm::mat3(_camera->GetViewMatrix()));
+	_skyBox->SetViewMatrix(viewNoTranslation);
 
 	_timeCount += delta;
-	_lightCube->SetPosition(glm::vec3(10 * glm::sin(_timeCount), 6 + glm::sin(_timeCount), 10 * glm::sin(_timeCount)));
+	_horizonalLightCube->SetPosition(glm::vec3(10 * glm::sin(_timeCount), 2, 10 * glm::cos(_timeCount)));
+	_verticalLightCube->SetPosition(glm::vec3(0, 10 * glm::sin(_timeCount), 10 * glm::cos(_timeCount)));
 }
 
 void TestScene::Draw()
@@ -56,8 +69,16 @@ void TestScene::Draw()
 	shader.setVec3("light.Specular", _pointLights[0]->Specular);
 	shader.setVec3("viewPos", _camera->GetPosition());
 
+	//_lightCube->SetViewMatrix(_camera->GetViewMatrix());
+
+	_skyBox->Draw();
 	_centerCube->Draw();
-	_lightCube->Draw();
+	_horizonalLightCube->Draw();
+	_verticalLightCube->Draw();
+	
+	//std::cout << shader.GetFragmentPath() << std::endl;
+	//std::cout << _lightCube->GetShader().GetFragmentPath() << std::endl;
+	//std::cout << _lightCube->GetShader().GetVertexPath() << std::endl;
 }
 
 void TestScene::Done()

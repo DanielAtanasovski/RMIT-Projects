@@ -21,10 +21,12 @@
   <ItemGroup>
     <ClCompile Include="src\engine\entities\CubeEntity.cpp" />
     <ClCompile Include="src\engine\entities\Entity.cpp" />
+    <ClCompile Include="src\engine\entities\SkyboxEntity.cpp" />
     <ClCompile Include="src\engine\graphics\models\Model.cpp" />
     <ClCompile Include="src\engine\graphics\models\Mesh.cpp" />
     <ClCompile Include="src\engine\graphics\models\shapes\CubeMesh.cpp" />
     <ClCompile Include="src\engine\graphics\Renderer.cpp" />
+    <ClCompile Include="src\engine\utilities\ResourceManager.cpp" />
     <ClCompile Include="src\game\entities\LightCube.cpp" />
     <ClCompile Include="src\game\Game.cpp" />
     <ClCompile Include="include\glad\glad.c" />
@@ -40,10 +42,12 @@
     <ClCompile Include="src\engine\utilities\Input.cpp" />
     <ClInclude Include="src\engine\entities\CubeEntity.h" />
     <ClInclude Include="src\engine\entities\Entity.h" />
+    <ClInclude Include="src\engine\entities\SkyboxEntity.h" />
     <ClInclude Include="src\engine\graphics\models\Model.h" />
     <ClInclude Include="src\engine\graphics\models\Mesh.h" />
     <ClInclude Include="src\engine\graphics\models\shapes\CubeMesh.h" />
     <ClInclude Include="src\engine\graphics\Renderer.h" />
+    <ClInclude Include="src\engine\utilities\ResourceManager.h" />
     <ClInclude Include="src\game\entities\LightCube.h" />
     <ClInclude Include="src\game\Game.h" />
     <ClInclude Include="src\engine\graphics\Light.h" />
@@ -63,8 +67,12 @@
   <ItemGroup>
     <None Include="assets\shaders\Light.frag" />
     <None Include="assets\shaders\Light.vert" />
+    <None Include="assets\shaders\Skybox.frag" />
+    <None Include="assets\shaders\Skybox.vert" />
     <None Include="assets\shaders\Standard.frag" />
     <None Include="assets\shaders\Standard.vert" />
+    <None Include="assets\shaders\StandardTextured.frag" />
+    <None Include="assets\shaders\StandardTextured.vert" />
     <None Include="src\engine\graphics\shaders\Default.frag" />
     <None Include="src\engine\graphics\shaders\Default.vert" />
   </ItemGroup>

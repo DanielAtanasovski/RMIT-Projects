@@ -4,9 +4,9 @@
 
 void Entity::Draw()
 {
-	_shader.use();
-	_shader.setMatrix4("modelMatrix", GetModelMatrix());
-	_model.Draw(_shader);
+	_shader->use();
+	_shader->setMatrix4("modelMatrix", GetModelMatrix());
+	_model.Draw(*_shader);
 }
 
 glm::mat4 Entity::GetModelMatrix()
@@ -19,7 +19,6 @@ glm::mat4 Entity::GetModelMatrix()
 	result = glm::rotate(result, glm::radians(_rotation.x), glm::vec3(1, 0, 0));
 	result = glm::rotate(result, glm::radians(_rotation.y), glm::vec3(0, 1, 0));
 	result = glm::rotate(result, glm::radians(_rotation.z), glm::vec3(0, 0, 1));
-
 
 	return result;
 }

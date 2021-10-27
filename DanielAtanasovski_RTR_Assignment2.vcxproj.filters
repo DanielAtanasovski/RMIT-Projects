@@ -72,6 +72,12 @@
     <ClCompile Include="src\engine\graphics\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\utilities\ResourceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\entities\SkyboxEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\App.h">
@@ -131,6 +137,12 @@
     <ClInclude Include="src\engine\graphics\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\utilities\ResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\entities\SkyboxEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\Standard.vert" />
@@ -139,5 +151,9 @@
     <None Include="src\engine\graphics\shaders\Default.frag" />
     <None Include="assets\shaders\Light.vert" />
     <None Include="assets\shaders\Light.frag" />
+    <None Include="assets\shaders\StandardTextured.vert" />
+    <None Include="assets\shaders\StandardTextured.frag" />
+    <None Include="assets\shaders\Skybox.vert" />
+    <None Include="assets\shaders\Skybox.frag" />
   </ItemGroup>
 </Project>

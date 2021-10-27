@@ -9,3 +9,10 @@ struct Material {
 	float Shininess;
 	glm::vec3 Emission;
 };
+
+struct MaterialMapped {
+	glm::vec3 Ambient;
+	unsigned int DiffuseID;
+	unsigned int SpecularID;
+	float Shininess;
+};

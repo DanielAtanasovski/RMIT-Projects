@@ -103,6 +103,10 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
 			infoLog << std::endl;
 	}
 
+	_vertexPath = vertexPath;
+	_fragmentPath = fragmentPath;
+	_geometryPath = geometryPath;
+
 	// Delete Shaders now that they are in the shader program
 	glDeleteShader(vertex);
 	glDeleteShader(geometry);
@@ -188,6 +192,9 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 		std::cout << "ERROR::SHADER::PROGRAM::COMPILATION_FAILED\n" <<
 			infoLog << std::endl;
 	}
+
+	_vertexPath = vertexPath;
+	_fragmentPath = fragmentPath;
 
 	// Delete Shaders now that they are in the shader program
 	glDeleteShader(vertex);

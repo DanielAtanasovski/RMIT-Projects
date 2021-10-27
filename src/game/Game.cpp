@@ -3,8 +3,7 @@
 #include "scenes/TestScene.h"
 
 
-Game::Game() : _shader("./assets/shaders/Standard.vert", "./assets/shaders/Standard.frag")
-{
+Game::Game() {
 
 }
 
@@ -13,11 +12,13 @@ void Game::Init(float width, float height, std::shared_ptr<Input> input)
 	_state = GameState::GAME_ACTIVE;
 
 	_input = input;
-	_scenes.push_back(std::make_unique<TestScene>(_input));
+	_renderer = std::make_shared<Renderer>();
+	_resourceManager = std::make_shared<ResourceManager>();
+	_scenes.push_back(std::make_unique<TestScene>(_input, _renderer));
 
 	_perspectiveMatrix = glm::perspective(glm::radians<float>(45.0f), width / height, 0.1f, 1000.0f);
 	_scenes[_currentScene]->SetPerspective(_perspectiveMatrix);
-	_scenes[_currentScene]->Init();
+	_scenes[_currentScene]->Init(_resourceManager);
 
 	// Wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

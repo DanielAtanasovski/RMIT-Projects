@@ -9,6 +9,8 @@
 
 #include "entities/LightCube.h"
 #include "../engine/scenes/Scene.h"
+#include "../engine/graphics/Renderer.h"
+#include "../engine/utilities/ResourceManager.h"
 
 enum class GameState {
 	GAME_ACTIVE,
@@ -28,6 +30,8 @@ private:
 	GameState _state;
 
 	std::shared_ptr<Input> _input;
+	std::shared_ptr<Renderer> _renderer;
+	std::shared_ptr<ResourceManager> _resourceManager;
 
 	// Matrix
 	glm::mat4 _perspectiveMatrix;
@@ -36,12 +40,12 @@ private:
 	float _width, _height;
 
 	std::vector<std::unique_ptr<Scene>> _scenes;
-	unsigned int _currentScene;
+	unsigned int _currentScene = 0;
 
 	// Temporary
-	unsigned int VBO, VAO, EBO;
-	std::vector<glm::vec3> _vertices;
-	std::vector<unsigned int> _faces;
-	Shader _shader;
+	//unsigned int VBO, VAO, EBO;
+	//std::vector<glm::vec3> _vertices;
+	//std::vector<unsigned int> _faces;
+	//Shader _shader;
 };
 

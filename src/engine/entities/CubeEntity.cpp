@@ -1,7 +1,9 @@
 #include "CubeEntity.h"
+#include "../utilities/ResourceManager.h"
 
-CubeEntity::CubeEntity() : Entity(CubeMesh(), Shader("./src/engine/graphics/shaders/Default.vert",
-	"./src/engine/graphics/shaders/Default.frag"))
+CubeEntity::CubeEntity(std::shared_ptr<ResourceManager> resourceManager)
+	: Entity(CubeMesh(), resourceManager->LoadShader(Shader("./src/engine/graphics/shaders/Default.vert",
+	"./src/engine/graphics/shaders/Default.frag")))
 {
 	Material material = {
 		glm::vec3(1.0f, 1.0f, 1.0f),

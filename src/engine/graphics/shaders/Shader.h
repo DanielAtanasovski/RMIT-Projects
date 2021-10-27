@@ -43,3 +43,11 @@ private:
 	std::string _fragmentPath = "";
 	std::string _geometryPath = "";
 };
+
+class ShaderHashFunction {
+public:
+	size_t operator()(const Shader& shader) const {
+		return shader.GetFragmentPath().length() + shader.GetGeometryPath().length()
+			+ shader.GetVertexPath().length();
+	}
+};
