@@ -7,8 +7,6 @@ TestScene::TestScene(std::shared_ptr<Input> input, std::shared_ptr<Renderer> ren
 
 void TestScene::Init(std::shared_ptr<ResourceManager> resourceManager)
 {
-
-
 	// Entities
 	_camera = std::make_unique<Camera>();
 	_centerCube = std::make_unique<CubeEntity>(resourceManager);
@@ -39,7 +37,6 @@ void TestScene::Init(std::shared_ptr<ResourceManager> resourceManager)
 	// Add lights
 	_pointLights.push_back(_horizonalLightCube->GetLight());
 	_pointLights.push_back(_verticalLightCube->GetLight());
-
 }
 
 void TestScene::Update(float delta)
@@ -60,25 +57,55 @@ void TestScene::Update(float delta)
 
 void TestScene::Draw()
 {
-	// TODO: Update Renderer with Lights
+	std::cout << _pointLights.size() << std::endl;
+
+	// Update Lights
 	Shader& shader = _centerCube->GetShader();
 	shader.use();
-	shader.setVec3("light.Position", _pointLights[0]->Position);
-	shader.setVec3("light.Ambient", _pointLights[0]->Ambient);
-	shader.setVec3("light.Diffuse", _pointLights[0]->Diffuse);
-	shader.setVec3("light.Specular", _pointLights[0]->Specular);
-	shader.setVec3("viewPos", _camera->GetPosition());
+	std::ostringstream stringStream;
+	for (size_t i = 0; i < _pointLights.size(); i++)
+	{	
+		std::shared_ptr<PointLight> light = _pointLights[i];
 
+		// Update Light Components
+		stringStream << "pLights[" << i << "].Position";
+		shader.setVec3(stringStream.str().c_str(), light->Position);
+
+		stringStream.str("");
+		stringStream << "pLights[" << i << "].Ambient";
+		shader.setVec3(stringStream.str().c_str(), light->Ambient);
+
+		stringStream.str("");
+		stringStream << "pLights[" << i << "].Diffuse";
+		shader.setVec3(stringStream.str().c_str(), light->Diffuse);
+
+		stringStream.str("");
+		stringStream << "pLights[" << i << "].Specular";
+		shader.setVec3(stringStream.str().c_str(), light->Specular);
+
+		stringStream.str("");
+		stringStream << "pLights[" << i << "].Constant";
+		shader.setFloat(stringStream.str().c_str(), light->Constant);
+
+		stringStream.str("");
+		stringStream << "pLights[" << i << "].Linear";
+		shader.setFloat(stringStream.str().c_str(), light->Linear);
+
+		stringStream.str("");
+		stringStream << "pLights[" << i << "].Quadratic";
+		shader.setFloat(stringStream.str().c_str(), light->Quadratic);
+	}
+	shader.setInt("numLights", _pointLights.size());
+	shader.setVec3("viewPos", _camera->GetPosition());
 	//_lightCube->SetViewMatrix(_camera->GetViewMatrix());
 
+
+	// Draw Entities
 	_skyBox->Draw();
 	_centerCube->Draw();
 	_horizonalLightCube->Draw();
 	_verticalLightCube->Draw();
 	
-	//std::cout << shader.GetFragmentPath() << std::endl;
-	//std::cout << _lightCube->GetShader().GetFragmentPath() << std::endl;
-	//std::cout << _lightCube->GetShader().GetVertexPath() << std::endl;
 }
 
 void TestScene::Done()

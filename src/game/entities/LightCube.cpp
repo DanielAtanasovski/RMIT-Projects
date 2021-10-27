@@ -8,9 +8,12 @@ LightCube::LightCube(glm::vec3 position, std::shared_ptr<ResourceManager> resour
 
 	_light = std::make_shared<PointLight>();
 	_light->Position = _position;
-	_light->Ambient = glm::vec3(0.4f);
-	_light->Diffuse = glm::vec3(0.5f);
+	_light->Ambient = glm::vec3(0.2f);
+	_light->Diffuse = glm::vec3(0.6f);
 	_light->Specular = glm::vec3(1.0f);
+	_light->Constant = 1.0f;
+	_light->Linear = 0.0014f;
+	_light->Quadratic = 0.000007f;
 }
 
 void LightCube::SetPosition(glm::vec3 position)

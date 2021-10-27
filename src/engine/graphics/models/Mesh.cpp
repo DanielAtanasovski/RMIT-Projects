@@ -32,8 +32,8 @@ void Mesh::SetupMesh()
     glGenBuffers(1, &_EBO);
 
     glBindVertexArray(_VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
 
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
     glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex), _vertices.data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
