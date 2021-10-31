@@ -19,6 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\collision\BoxCollider.cpp" />
+    <ClCompile Include="src\engine\collision\SphereCollider.cpp" />
+    <ClCompile Include="src\engine\collision\UniformGrid.cpp" />
     <ClCompile Include="src\engine\entities\CubeEntity.cpp" />
     <ClCompile Include="src\engine\entities\Entity.cpp" />
     <ClCompile Include="src\engine\entities\SkyboxEntity.cpp" />
@@ -48,6 +51,8 @@
     <ClInclude Include="src\engine\collision\BoxCollider.h" />
     <ClInclude Include="src\engine\collision\Collider.h" />
     <ClInclude Include="src\engine\collision\SphereCollider.h" />
+    <ClInclude Include="src\engine\collision\UniformCell.h" />
+    <ClInclude Include="src\engine\collision\UniformGrid.h" />
     <ClInclude Include="src\engine\entities\CubeEntity.h" />
     <ClInclude Include="src\engine\entities\Entity.h" />
     <ClInclude Include="src\engine\entities\SkyboxEntity.h" />
