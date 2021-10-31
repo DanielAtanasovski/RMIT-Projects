@@ -22,6 +22,7 @@ public:
 	~Mesh() { glDeleteBuffers(1, &_VBO); glDeleteBuffers(1, &_EBO); glDeleteBuffers(1, &_VAO); };
 	Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, std::vector<Texture> &textures);
 	virtual void Draw(Shader& shader);
+	virtual void Recalculate(glm::vec3 scale);
 
 protected:
 	unsigned int _VAO, _VBO, _EBO;
@@ -30,4 +31,5 @@ protected:
 	std::vector<Texture> _textures;
 
 	virtual void SetupMesh();
+	void RebuildMesh();
 };

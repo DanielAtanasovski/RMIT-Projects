@@ -50,7 +50,7 @@ void main()
     vec3 viewDir = normalize(viewPos - FragPos);
 
 	// Directional light
-	vec3 result = vec3(0.05); //CalcDirLight(dLight, norm, viewDir);
+	vec3 result = CalcDirLight(dLight, norm, viewDir);
 
 	// Point Lights
     for(int i = 0; i < numLights; i++) 

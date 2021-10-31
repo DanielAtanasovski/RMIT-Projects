@@ -19,13 +19,16 @@ public:
 	virtual void SetRotation(glm::vec3 rotation) { _rotation = rotation; };
 	virtual void SetPerspectiveMatrix(glm::mat4 perspectiveMatrix) { _shader->use(); _shader->setMatrix4("perspectiveMatrix", perspectiveMatrix); }
 	virtual void SetViewMatrix(glm::mat4 viewMatrix) { _shader->use(); _shader->setMatrix4("viewMatrix", viewMatrix); }
-	virtual void SetShader(std::shared_ptr<Shader> shader) { _shader = shader; } // TODO: Use Resource Manager to ensure no duplicate shader programs
-	virtual void SetMaterial(Material material) { _model.SetMaterial(material); }
-	virtual void SetMaterial(MaterialMapped material) { _model.SetMaterial(material); }
+	virtual void SetShader(std::shared_ptr<Shader> shader) { _shader = shader; }
+	virtual void SetMaterial(Material material, bool textured, bool specular) { _model.SetMaterial(material, textured, specular); }
 
 	// Getters
 	glm::mat4 GetModelMatrix();
 	Shader& GetShader() { return *_shader; };
+	Model& GetModel() { return _model; };
+	glm::vec3 GetPosition() { return _position; };
+	glm::vec3 GetScale() { return _scale; };
+	glm::vec3 GetRotation() { return _rotation; };
 
 protected:
 	std::shared_ptr<Shader> _shader;

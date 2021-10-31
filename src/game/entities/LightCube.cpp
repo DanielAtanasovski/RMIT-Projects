@@ -2,7 +2,7 @@
 #include "../../engine/graphics/models/shapes/CubeMesh.h"
 
 LightCube::LightCube(glm::vec3 position, std::shared_ptr<ResourceManager> resourceManager) 
-	: Entity(CubeMesh(), resourceManager->LoadShader(Shader("./assets/shaders/light.vert", "./assets/shaders/light.frag")))
+	: Entity(Model(std::make_shared<CubeMesh>()), resourceManager->LoadShader(Shader("./assets/shaders/light.vert", "./assets/shaders/light.frag")))
 {
 	_position = position;
 

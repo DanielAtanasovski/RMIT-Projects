@@ -6,6 +6,44 @@ CubeMesh::CubeMesh()
 	SetupMesh();
 }
 
+void CubeMesh::Recalculate(glm::vec3 scale)
+{
+	_vertices = {
+		// Back Face
+		{ glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0,0) }, // Bottom Left
+		{ glm::vec3(0.5f , -0.5f, -0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(scale.x,0) }, // Bottom Right
+		{ glm::vec3(0.5f ,  0.5f, -0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(scale.x,scale.y) }, // Top Right
+		{ glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0,scale.y) }, // Top Left
+		// Front Face
+		{ glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(0.0f,  0.0f, 1.0f), glm::vec2(0,0) },
+		{ glm::vec3(0.5f , -0.5f,  0.5f), glm::vec3(0.0f,  0.0f, 1.0f), glm::vec2(scale.x,0) },
+		{ glm::vec3(0.5f ,  0.5f,  0.5f), glm::vec3(0.0f,  0.0f, 1.0f), glm::vec2(scale.x,scale.y) },
+		{ glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(0.0f,  0.0f, 1.0f), glm::vec2(0,scale.y) },
+		// Left Face
+		{ glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec2(scale.z,scale.y) },
+		{ glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec2(0,scale.y) },
+		{ glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec2(0,0) },
+		{ glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec2(scale.z,0) },
+		// Right Face
+		{ glm::vec3(0.5f ,  0.5f,  0.5f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec2(0,scale.y) },
+		{ glm::vec3(0.5f ,  0.5f, -0.5f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec2(scale.z,scale.y) },
+		{ glm::vec3(0.5f , -0.5f, -0.5f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec2(scale.z,0) },
+		{ glm::vec3(0.5f , -0.5f,  0.5f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec2(0,0) },
+		// Bottom Face
+		{ glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec2(scale.z,scale.x) },
+		{ glm::vec3(0.5f , -0.5f, -0.5f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec2(scale.z,0) },
+		{ glm::vec3(0.5f , -0.5f,  0.5f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec2(0,0) },
+		{ glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec2(0,scale.x) },
+		// Top Face
+		{ glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec2(scale.z,0) },
+		{ glm::vec3(0.5f ,  0.5f, -0.5f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec2(scale.z,scale.x) },
+		{ glm::vec3(0.5f ,  0.5f,  0.5f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec2(0,scale.x) },
+		{ glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec2(0,0) },
+	};
+
+	RebuildMesh();
+}
+
 void CubeMesh::CalculateBoxMesh()
 {
 	// Vertices

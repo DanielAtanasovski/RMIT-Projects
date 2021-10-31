@@ -6,25 +6,32 @@
 
 #include <assimp/scene.h>
 
+enum class MaterialType
+{
+	Value,
+	Textured,
+	TexturedWithSpecular
+};
+
 class Model
 {
 public:
 	Model();
-	Model(Mesh mesh);
+	Model(std::shared_ptr<Mesh> mesh);
 	Model(char* path);
 
 	// Setters
-	void SetMaterial(Material material) { _material = material; _isMaterialMapped = false; };
-	void SetMaterial(MaterialMapped materialMapped) { _materialMapped = materialMapped; _isMaterialMapped = true; }
+	void SetMaterial(Material material, bool textured = false, bool specular = false);
+	std::vector<std::shared_ptr<Mesh>>& GetMeshes() { return _meshes; };
 
 	virtual void Draw(Shader &shader);
 protected:
-	std::vector<Mesh> _meshes;
+	std::vector<std::shared_ptr<Mesh>> _meshes;
 	std::string _directory;
 	Material _material;
-	MaterialMapped _materialMapped;
-	bool _isMaterialMapped = false;
+	MaterialType _materialType = MaterialType::Value;
 
+	// TODO: Import Model Loading
 	void LoadModel(std::string path);
 	void ProcessNode(aiNode* node, const aiScene* scene);
 	Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);

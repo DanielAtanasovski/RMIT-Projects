@@ -11,6 +11,8 @@
 #include "../../engine/graphics/Renderer.h"
 #include "../../engine/utilities/ResourceManager.h"
 #include "../../engine/entities/SkyboxEntity.h"
+#include "../entities/Table.h"
+#include "../entities/Ball.h"
 
 
 class TestScene : public Scene{
@@ -30,7 +32,9 @@ public:
 private:
 
 	// Entities
-	std::unique_ptr<CubeEntity> _centerCube;
+	//std::unique_ptr<CubeEntity> _centerCube;
+	std::unique_ptr<Ball> _ball;
+	std::unique_ptr<Table> _table;
 	std::unique_ptr<LightCube> _horizonalLightCube;
 	std::unique_ptr<LightCube> _verticalLightCube;
 	std::unique_ptr<SkyBoxEntity> _skyBox;
@@ -53,5 +57,7 @@ private:
 	};
 
 	void UpdateCamera(float delta);
+	void UpdateShaderLights(Shader& shader);
+	void SetDirectional(Shader& shader);
 	float _timeCount = 0.0f;
 };

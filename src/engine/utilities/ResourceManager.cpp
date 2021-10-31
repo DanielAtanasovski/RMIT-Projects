@@ -57,6 +57,7 @@ unsigned int ResourceManager::LoadTexture(const char* filePath)
 
 	stbi_image_free(data);
 
+	_textures[filePath] = id;
 	return id;
 }
 

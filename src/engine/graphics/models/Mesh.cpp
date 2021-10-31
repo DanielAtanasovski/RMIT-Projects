@@ -25,6 +25,10 @@ void Mesh::Draw(Shader& shader)
     glBindVertexArray(0);
 }
 
+void Mesh::Recalculate(glm::vec3 scale)
+{
+}
+
 void Mesh::SetupMesh()
 {
     glGenVertexArrays(1, &_VAO);
@@ -49,6 +53,16 @@ void Mesh::SetupMesh()
     // vertex texture coords
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+
+    glBindVertexArray(0);
+}
+
+void Mesh::RebuildMesh()
+{
+    glBindVertexArray(_VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex), _vertices.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(0);
 }
