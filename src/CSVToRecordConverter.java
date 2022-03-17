@@ -3,6 +3,7 @@
  */
 
 import java.io.*;
+import java.text.DateFormat;
 import java.util.*;
 
 public class CSVToRecordConverter {
@@ -12,17 +13,17 @@ public class CSVToRecordConverter {
     public CSVToRecordConverter(List<List<String>> csvContents) {
         // All field names
         fieldToIndex = new HashMap<String, Integer>();
-        fieldToIndex.put("rdf-schema#label",    -1);
-        fieldToIndex.put("birthDate",           -1);
-        fieldToIndex.put("birthPlace_label",    -1);
-        fieldToIndex.put("deathDate",           -1);
-        fieldToIndex.put("field_label",         -1);
-        fieldToIndex.put("genre_label",         -1);
-        fieldToIndex.put("instrument_label",    -1);
-        fieldToIndex.put("nationality_label",   -1);
-        fieldToIndex.put("thumbnail",           -1);
-        fieldToIndex.put("wikiPageID",          -1);
-        fieldToIndex.put("description",         -1);
+        fieldToIndex.put(RecordHeaderSchema.PersonName,         -1);
+        fieldToIndex.put(RecordHeaderSchema.BirthDate,          -1);
+        fieldToIndex.put(RecordHeaderSchema.BirthPlaceLabel,    -1);
+        fieldToIndex.put(RecordHeaderSchema.DeathDate,          -1);
+        fieldToIndex.put(RecordHeaderSchema.FieldLabel,         -1);
+        fieldToIndex.put(RecordHeaderSchema.GenreLabel,         -1);
+        fieldToIndex.put(RecordHeaderSchema.InstrumentLabel,    -1);
+        fieldToIndex.put(RecordHeaderSchema.NationalityLabel,   -1);
+        fieldToIndex.put(RecordHeaderSchema.Thumbnail,          -1);
+        fieldToIndex.put(RecordHeaderSchema.WikiPageID,         -1);
+        fieldToIndex.put(RecordHeaderSchema.Description,        -1);
     }
 
     /**
@@ -131,24 +132,22 @@ public class CSVToRecordConverter {
         for (int i = 0; i < cleanedCsvContents.size(); i++) {
             for (int j = 0; j < cleanedCsvContents.get(0).size(); j++) {
 
-                personName = cleanedCsvContents.get(i).get(fieldToIndex.get("rdf-schema#label"));
-                personName = cleanedCsvContents.get(i).get(fieldToIndex.get("rdf-schema#label"));
-                personName = cleanedCsvContents.get(i).get(fieldToIndex.get("rdf-schema#label"));
-                personName = cleanedCsvContents.get(i).get(fieldToIndex.get("rdf-schema#label"));
-                personName = cleanedCsvContents.get(i).get(fieldToIndex.get("rdf-schema#label"));
-                personName = cleanedCsvContents.get(i).get(fieldToIndex.get("rdf-schema#label"));
-                personName = cleanedCsvContents.get(i).get(fieldToIndex.get("rdf-schema#label"));
-                personName = cleanedCsvContents.get(i).get(fieldToIndex.get("rdf-schema#label"));
+                personName = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.PersonName));
+                birthDate = new Date(cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.BirthDate)));
+                birthPlaceLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.BirthPlaceLabel));
+                deathDate = new Date(cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.DeathDate)));
+                fieldLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.FieldLabel));
+                genreLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.GenreLabel));
+                instrumentLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.InstrumentLabel));
+                nationalityLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.NationalityLabel));
+                thumbnail = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.Thumbnail));
+                wikiPageID = Integer.parseInt(cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.WikiPageID)));
+                description = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.Description));
 
 
-                records.add(new Record(
-                        ,
-                        cleanedCsvContents.get(i).get(fieldToIndex.get("rdf-schema#label")),
-                        cleanedCsvContents.get(i).get(fieldToIndex.get("rdf-schema#label")),
-                        cleanedCsvContents.get(i).get(fieldToIndex.get("rdf-schema#label")),
-                        cleanedCsvContents.get(i).get(fieldToIndex.get("rdf-schema#label")),
-                        cleanedCsvContents.get(i).get(fieldToIndex.get("rdf-schema#label")),
-
+                records.add(new Record(personName, birthDate, birthPlaceLabel,
+                        deathDate, fieldLabel, genreLabel, instrumentLabel,
+                        nationalityLabel, thumbnail, wikiPageID, description
                 ));
 
             }
