@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class dbload {
-
-
     public static void main(String[] args) {
         CSVToRecordConverter csvToRecordConverter = new CSVToRecordConverter();
         List<Record> records = new ArrayList<>();

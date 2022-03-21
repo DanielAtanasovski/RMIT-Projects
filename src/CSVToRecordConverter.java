@@ -3,7 +3,6 @@
  */
 
 import java.io.*;
-import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.*;
@@ -14,7 +13,7 @@ public class CSVToRecordConverter {
 
     public CSVToRecordConverter() {
         // All field names
-        fieldToIndex = new HashMap<String, Integer>();
+        fieldToIndex = new HashMap<>();
         fieldToIndex.put(RecordHeaderSchema.PersonName, -1);
         fieldToIndex.put(RecordHeaderSchema.BirthDate, -1);
         fieldToIndex.put(RecordHeaderSchema.BirthPlaceLabel, -1);
@@ -55,9 +54,8 @@ public class CSVToRecordConverter {
         // Loop through file reading lines of the csv
         String currentLine;
         while ((currentLine = bufferedReader.readLine()) != null) {
-            String[] contents = currentLine.split(",");
+            String[] contents = stripQuotes(currentLine.split(","));
 
-            contents = stripQuotes(contents);
             // Add list of tokens as an element of greater 'csvContents' list
             csvContents.add(Arrays.asList(contents));
         }
@@ -67,7 +65,7 @@ public class CSVToRecordConverter {
     /**
      * Removes all quotes from all elements of content
      *
-     * @param content
+     * @param content string to remove quotes from
      * @return modified content
      */
     private String[] stripQuotes(String[] content) {
@@ -128,10 +126,7 @@ public class CSVToRecordConverter {
         }
 
         // Check if all are found
-        if (!fieldToIndex.containsValue(-1))
-            return true;
-
-        return false;
+        return !fieldToIndex.containsValue(-1);
     }
 
     /**
@@ -157,46 +152,95 @@ public class CSVToRecordConverter {
 
         System.out.println("3. Converting Data to Records...");
 
-        for (int i = 0; i < cleanedCsvContents.size(); i++) {
+        int invalidBirthDates = 0;
+        int invalidDeathDates = 0;
+        int longestBirthPlaceLabelBytes = 0;
+        int longesFieldLabelBytes = 0;
+        int longestGenreLabelBytes = 0;
+        int longestInstrumentLabelBytes = 0;
+        int longestNationalityLabelBytes = 0;
+        int longestThumbnailBytes = 0;
+        int longestDescriptionBytes = 0;
 
-            personName = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.PersonName));
+
+        for (List<String> cleanedCsvContent : cleanedCsvContents) {
+
+            personName = cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.PersonName));
 
             // Handle Dates
             try {
-                birthDate = LocalDate.parse(cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.BirthDate)));
+                birthDate = LocalDate.parse(cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.BirthDate)));
             } catch (DateTimeParseException e) {
                 birthDate = LocalDate.MAX;
+                invalidBirthDates++;
             }
 
             try {
-                deathDate = LocalDate.parse(cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.DeathDate)));
+                deathDate = LocalDate.parse(cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.DeathDate)));
             } catch (DateTimeParseException e) {
                 deathDate = LocalDate.MAX;
+                invalidDeathDates++;
             }
 
             // Handle Integers
             try {
-                wikiPageID = Integer.parseInt(cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.WikiPageID)));
+                wikiPageID = Integer.parseInt(cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.WikiPageID)));
             } catch (NumberFormatException e) {
                 wikiPageID = Integer.MAX_VALUE;
             }
 
 
-            birthPlaceLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.BirthPlaceLabel));
-            fieldLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.FieldLabel));
-            genreLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.GenreLabel));
-            instrumentLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.InstrumentLabel));
-            nationalityLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.NationalityLabel));
-            thumbnail = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.Thumbnail));
+            birthPlaceLabel = cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.BirthPlaceLabel));
 
-            description = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.Description));
+            if (birthPlaceLabel.getBytes().length > longestBirthPlaceLabelBytes)
+                longestBirthPlaceLabelBytes = birthPlaceLabel.getBytes().length;
 
+            fieldLabel = cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.FieldLabel));
+
+            if (fieldLabel.getBytes().length > longesFieldLabelBytes)
+                longesFieldLabelBytes = fieldLabel.getBytes().length;
+
+            genreLabel = cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.GenreLabel));
+
+            if (genreLabel.getBytes().length > longestGenreLabelBytes)
+                longestGenreLabelBytes = genreLabel.getBytes().length;
+
+            instrumentLabel = cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.InstrumentLabel));
+
+            if (genreLabel.getBytes().length > longestInstrumentLabelBytes)
+                longestInstrumentLabelBytes = genreLabel.getBytes().length;
+
+            nationalityLabel = cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.NationalityLabel));
+
+            if (nationalityLabel.getBytes().length > longestNationalityLabelBytes)
+                longestNationalityLabelBytes = nationalityLabel.getBytes().length;
+
+            thumbnail = cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.Thumbnail));
+
+            if (thumbnail.getBytes().length > longestThumbnailBytes)
+                longestThumbnailBytes = thumbnail.getBytes().length;
+
+            description = cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.Description));
+
+            if (description.getBytes().length > longestDescriptionBytes)
+                longestDescriptionBytes = description.getBytes().length;
 
             records.add(new Record(personName, birthDate, birthPlaceLabel,
                     deathDate, fieldLabel, genreLabel, instrumentLabel,
                     nationalityLabel, thumbnail, wikiPageID, description
             ));
         }
+
+        System.out.println("-- STATS --");
+        System.out.println("Invalid BirthDates: " + invalidBirthDates);
+        System.out.println("Invalid DeathDates: " + invalidDeathDates);
+        System.out.println("Longest BirthPlaceLabel (bytes): " + longestBirthPlaceLabelBytes);
+        System.out.println("Longest fieldLabel (bytes): " + longesFieldLabelBytes);
+        System.out.println("Longest genreLabel (bytes): " + longestGenreLabelBytes);
+        System.out.println("Longest instrumentLabel (bytes): " + longestInstrumentLabelBytes);
+        System.out.println("Longest nationalityLabel (bytes): " + longestNationalityLabelBytes);
+        System.out.println("Longest thumbnail (bytes): " + longestThumbnailBytes);
+        System.out.println("Longest description (bytes): " + longestDescriptionBytes);
 
         return records;
     }
