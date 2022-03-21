@@ -4,30 +4,33 @@
 
 import java.io.*;
 import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class CSVToRecordConverter {
 
     Map<String, Integer> fieldToIndex;
 
-    public CSVToRecordConverter(List<List<String>> csvContents) {
+    public CSVToRecordConverter() {
         // All field names
         fieldToIndex = new HashMap<String, Integer>();
-        fieldToIndex.put(RecordHeaderSchema.PersonName,         -1);
-        fieldToIndex.put(RecordHeaderSchema.BirthDate,          -1);
-        fieldToIndex.put(RecordHeaderSchema.BirthPlaceLabel,    -1);
-        fieldToIndex.put(RecordHeaderSchema.DeathDate,          -1);
-        fieldToIndex.put(RecordHeaderSchema.FieldLabel,         -1);
-        fieldToIndex.put(RecordHeaderSchema.GenreLabel,         -1);
-        fieldToIndex.put(RecordHeaderSchema.InstrumentLabel,    -1);
-        fieldToIndex.put(RecordHeaderSchema.NationalityLabel,   -1);
-        fieldToIndex.put(RecordHeaderSchema.Thumbnail,          -1);
-        fieldToIndex.put(RecordHeaderSchema.WikiPageID,         -1);
-        fieldToIndex.put(RecordHeaderSchema.Description,        -1);
+        fieldToIndex.put(RecordHeaderSchema.PersonName, -1);
+        fieldToIndex.put(RecordHeaderSchema.BirthDate, -1);
+        fieldToIndex.put(RecordHeaderSchema.BirthPlaceLabel, -1);
+        fieldToIndex.put(RecordHeaderSchema.DeathDate, -1);
+        fieldToIndex.put(RecordHeaderSchema.FieldLabel, -1);
+        fieldToIndex.put(RecordHeaderSchema.GenreLabel, -1);
+        fieldToIndex.put(RecordHeaderSchema.InstrumentLabel, -1);
+        fieldToIndex.put(RecordHeaderSchema.NationalityLabel, -1);
+        fieldToIndex.put(RecordHeaderSchema.Thumbnail, -1);
+        fieldToIndex.put(RecordHeaderSchema.WikiPageID, -1);
+        fieldToIndex.put(RecordHeaderSchema.Description, -1);
     }
 
     /**
      * Given a CSV file, converts the provided data to a list of Record Objects
+     *
      * @param fileName - filename of CSV file
      * @return - List of Record Objects
      */
@@ -38,6 +41,7 @@ public class CSVToRecordConverter {
     /**
      * Converts CSV file to list of rows, seperated by tokens
      * Credit: https://www.baeldung.com/java-csv-file-array
+     *
      * @param fileName - csv filename
      * @return - List of CSV Rows that are also lists seperated by tokens
      */
@@ -46,10 +50,14 @@ public class CSVToRecordConverter {
         FileReader fileReader = new FileReader(fileName);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
 
+        System.out.println("1. Reading In File: " + fileName + "...");
+
         // Loop through file reading lines of the csv
         String currentLine;
-        while((currentLine = bufferedReader.readLine()) != null) {
+        while ((currentLine = bufferedReader.readLine()) != null) {
             String[] contents = currentLine.split(",");
+
+            contents = stripQuotes(contents);
             // Add list of tokens as an element of greater 'csvContents' list
             csvContents.add(Arrays.asList(contents));
         }
@@ -57,7 +65,21 @@ public class CSVToRecordConverter {
     }
 
     /**
+     * Removes all quotes from all elements of content
+     *
+     * @param content
+     * @return modified content
+     */
+    private String[] stripQuotes(String[] content) {
+        for (int i = 0; i < content.length; i++) {
+            content[i] = content[i].replaceAll("\"", "");
+        }
+        return content;
+    }
+
+    /**
      * Removes unused fields from list of rows of tokens
+     *
      * @param csvContents - list of rows of tokens from CSV
      * @return - list of rows of tokens without unused fields
      */
@@ -65,6 +87,8 @@ public class CSVToRecordConverter {
         // We know row 0 is header
         // Rows 1,2,3 are useless and can be deleted
         // Rows 4-X are data and need to be pruned to only include the fields we need
+
+        System.out.println("2. Cleaning Data...");
 
         // Ensure CSV file has all fieldnames
         if (!findAllHeaders(csvContents.get(0)))
@@ -92,6 +116,7 @@ public class CSVToRecordConverter {
     /**
      * Searches CSV contents first element in list for all headers and
      * populates 'fieldToIndex' to point to where field names are in row
+     *
      * @return - Whether successful in finding all field headers
      */
     private boolean findAllHeaders(List<String> headerRow) {
@@ -111,6 +136,7 @@ public class CSVToRecordConverter {
 
     /**
      * Converts from list of rows of tokens without unused fields to Record objects
+     *
      * @param cleanedCsvContents - list of rows of tokens without unused fields
      * @return - List of Record Objects
      */
@@ -118,9 +144,9 @@ public class CSVToRecordConverter {
         List<Record> records = new ArrayList<>();
 
         String personName;
-        Date birthDate;
+        LocalDate birthDate;
         String birthPlaceLabel;
-        Date deathDate;
+        LocalDate deathDate;
         String fieldLabel;
         String genreLabel;
         String instrumentLabel;
@@ -129,28 +155,47 @@ public class CSVToRecordConverter {
         int wikiPageID;
         String description;
 
+        System.out.println("3. Converting Data to Records...");
+
         for (int i = 0; i < cleanedCsvContents.size(); i++) {
-            for (int j = 0; j < cleanedCsvContents.get(0).size(); j++) {
 
-                personName = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.PersonName));
-                birthDate = new Date(cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.BirthDate)));
-                birthPlaceLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.BirthPlaceLabel));
-                deathDate = new Date(cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.DeathDate)));
-                fieldLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.FieldLabel));
-                genreLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.GenreLabel));
-                instrumentLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.InstrumentLabel));
-                nationalityLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.NationalityLabel));
-                thumbnail = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.Thumbnail));
-                wikiPageID = Integer.parseInt(cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.WikiPageID)));
-                description = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.Description));
+            personName = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.PersonName));
 
-
-                records.add(new Record(personName, birthDate, birthPlaceLabel,
-                        deathDate, fieldLabel, genreLabel, instrumentLabel,
-                        nationalityLabel, thumbnail, wikiPageID, description
-                ));
-
+            // Handle Dates
+            try {
+                birthDate = LocalDate.parse(cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.BirthDate)));
+            } catch (DateTimeParseException e) {
+                birthDate = LocalDate.MAX;
             }
+
+            try {
+                deathDate = LocalDate.parse(cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.DeathDate)));
+            } catch (DateTimeParseException e) {
+                deathDate = LocalDate.MAX;
+            }
+
+            // Handle Integers
+            try {
+                wikiPageID = Integer.parseInt(cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.WikiPageID)));
+            } catch (NumberFormatException e) {
+                wikiPageID = Integer.MAX_VALUE;
+            }
+
+
+            birthPlaceLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.BirthPlaceLabel));
+            fieldLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.FieldLabel));
+            genreLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.GenreLabel));
+            instrumentLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.InstrumentLabel));
+            nationalityLabel = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.NationalityLabel));
+            thumbnail = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.Thumbnail));
+
+            description = cleanedCsvContents.get(i).get(fieldToIndex.get(RecordHeaderSchema.Description));
+
+
+            records.add(new Record(personName, birthDate, birthPlaceLabel,
+                    deathDate, fieldLabel, genreLabel, instrumentLabel,
+                    nationalityLabel, thumbnail, wikiPageID, description
+            ));
         }
 
         return records;

@@ -2,6 +2,7 @@
  * Copyright (c) 2022. Daniel Atanasovski.
  */
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -11,9 +12,9 @@ public class Record {
 
     // Data Fields
     private String personName;
-    private Date birthDate;
+    private LocalDate birthDate;
     private String birthPlaceLabel;
-    private Date deathDate;
+    private LocalDate deathDate;
     private String fieldLabel;
     private String genreLabel;
     private String instrumentLabel;
@@ -22,7 +23,7 @@ public class Record {
     private int wikiPageID;
     private String description;
 
-    public Record(String personName, Date birthDate, String birthPlaceLabel, Date deathDate, String fieldLabel,
+    public Record(String personName, LocalDate birthDate, String birthPlaceLabel, LocalDate deathDate, String fieldLabel,
                   String genreLabel, String instrumentLabel, String nationalityLabel,
                   String thumbnail, int wikiPageID, String description) {
         this.personName = personName;
