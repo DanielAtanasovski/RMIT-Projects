@@ -82,6 +82,8 @@ public class CSVToRecordConverter {
      * @return - list of rows of tokens without unused fields
      */
     private List<List<String>> cleanData(List<List<String>> csvContents) throws IOException {
+//        List<List<String>> modifiableList = new LinkedList<>();
+
         // We know row 0 is header
         // Rows 1,2,3 are useless and can be deleted
         // Rows 4-X are data and need to be pruned to only include the fields we need
@@ -103,10 +105,17 @@ public class CSVToRecordConverter {
 //        for (int row = 0; row < csvContents.size(); row++) {
 //            for (int token = csvContents.get(row).size(); token-- > 0; ) {
 //                String content = csvContents.get(row).get(token);
-//                if (!fieldToIndex.containsKey(content))
+//                if (!fieldToIndex.containsValue(token)){
 //                    csvContents.get(row).remove(token);
+//                    System.out.println("REMOVE: " + content);
+//                }
 //            }
+//
 //        }
+//
+//        // Ensure CSV file has all fieldnames
+//        if (!findAllHeaders(csvContents.get(0)))
+//            throw new IOException("Invalid CSV File!");
 
         return csvContents;
     }
@@ -121,8 +130,11 @@ public class CSVToRecordConverter {
         // Find field name locations
         for (int i = 0; i < headerRow.size(); i++) {
             String content = headerRow.get(i);
-            if (fieldToIndex.containsKey(content))
+            if (fieldToIndex.containsKey(content)) {
+                System.out.println(content + ", i: " + i);
                 fieldToIndex.put(content, i);
+            }
+
         }
 
         // Check if all are found
@@ -154,18 +166,24 @@ public class CSVToRecordConverter {
 
         int invalidBirthDates = 0;
         int invalidDeathDates = 0;
+        int longestPersonNameBytes = 0;
         int longestBirthPlaceLabelBytes = 0;
-        int longesFieldLabelBytes = 0;
+        int longestFieldLabelBytes = 0;
         int longestGenreLabelBytes = 0;
         int longestInstrumentLabelBytes = 0;
+        String longestGenre = "";
+        int debugRow = 0;
         int longestNationalityLabelBytes = 0;
         int longestThumbnailBytes = 0;
         int longestDescriptionBytes = 0;
 
 
-        for (List<String> cleanedCsvContent : cleanedCsvContents) {
+        for (int i = 0; i < cleanedCsvContents.size(); i++) {
+            List<String> cleanedCsvContent = cleanedCsvContents.get(i);
 
             personName = cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.PersonName));
+            if (personName.getBytes().length > longestPersonNameBytes)
+                longestPersonNameBytes = personName.getBytes().length;
 
             // Handle Dates
             try {
@@ -197,18 +215,24 @@ public class CSVToRecordConverter {
 
             fieldLabel = cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.FieldLabel));
 
-            if (fieldLabel.getBytes().length > longesFieldLabelBytes)
-                longesFieldLabelBytes = fieldLabel.getBytes().length;
+            if (fieldLabel.getBytes().length > longestFieldLabelBytes)
+                longestFieldLabelBytes = fieldLabel.getBytes().length;
 
             genreLabel = cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.GenreLabel));
 
-            if (genreLabel.getBytes().length > longestGenreLabelBytes)
+            if (genreLabel.getBytes().length > longestGenreLabelBytes) {
                 longestGenreLabelBytes = genreLabel.getBytes().length;
+                longestGenre = genreLabel;
+                debugRow = i;
+            }
+
 
             instrumentLabel = cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.InstrumentLabel));
 
-            if (genreLabel.getBytes().length > longestInstrumentLabelBytes)
-                longestInstrumentLabelBytes = genreLabel.getBytes().length;
+            if (instrumentLabel.getBytes().length > longestInstrumentLabelBytes) {
+                longestInstrumentLabelBytes = instrumentLabel.getBytes().length;
+            }
+
 
             nationalityLabel = cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.NationalityLabel));
 
@@ -234,9 +258,12 @@ public class CSVToRecordConverter {
         System.out.println("-- STATS --");
         System.out.println("Invalid BirthDates: " + invalidBirthDates);
         System.out.println("Invalid DeathDates: " + invalidDeathDates);
-        System.out.println("Longest BirthPlaceLabel (bytes): " + longestBirthPlaceLabelBytes);
-        System.out.println("Longest fieldLabel (bytes): " + longesFieldLabelBytes);
+        System.out.println("Longest personName (bytes): " + longestPersonNameBytes);
+        System.out.println("Longest birthPlaceLabel (bytes): " + longestBirthPlaceLabelBytes);
+        System.out.println("Longest fieldLabel (bytes): " + longestFieldLabelBytes);
         System.out.println("Longest genreLabel (bytes): " + longestGenreLabelBytes);
+        System.out.println("Longest GenreLabel: " + longestGenre);
+        System.out.println("Longest row: " + debugRow);
         System.out.println("Longest instrumentLabel (bytes): " + longestInstrumentLabelBytes);
         System.out.println("Longest nationalityLabel (bytes): " + longestNationalityLabelBytes);
         System.out.println("Longest thumbnail (bytes): " + longestThumbnailBytes);
