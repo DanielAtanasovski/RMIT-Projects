@@ -2,7 +2,9 @@
  * Copyright (c) 2022. Daniel Atanasovski.
  */
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.*;
@@ -131,10 +133,8 @@ public class CSVToRecordConverter {
         for (int i = 0; i < headerRow.size(); i++) {
             String content = headerRow.get(i);
             if (fieldToIndex.containsKey(content)) {
-                System.out.println(content + ", i: " + i);
                 fieldToIndex.put(content, i);
             }
-
         }
 
         // Check if all are found
@@ -255,19 +255,19 @@ public class CSVToRecordConverter {
             ));
         }
 
-        System.out.println("-- STATS --");
-        System.out.println("Invalid BirthDates: " + invalidBirthDates);
-        System.out.println("Invalid DeathDates: " + invalidDeathDates);
-        System.out.println("Longest personName (bytes): " + longestPersonNameBytes);
-        System.out.println("Longest birthPlaceLabel (bytes): " + longestBirthPlaceLabelBytes);
-        System.out.println("Longest fieldLabel (bytes): " + longestFieldLabelBytes);
-        System.out.println("Longest genreLabel (bytes): " + longestGenreLabelBytes);
-        System.out.println("Longest GenreLabel: " + longestGenre);
-        System.out.println("Longest row: " + debugRow);
-        System.out.println("Longest instrumentLabel (bytes): " + longestInstrumentLabelBytes);
-        System.out.println("Longest nationalityLabel (bytes): " + longestNationalityLabelBytes);
-        System.out.println("Longest thumbnail (bytes): " + longestThumbnailBytes);
-        System.out.println("Longest description (bytes): " + longestDescriptionBytes);
+//        System.out.println("-- STATS --");
+//        System.out.println("Invalid BirthDates: " + invalidBirthDates);
+//        System.out.println("Invalid DeathDates: " + invalidDeathDates);
+//        System.out.println("Longest personName (bytes): " + longestPersonNameBytes);
+//        System.out.println("Longest birthPlaceLabel (bytes): " + longestBirthPlaceLabelBytes);
+//        System.out.println("Longest fieldLabel (bytes): " + longestFieldLabelBytes);
+//        System.out.println("Longest genreLabel (bytes): " + longestGenreLabelBytes);
+//        System.out.println("Longest GenreLabel: " + longestGenre);
+//        System.out.println("Longest row: " + debugRow);
+//        System.out.println("Longest instrumentLabel (bytes): " + longestInstrumentLabelBytes);
+//        System.out.println("Longest nationalityLabel (bytes): " + longestNationalityLabelBytes);
+//        System.out.println("Longest thumbnail (bytes): " + longestThumbnailBytes);
+//        System.out.println("Longest description (bytes): " + longestDescriptionBytes);
 
         return records;
     }
