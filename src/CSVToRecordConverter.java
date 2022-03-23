@@ -47,9 +47,9 @@ public class CSVToRecordConverter {
      * @return - List of CSV Rows that are also lists seperated by tokens
      */
     private List<List<String>> readCSV(String fileName) throws IOException {
-        List<List<String>> csvContents = new ArrayList<>();
-        FileReader fileReader = new FileReader(fileName);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        List<List<String>> csvContents    = new ArrayList<>();
+        FileReader         fileReader     = new FileReader(fileName);
+        BufferedReader     bufferedReader = new BufferedReader(fileReader);
 
         System.out.println("1. Reading In File: " + fileName + "...");
 
@@ -92,8 +92,6 @@ public class CSVToRecordConverter {
 
         System.out.println("2. Cleaning Data...");
 
-        System.out.println(csvContents.get(0));
-
         // Ensure CSV file has all fieldnames
         if (!findAllHeaders(csvContents.get(0)))
             throw new IOException("Invalid CSV File!");
@@ -104,22 +102,6 @@ public class CSVToRecordConverter {
         csvContents.remove(1);
         // We have found header so no longer need it
         csvContents.remove(0);
-
-        // Loop through all tokens and delete ones that are not necessary
-//        for (int row = 0; row < csvContents.size(); row++) {
-//            for (int token = csvContents.get(row).size(); token-- > 0; ) {
-//                String content = csvContents.get(row).get(token);
-//                if (!fieldToIndex.containsValue(token)){
-//                    csvContents.get(row).remove(token);
-//                    System.out.println("REMOVE: " + content);
-//                }
-//            }
-//
-//        }
-//
-//        // Ensure CSV file has all fieldnames
-//        if (!findAllHeaders(csvContents.get(0)))
-//            throw new IOException("Invalid CSV File!");
 
         return csvContents;
     }
@@ -152,37 +134,35 @@ public class CSVToRecordConverter {
     private List<Record> convertToRecords(List<List<String>> cleanedCsvContents) {
         List<Record> records = new ArrayList<>();
 
-        String personName;
+        String    personName;
         LocalDate birthDate;
-        String birthPlaceLabel;
+        String    birthPlaceLabel;
         LocalDate deathDate;
-        String fieldLabel;
-        String genreLabel;
-        String instrumentLabel;
-        String nationalityLabel;
-        String thumbnail;
-        int wikiPageID;
-        String description;
+        String    fieldLabel;
+        String    genreLabel;
+        String    instrumentLabel;
+        String    nationalityLabel;
+        String    thumbnail;
+        int       wikiPageID;
+        String    description;
 
         System.out.println("3. Converting Data to Records...");
 
-        int invalidBirthDates = 0;
-        int invalidDeathDates = 0;
-        int longestPersonNameBytes = 0;
+//        int    invalidBirthDates            = 0;
+//        int    invalidDeathDates            = 0;
+        int longestPersonNameBytes      = 0;
         int longestBirthPlaceLabelBytes = 0;
-        int longestFieldLabelBytes = 0;
-        int longestGenreLabelBytes = 0;
+        int longestFieldLabelBytes      = 0;
+        int longestGenreLabelBytes      = 0;
         int longestInstrumentLabelBytes = 0;
-        String longestGenre = "";
-        int debugRow = 0;
+//        String longestGenre                 = "";
+//        int    debugRow                     = 0;
         int longestNationalityLabelBytes = 0;
-        int longestThumbnailBytes = 0;
-        int longestDescriptionBytes = 0;
+        int longestThumbnailBytes        = 0;
+        int longestDescriptionBytes      = 0;
 
 
-        for (int i = 0; i < cleanedCsvContents.size(); i++) {
-            List<String> cleanedCsvContent = cleanedCsvContents.get(i);
-
+        for (List<String> cleanedCsvContent : cleanedCsvContents) {
             personName = cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.PersonName));
             if (personName.getBytes().length > longestPersonNameBytes)
                 longestPersonNameBytes = personName.getBytes().length;
@@ -192,14 +172,14 @@ public class CSVToRecordConverter {
                 birthDate = LocalDate.parse(cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.BirthDate)));
             } catch (DateTimeParseException e) {
                 birthDate = LocalDate.MAX;
-                invalidBirthDates++;
+//                invalidBirthDates++;
             }
 
             try {
                 deathDate = LocalDate.parse(cleanedCsvContent.get(fieldToIndex.get(RecordHeaderSchema.DeathDate)));
             } catch (DateTimeParseException e) {
                 deathDate = LocalDate.MAX;
-                invalidDeathDates++;
+//                invalidDeathDates++;
             }
 
             // Handle Integers
@@ -224,8 +204,8 @@ public class CSVToRecordConverter {
 
             if (genreLabel.getBytes().length > longestGenreLabelBytes) {
                 longestGenreLabelBytes = genreLabel.getBytes().length;
-                longestGenre = genreLabel;
-                debugRow = i;
+//                longestGenre = genreLabel;
+//                debugRow = i;
             }
 
 
@@ -252,8 +232,8 @@ public class CSVToRecordConverter {
                 longestDescriptionBytes = description.getBytes().length;
 
             records.add(new Record(personName, birthDate, birthPlaceLabel,
-                    deathDate, fieldLabel, genreLabel, instrumentLabel,
-                    nationalityLabel, thumbnail, wikiPageID, description
+                                   deathDate, fieldLabel, genreLabel, instrumentLabel,
+                                   nationalityLabel, thumbnail, wikiPageID, description
             ));
         }
 

@@ -25,6 +25,7 @@ public class Record {
     private static int maxNationalityLabelBytes = 119;
     private static int maxThumbnailBytes        = 223;
     private static int maxDescriptionBytes      = 466;
+    // 2229 Total Bytes
 
     // Data Fields
     private final byte[]    recordBytes;
@@ -58,6 +59,7 @@ public class Record {
         recordBytes = calculateBytes();
     }
 
+    // Function to modify the maximum bytes of records
     public static void setMaxBytes(int personName, int birthPlace, int fieldLabel, int genreLabel,
                                    int instrumentLabel, int nationalityLabel, int thumbnail, int description) {
         maxPersonNameBytes = personName;
@@ -68,7 +70,6 @@ public class Record {
         maxNationalityLabelBytes = nationalityLabel;
         maxThumbnailBytes = thumbnail;
         maxDescriptionBytes = description;
-
     }
 
     public static int getMaxBytes() {
