@@ -17,29 +17,31 @@ public class Record {
     // If we were to accommodate all data within with longest works
 
     // Theoretical Maximum byte values
-    private static int maxPersonNameBytes = 70;
-    private static int maxBirthPlaceLabelBytes = 158;
-    private static int maxFieldLabelBytes = 242;
-    private static int maxGenreLabelBytes = 386;
-    private static int maxInstrumentLabelBytes = 545;
+    private static int maxPersonNameBytes       = 70;
+    private static int maxBirthPlaceLabelBytes  = 158;
+    private static int maxFieldLabelBytes       = 242;
+    private static int maxGenreLabelBytes       = 386;
+    private static int maxInstrumentLabelBytes  = 545;
     private static int maxNationalityLabelBytes = 119;
-    private static int maxThumbnailBytes = 223;
-    private static int maxDescriptionBytes = 466;
+    private static int maxThumbnailBytes        = 223;
+    private static int maxDescriptionBytes      = 466;
 
     // Data Fields
+    private final byte[]    recordBytes;
     private final LocalDate birthDate; // .toEpochDay 8 bytes
     private final LocalDate deathDate; // .toEpochDay 8 bytes
-    private final int wikiPageID; // 4 bytes
-    private String personName;
-    private String birthPlaceLabel;
-    private String fieldLabel;
-    private String genreLabel;
-    private String instrumentLabel;
-    private String nationalityLabel;
-    private String thumbnail;
-    private String description;
+    private final int       wikiPageID; // 4 bytes
+    private       String    personName;
+    private       String    birthPlaceLabel;
+    private       String    fieldLabel;
+    private       String    genreLabel;
+    private       String    instrumentLabel;
+    private       String    nationalityLabel;
+    private       String    thumbnail;
+    private       String    description;
 
-    public Record(String personName, LocalDate birthDate, String birthPlaceLabel, LocalDate deathDate, String fieldLabel,
+    public Record(String personName, LocalDate birthDate, String birthPlaceLabel, LocalDate deathDate,
+                  String fieldLabel,
                   String genreLabel, String instrumentLabel, String nationalityLabel,
                   String thumbnail, int wikiPageID, String description) {
         this.personName = personName;
@@ -53,6 +55,7 @@ public class Record {
         this.thumbnail = thumbnail;
         this.wikiPageID = wikiPageID;
         this.description = description;
+        recordBytes = calculateBytes();
     }
 
     public static void setMaxBytes(int personName, int birthPlace, int fieldLabel, int genreLabel,
@@ -68,7 +71,13 @@ public class Record {
 
     }
 
-    public byte[] getBytes() {
+    public static int getMaxBytes() {
+        return maxPersonNameBytes + maxBirthPlaceLabelBytes + maxFieldLabelBytes + maxGenreLabelBytes +
+               maxInstrumentLabelBytes + maxNationalityLabelBytes + maxThumbnailBytes + maxDescriptionBytes +
+               Long.BYTES + Long.BYTES + Integer.BYTES;
+    }
+
+    private byte[] calculateBytes() {
         ByteArrayOutputStream recordBytes = new ByteArrayOutputStream();
 
         // Set Strings to Maximum
@@ -107,7 +116,6 @@ public class Record {
 
         // Combine Attributes into byte array
         try {
-            System.out.println();
             recordBytes.write(ByteBuffer.allocate(Long.BYTES).putLong(this.birthDate.toEpochDay()).array());
             recordBytes.write(ByteBuffer.allocate(Long.BYTES).putLong(this.deathDate.toEpochDay()).array());
             recordBytes.write(ByteBuffer.allocate(Integer.BYTES).putInt(this.wikiPageID).array());
@@ -126,20 +134,24 @@ public class Record {
         return recordBytes.toByteArray();
     }
 
+    public byte[] getBytes() {
+        return recordBytes;
+    }
+
     @Override
     public String toString() {
         return "Record{" +
-                "birthDate=" + birthDate +
-                ", deathDate=" + deathDate +
-                ", wikiPageID=" + wikiPageID +
-                ", personName='" + personName + '\'' +
-                ", birthPlaceLabel='" + birthPlaceLabel + '\'' +
-                ", fieldLabel='" + fieldLabel + '\'' +
-                ", genreLabel='" + genreLabel + '\'' +
-                ", instrumentLabel='" + instrumentLabel + '\'' +
-                ", nationalityLabel='" + nationalityLabel + '\'' +
-                ", thumbnail='" + thumbnail + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+               "birthDate=" + birthDate +
+               ", deathDate=" + deathDate +
+               ", wikiPageID=" + wikiPageID +
+               ", personName='" + personName + '\'' +
+               ", birthPlaceLabel='" + birthPlaceLabel + '\'' +
+               ", fieldLabel='" + fieldLabel + '\'' +
+               ", genreLabel='" + genreLabel + '\'' +
+               ", instrumentLabel='" + instrumentLabel + '\'' +
+               ", nationalityLabel='" + nationalityLabel + '\'' +
+               ", thumbnail='" + thumbnail + '\'' +
+               ", description='" + description + '\'' +
+               '}';
     }
 }
