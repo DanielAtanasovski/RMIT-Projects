@@ -92,6 +92,8 @@ public class CSVToRecordConverter {
 
         System.out.println("2. Cleaning Data...");
 
+        System.out.println(csvContents.get(0));
+
         // Ensure CSV file has all fieldnames
         if (!findAllHeaders(csvContents.get(0)))
             throw new IOException("Invalid CSV File!");

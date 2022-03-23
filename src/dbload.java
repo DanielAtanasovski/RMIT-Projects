@@ -14,7 +14,7 @@ public class dbload {
         CSVToRecordConverter csvToRecordConverter = new CSVToRecordConverter();
 
         int pageSize = 4096;
-        String fileName = "artist.csv";
+        String fileName = "artist_processed.csv";
 
         if (args.length == 3) {
             // full args
@@ -44,7 +44,7 @@ public class dbload {
 //        System.out.println(records.get(0).toString());
 //        System.out.println(Arrays.toString(records.get(0).getBytes()));
 
-        try (FileOutputStream fos = new FileOutputStream("test.one")) {
+        try (FileOutputStream fos = new FileOutputStream("HeapFile.4096")) {
             fos.write(records.get(0).getBytes());
 
         } catch (FileNotFoundException e) {
