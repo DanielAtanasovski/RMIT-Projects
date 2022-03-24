@@ -13,6 +13,9 @@ public class CSVToRecordConverter {
 
     Map<String, Integer> fieldToIndex;
 
+    long cleanTimeTaken = 0L;
+    long convertingTimeTaken = 0L;
+
     public CSVToRecordConverter() {
         // All field names
         fieldToIndex = new HashMap<>();
@@ -27,6 +30,14 @@ public class CSVToRecordConverter {
         fieldToIndex.put(RecordHeaderSchema.Thumbnail, -1);
         fieldToIndex.put(RecordHeaderSchema.WikiPageID, -1);
         fieldToIndex.put(RecordHeaderSchema.Description, -1);
+    }
+
+    public long getCleanTimeTaken() {
+        return cleanTimeTaken;
+    }
+
+    public long getConvertingTimeTaken() {
+        return convertingTimeTaken;
     }
 
     /**
@@ -84,7 +95,7 @@ public class CSVToRecordConverter {
      * @return - list of rows of tokens without unused fields
      */
     private List<List<String>> cleanData(List<List<String>> csvContents) throws IOException {
-//        List<List<String>> modifiableList = new LinkedList<>();
+        long startTime = System.nanoTime();
 
         // We know row 0 is header
         // Rows 1,2,3 are useless and can be deleted
@@ -103,6 +114,7 @@ public class CSVToRecordConverter {
         // We have found header so no longer need it
         csvContents.remove(0);
 
+        cleanTimeTaken = System.nanoTime() - startTime;
         return csvContents;
     }
 
@@ -134,6 +146,7 @@ public class CSVToRecordConverter {
     private List<Record> convertToRecords(List<List<String>> cleanedCsvContents) {
         List<Record> records = new ArrayList<>();
 
+
         String    personName;
         LocalDate birthDate;
         String    birthPlaceLabel;
@@ -147,7 +160,7 @@ public class CSVToRecordConverter {
         String    description;
 
         System.out.println("3. Converting Data to Records...");
-
+        long startTime = System.nanoTime();
 //        int    invalidBirthDates            = 0;
 //        int    invalidDeathDates            = 0;
         int longestPersonNameBytes      = 0;
@@ -251,6 +264,7 @@ public class CSVToRecordConverter {
 //        System.out.println("Longest thumbnail (bytes): " + longestThumbnailBytes);
 //        System.out.println("Longest description (bytes): " + longestDescriptionBytes);
 
+        convertingTimeTaken = System.nanoTime() - startTime;
         return records;
     }
 }
