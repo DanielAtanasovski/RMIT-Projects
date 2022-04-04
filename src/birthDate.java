@@ -67,6 +67,7 @@ public class birthDate {
         int    bytesRead      = 0;
         int    records        = 0;
         int    recordsMatched = 0;
+        long   startTime      = System.nanoTime();
 
         try {
             while ((bytesRead = heapFile.read(pageBytes)) != -1) {
@@ -81,19 +82,20 @@ public class birthDate {
                     if (currentRecord.getBirthDate().isAfter(fromDate) &&
                         currentRecord.getBirthDate().isBefore(toDate)) {
                         recordsMatched++;
-                        System.out.println("Record Exists between dates! " + currentRecord.getPersonName());
+                        System.out.println("Result: " + currentRecord.getPersonName() + " | " +
+                                           currentRecord.getBirthDate().toString());
                     }
                     records += 1;
                 }
-
             }
 
         } catch (IOException e) {
             System.out.println("Failed to read Heap File");
+            return;
         }
 
-        System.out.println("Out of " + records + ", only " + recordsMatched + " records matched the query.");
-//        System.out.println(pageBytes.toString());
-
+        long finalTime = System.nanoTime() - startTime;
+        System.out.println("Out of " + records + " records, only " + recordsMatched + " matched the query.");
+        System.out.println("Query took " + ((double) finalTime / 1_000_000_000) + " Seconds.");
     }
 }
