@@ -78,7 +78,7 @@ public class CSVToRecordConverter {
         // Loop through file reading lines of the csv
         String currentLine;
         while ((currentLine = bufferedReader.readLine()) != null) {
-            String[] contents = stripQuotes(currentLine.split(","));
+            String[] contents = stripQuotes(currentLine.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1));
 
             // Add list of tokens as an element of greater 'csvContents' list
             csvContents.add(Arrays.asList(contents));
@@ -283,7 +283,9 @@ public class CSVToRecordConverter {
                 for (int j = 0; j < recordsPerPage; j++) {
                     int index = i + j;
 
-                    System.arraycopy(createRecord(cleanedCsvContents.get(index)).getBytes(), 0, page,
+                    Record record = createRecord(cleanedCsvContents.get(index));
+
+                    System.arraycopy(record.getBytes(), 0, page,
                                      j * Record.getMaxBytes(),
                                      Record.getMaxBytes());
                 }

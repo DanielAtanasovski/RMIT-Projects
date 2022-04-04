@@ -147,6 +147,10 @@ public class Record {
         return this.personName.trim();
     }
 
+    public String getThumbnail() {
+        return thumbnail.trim();
+    }
+
     private byte[] calculateBytes() {
         ByteArrayOutputStream recordBytes = new ByteArrayOutputStream();
 
