@@ -1,5 +1,6 @@
 # Copyright 2022 Daniel Atanasovski
 # Note: Header row is removed at end of preprocessing
+from csv import QUOTE_ALL
 import pandas as pd
 
 print("Beginning Pre-Processing...")
@@ -15,6 +16,7 @@ csv = pd.read_csv("artist.csv", usecols=keep_columns)
 # Keep null values as 'NULL'
 csv.fillna("NULL", inplace=True)
 # Export modifed csv
-csv.to_csv("artist_processed.csv", index=False, header=True)
+csv.to_csv("artist_processed.csv", index=False,
+           header=True, quotechar='"', quoting=QUOTE_ALL)
 
 print("Pre-Processing Done!")
