@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -26,6 +27,8 @@ public class Record {
     private static int maxThumbnailBytes        = 223;
     private static int maxDescriptionBytes      = 466;
     // 2229 Total Bytes
+
+    private static String nullTerminator = "\u0000";
 
     // Data Fields
     private final byte[]    recordBytes;
@@ -59,6 +62,60 @@ public class Record {
         recordBytes = calculateBytes();
     }
 
+    public Record(byte[] inputBytes) {
+        int offset = 0;
+
+        // Dates
+        ByteBuffer byteBuffer = ByteBuffer.wrap(inputBytes, 0, Long.BYTES);
+        this.birthDate = LocalDate.ofEpochDay(byteBuffer.getLong());
+        offset += Long.BYTES;
+
+        byteBuffer = ByteBuffer.wrap(inputBytes, offset, Long.BYTES);
+        this.deathDate = LocalDate.ofEpochDay(byteBuffer.getLong());
+        offset += Long.BYTES;
+
+        // WikiPageID
+        byteBuffer = ByteBuffer.wrap(inputBytes, offset, Integer.BYTES);
+        this.wikiPageID = byteBuffer.getInt();
+        offset += Integer.BYTES;
+
+        // Strings
+        byteBuffer = ByteBuffer.wrap(inputBytes, offset, maxPersonNameBytes);
+        byte[] bytes = Arrays.copyOfRange(byteBuffer.array(), byteBuffer.position(), byteBuffer.remaining());
+        this.personName = new String(bytes).trim();
+        offset += maxPersonNameBytes;
+
+        byteBuffer = ByteBuffer.wrap(inputBytes, offset, maxBirthPlaceLabelBytes);
+        this.birthPlaceLabel = new String(byteBuffer.array());
+        offset += maxBirthPlaceLabelBytes;
+
+        byteBuffer = ByteBuffer.wrap(inputBytes, offset, maxFieldLabelBytes);
+        this.fieldLabel = new String(byteBuffer.array());
+        offset += maxFieldLabelBytes;
+
+        byteBuffer = ByteBuffer.wrap(inputBytes, offset, maxGenreLabelBytes);
+        this.genreLabel = new String(byteBuffer.array());
+        offset += maxGenreLabelBytes;
+
+        byteBuffer = ByteBuffer.wrap(inputBytes, offset, maxInstrumentLabelBytes);
+        this.instrumentLabel = new String(byteBuffer.array());
+        offset += maxInstrumentLabelBytes;
+
+        byteBuffer = ByteBuffer.wrap(inputBytes, offset, maxNationalityLabelBytes);
+        this.nationalityLabel = new String(byteBuffer.array());
+        offset += maxNationalityLabelBytes;
+
+        byteBuffer = ByteBuffer.wrap(inputBytes, offset, maxThumbnailBytes);
+        this.thumbnail = new String(byteBuffer.array());
+        offset += maxThumbnailBytes;
+
+        byteBuffer = ByteBuffer.wrap(inputBytes, offset, maxDescriptionBytes);
+        this.description = new String(byteBuffer.array());
+        offset += maxDescriptionBytes;
+
+        recordBytes = calculateBytes();
+    }
+
     // Function to modify the maximum bytes of records
     public static void setMaxBytes(int personName, int birthPlace, int fieldLabel, int genreLabel,
                                    int instrumentLabel, int nationalityLabel, int thumbnail, int description) {
@@ -78,41 +135,56 @@ public class Record {
                Long.BYTES + Long.BYTES + Integer.BYTES;
     }
 
+    public LocalDate getBirthDate() {
+        return this.birthDate;
+    }
+
+    public int getWikiPageID() {
+        return wikiPageID;
+    }
+
+    public String getPersonName() {
+        return this.personName.trim();
+    }
+
     private byte[] calculateBytes() {
         ByteArrayOutputStream recordBytes = new ByteArrayOutputStream();
 
         // Set Strings to Maximum
         if (this.personName.getBytes(StandardCharsets.UTF_8).length < maxPersonNameBytes)
             this.personName = this.personName + String.join("", Collections.nCopies(
-                    maxPersonNameBytes - this.personName.getBytes(StandardCharsets.UTF_8).length, " "));
+                    maxPersonNameBytes - this.personName.getBytes(StandardCharsets.UTF_8).length, nullTerminator));
 
         if (this.birthPlaceLabel.getBytes(StandardCharsets.UTF_8).length < maxBirthPlaceLabelBytes)
             this.birthPlaceLabel = this.birthPlaceLabel + String.join("", Collections.nCopies(
-                    maxBirthPlaceLabelBytes - this.birthPlaceLabel.getBytes(StandardCharsets.UTF_8).length, " "));
+                    maxBirthPlaceLabelBytes - this.birthPlaceLabel.getBytes(StandardCharsets.UTF_8).length,
+                    nullTerminator));
 
         if (this.fieldLabel.getBytes(StandardCharsets.UTF_8).length < maxFieldLabelBytes)
             this.fieldLabel = this.fieldLabel + String.join("", Collections.nCopies(
-                    maxFieldLabelBytes - this.fieldLabel.getBytes(StandardCharsets.UTF_8).length, " "));
+                    maxFieldLabelBytes - this.fieldLabel.getBytes(StandardCharsets.UTF_8).length, nullTerminator));
 
         if (this.genreLabel.getBytes(StandardCharsets.UTF_8).length < maxGenreLabelBytes)
             this.genreLabel = this.genreLabel + String.join("", Collections.nCopies(
-                    maxGenreLabelBytes - this.genreLabel.getBytes(StandardCharsets.UTF_8).length, " "));
+                    maxGenreLabelBytes - this.genreLabel.getBytes(StandardCharsets.UTF_8).length, nullTerminator));
 
         if (this.instrumentLabel.getBytes(StandardCharsets.UTF_8).length < maxInstrumentLabelBytes)
             this.instrumentLabel = this.instrumentLabel + String.join("", Collections.nCopies(
-                    maxInstrumentLabelBytes - this.instrumentLabel.getBytes(StandardCharsets.UTF_8).length, " "));
+                    maxInstrumentLabelBytes - this.instrumentLabel.getBytes(StandardCharsets.UTF_8).length,
+                    nullTerminator));
 
         if (this.nationalityLabel.getBytes(StandardCharsets.UTF_8).length < maxNationalityLabelBytes)
             this.nationalityLabel = this.nationalityLabel + String.join("", Collections.nCopies(
-                    maxNationalityLabelBytes - this.nationalityLabel.getBytes(StandardCharsets.UTF_8).length, " "));
+                    maxNationalityLabelBytes - this.nationalityLabel.getBytes(StandardCharsets.UTF_8).length,
+                    nullTerminator));
 
         if (this.thumbnail.getBytes(StandardCharsets.UTF_8).length < maxThumbnailBytes)
             this.thumbnail = this.thumbnail + String.join("", Collections.nCopies(
-                    maxThumbnailBytes - this.thumbnail.getBytes(StandardCharsets.UTF_8).length, " "));
+                    maxThumbnailBytes - this.thumbnail.getBytes(StandardCharsets.UTF_8).length, nullTerminator));
 
         if (this.description.getBytes(StandardCharsets.UTF_8).length < maxDescriptionBytes)
             this.description = this.description + String.join("", Collections.nCopies(
-                    maxDescriptionBytes - this.description.getBytes(StandardCharsets.UTF_8).length, " "));
+                    maxDescriptionBytes - this.description.getBytes(StandardCharsets.UTF_8).length, nullTerminator));
 
 
         // Combine Attributes into byte array
