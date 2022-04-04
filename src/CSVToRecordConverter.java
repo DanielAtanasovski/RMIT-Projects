@@ -3,6 +3,7 @@
  */
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ public class CSVToRecordConverter {
 
     Map<String, Integer> fieldToIndex;
 
-    long cleanTimeTaken = 0L;
+    long cleanTimeTaken      = 0L;
     long convertingTimeTaken = 0L;
 
     public CSVToRecordConverter() {
@@ -48,6 +49,16 @@ public class CSVToRecordConverter {
      */
     public List<Record> convert(String fileName) throws IOException {
         return convertToRecords(cleanData(readCSV(fileName)));
+    }
+
+    /**
+     * Given a CSV file, converts the provided data to a heapFile
+     *
+     * @param fileName - filename of CSV file
+     * @return - void
+     */
+    public void convertAndOutput(String fileName, int pageSize) throws IOException {
+        convertToRecordsAndOutput(cleanData(readCSV(fileName)), pageSize);
     }
 
     /**
@@ -249,22 +260,89 @@ public class CSVToRecordConverter {
                                    nationalityLabel, thumbnail, wikiPageID, description
             ));
         }
-
-//        System.out.println("-- STATS --");
-//        System.out.println("Invalid BirthDates: " + invalidBirthDates);
-//        System.out.println("Invalid DeathDates: " + invalidDeathDates);
-//        System.out.println("Longest personName (bytes): " + longestPersonNameBytes);
-//        System.out.println("Longest birthPlaceLabel (bytes): " + longestBirthPlaceLabelBytes);
-//        System.out.println("Longest fieldLabel (bytes): " + longestFieldLabelBytes);
-//        System.out.println("Longest genreLabel (bytes): " + longestGenreLabelBytes);
-//        System.out.println("Longest GenreLabel: " + longestGenre);
-//        System.out.println("Longest row: " + debugRow);
-//        System.out.println("Longest instrumentLabel (bytes): " + longestInstrumentLabelBytes);
-//        System.out.println("Longest nationalityLabel (bytes): " + longestNationalityLabelBytes);
-//        System.out.println("Longest thumbnail (bytes): " + longestThumbnailBytes);
-//        System.out.println("Longest description (bytes): " + longestDescriptionBytes);
-
         convertingTimeTaken = System.nanoTime() - startTime;
         return records;
+    }
+
+    private void convertToRecordsAndOutput(List<List<String>> cleanedCsvContents, int pageSize) {
+        System.out.println("Records Byte Size: " + Record.getMaxBytes());
+        System.out.println("3. Converting Data to Records and Building Heap of pageSize " + pageSize + " ...");
+        long startTime = System.nanoTime();
+
+        // File
+        // Output Records to HeapFile
+        int recordsPerPage = Math.floorDiv(pageSize, Record.getMaxBytes());
+        int pageCount      = 0;
+
+        try (FileOutputStream fos = new FileOutputStream("heap." + pageSize)) {
+            // Go through all records, at records per page increments
+            for (int i = 0; i < cleanedCsvContents.size(); i += recordsPerPage) {
+                pageCount++;
+                // Align records after one another
+                byte[] page = new byte[pageSize];
+                for (int j = 0; j < recordsPerPage; j++) {
+                    int index = i + j;
+
+                    System.arraycopy(createRecord(cleanedCsvContents.get(index)).getBytes(), 0, page,
+                                     j * Record.getMaxBytes(),
+                                     Record.getMaxBytes());
+                }
+                // Write Page
+                fos.write(page);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("HeapFile Page Count: " + pageCount);
+        convertingTimeTaken = System.nanoTime() - startTime;
+    }
+
+    private Record createRecord(List<String> content) {
+        String    personName;
+        LocalDate birthDate;
+        String    birthPlaceLabel;
+        LocalDate deathDate;
+        String    fieldLabel;
+        String    genreLabel;
+        String    instrumentLabel;
+        String    nationalityLabel;
+        String    thumbnail;
+        int       wikiPageID;
+        String    description;
+
+        // Handle Dates
+        try {
+            birthDate = LocalDate.parse(content.get(fieldToIndex.get(RecordHeaderSchema.BirthDate)));
+        } catch (DateTimeParseException e) {
+            birthDate = LocalDate.MAX;
+        }
+
+        try {
+            deathDate = LocalDate.parse(content.get(fieldToIndex.get(RecordHeaderSchema.DeathDate)));
+        } catch (DateTimeParseException e) {
+            deathDate = LocalDate.MAX;
+        }
+
+        // Handle Integers
+        try {
+            wikiPageID = Integer.parseInt(content.get(fieldToIndex.get(RecordHeaderSchema.WikiPageID)));
+        } catch (NumberFormatException e) {
+            wikiPageID = Integer.MAX_VALUE;
+        }
+
+        personName = content.get(fieldToIndex.get(RecordHeaderSchema.PersonName));
+        birthPlaceLabel = content.get(fieldToIndex.get(RecordHeaderSchema.BirthPlaceLabel));
+        fieldLabel = content.get(fieldToIndex.get(RecordHeaderSchema.FieldLabel));
+        genreLabel = content.get(fieldToIndex.get(RecordHeaderSchema.GenreLabel));
+        instrumentLabel = content.get(fieldToIndex.get(RecordHeaderSchema.InstrumentLabel));
+        nationalityLabel = content.get(fieldToIndex.get(RecordHeaderSchema.NationalityLabel));
+        thumbnail = content.get(fieldToIndex.get(RecordHeaderSchema.Thumbnail));
+        description = content.get(fieldToIndex.get(RecordHeaderSchema.Description));
+
+        return new Record(personName, birthDate, birthPlaceLabel,
+                          deathDate, fieldLabel, genreLabel, instrumentLabel,
+                          nationalityLabel, thumbnail, wikiPageID, description
+        );
     }
 }
