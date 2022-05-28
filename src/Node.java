@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class Node {
+public class Node implements Serializable {
 
     // 16 bytes for key + value pointer
     // minimum of 16 * 8 records minimum
@@ -14,6 +15,7 @@ public class Node {
     private boolean root = false;
 
     private int order = 0;
+    public static int nodes = 0;
 
 //    private List<NodeElement> nodeElements;
     private List<Long> keys;
@@ -27,7 +29,13 @@ public class Node {
         nodeValues = new ArrayList<Node>();
     }
 
-    public void setRoot() {}
+    public void setRoot(boolean root) {
+        this.root = root;
+    }
+
+//    public byte[] getBytes() {
+//        return get
+//    }
 
 
     public boolean isFull() {
@@ -85,6 +93,11 @@ public class Node {
     }
 
     public void split() {
+//        if (root) {
+//            System.out.println("Root Splitting");
+//            BPTree.height++;
+//        }
+
         Node leftNode = new Node(order);
         Node rightNode = new Node(order);
         int middle = (int) Math.ceil(order / 2);
@@ -112,13 +125,15 @@ public class Node {
         return keys.size();
     }
 
-    public void printRecursive(int count) {
-        System.out.println("Node at level " + count + " has the keys: " + keys.toString());
+    public void printRecursive(int count, boolean print) {
+        if (print)
+            System.out.println("Node at level " + count + " has the keys: " + keys.toString());
 
         if (!leaf) {
             for (Node childNode : nodeValues) {
-                childNode.printRecursive(count + 1);
+                childNode.printRecursive(count + 1, print);
             }
         }
+        nodes++;
     }
 }

@@ -1,6 +1,4 @@
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -90,8 +88,23 @@ public class btindex {
         }
 
         System.out.println("Records Indexed: " + recordsNotIncludingNull);
+
+        byte[] treeBytes = tree.save();
+        try {
+            FileOutputStream os = new FileOutputStream(new File("index." + treePageSize));
+            os.write(treeBytes);
+            os.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 //        System.out.println("Tree Diagram: ");
-//        tree.printTree();
+        long finalTime = System.nanoTime() - startTime;
+        tree.printTree(false);
+        System.out.println("Index Pages / Nodes: "+ Node.nodes);
+        System.out.println("Index file creation took " + ((double) finalTime / 1_000_000_000) + " Seconds.");
 
     }
 

@@ -1,6 +1,6 @@
+import java.io.*;
 
-
-public class BPTree {
+public class BPTree implements Serializable{
 
     private Node root;
     private int maxOrder;
@@ -12,6 +12,7 @@ public class BPTree {
         // Create a B+ Tree
         maxOrder = (int) Math.ceil(pageSize / Node.MAX_SIZE); // order determined by size of a node
         root = new Node(maxOrder);
+        root.setRoot(true);
         indexPages++;
     }
 
@@ -19,6 +20,37 @@ public class BPTree {
         //TODO: Read a index file into memory for B+ tree
     }
 
+    public byte[] save() {
+        //TODO: Save B+ Tree to index file
+        boolean done = false;
+        int count = 0;
+        Node node = root;
+        while (!done) {
+            if (!node.isLeaf()) {
+                if (node.getNodeValues().size() > 0) {
+                    node = node.getNodeValues().get(0);
+                } else {
+                    done = true;
+                }
+                count++;
+            } else {
+                done = true;
+            }
+        }
+        System.out.println("Height:" + count);
+        ByteArrayOutputStream  bos = new ByteArrayOutputStream ();
+        ObjectOutputStream      oos = null;
+        try {
+            oos = new ObjectOutputStream (bos);
+            oos.writeObject(this);
+            oos.flush();
+            oos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return bos.toByteArray();
+    }
 
     public void insert(long key, long value) {
         Node parent = null;
@@ -90,8 +122,10 @@ public class BPTree {
         return Long.MIN_VALUE;
     }
 
-    public void printTree() {
-        this.root.printRecursive(0);
+    public void printTree(boolean print) {
+        Node.nodes = 0;
+
+        this.root.printRecursive(0, print);
     }
 
 
