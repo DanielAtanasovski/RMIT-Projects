@@ -1,3 +1,5 @@
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +13,7 @@ public class Node implements Serializable {
     public static int MAX_SIZE = 128;
 
     private boolean leaf = true;
-    private Node parent = null;
+    private Node next = null;
     private boolean root = false;
 
     private int order = 0;
@@ -29,13 +31,22 @@ public class Node implements Serializable {
         nodeValues = new ArrayList<Node>();
     }
 
+    public void setNext(Node next) {
+        this.next = next;
+    }
+
+    public Node getNext() {
+        return next;
+    }
+
     public void setRoot(boolean root) {
         this.root = root;
     }
 
-//    public byte[] getBytes() {
-//        return get
-//    }
+    public byte[] getBytes() {
+        throw new NotImplementedException();
+//        return null;
+    }
 
 
     public boolean isFull() {
@@ -89,7 +100,7 @@ public class Node implements Serializable {
                 break;
             }
         }
-//        nodeElements.add(findInsertIndex(key), new NodeElement(key, value));
+
     }
 
     public void split() {

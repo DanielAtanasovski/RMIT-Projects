@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BPTree implements Serializable{
 
@@ -16,12 +18,12 @@ public class BPTree implements Serializable{
         indexPages++;
     }
 
-    public BPTree(String indexFile) {
+    public BPTree(byte[] indexFileBytes) {
         //TODO: Read a index file into memory for B+ tree
     }
 
     public byte[] save() {
-        //TODO: Save B+ Tree to index file
+        //TODO: Better Save B+ Tree to index file
         boolean done = false;
         int count = 0;
         Node node = root;
@@ -109,11 +111,14 @@ public class BPTree implements Serializable{
 
     public long search(long key) {
         Node child = this.root;
+        List<Long> results = new ArrayList<>();
 
+        // Get through internal nodes
         while (!child.isLeaf()) {
             child = findInsertionPoint(child, key).getNode();
         }
 
+        // Search leaf node children
         for (int i = 0; i < child.getKeys().size(); i++) {
             if (key == child.getKeys().get(i))
                 return child.getRidValues().get(i);
@@ -127,23 +132,4 @@ public class BPTree implements Serializable{
 
         this.root.printRecursive(0, print);
     }
-
-
-
-//    public Node search (long key) {
-//        return treeSearch(key, root);
-//    }
-
-    // Return Node where key exists or can exist
-//    private Node treeSearch(long key, Node node) {
-//        if (node.isLeaf())
-//            return node;
-//
-//        // Keep searching
-//        return treeSearch(key, node.search(key));
-//    }
-
-
-
-
 }

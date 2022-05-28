@@ -96,6 +96,7 @@ public class btsearch {
         System.out.println("-----------------------------");
 
         int recordsPerPage = (int) Math.floor(heapPageSize / Record.getMaxBytes());
+        int validDates = 0;
 
         for (int i = 0; i < daysBetween; i++) {
             long value = tree.search(i);
@@ -122,9 +123,9 @@ public class btsearch {
                         Arrays.copyOfRange(pageBytes, recordBytesToSkip,  recordBytesToSkip + Record.getMaxBytes());
                 Record record = new Record(recordBytes);
 
-                System.out.println("RecordID: " + value);
-                System.out.println("Name: " + record.getPersonName());
-                System.out.println("Date: " + record.getBirthDate());
+                System.out.println("Match Found: " + record.getPersonName() + " | " +
+                                   record.getBirthDate().toString());
+                validDates++;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -132,6 +133,8 @@ public class btsearch {
         }
 
         long finalTime = System.nanoTime() - startTime;
+        System.out.println("------------------");
+        System.out.println("Records Matching Query: " + validDates);
         System.out.println("Query took " + ((double) finalTime / 1_000_000_000) + " Seconds.");
     }
 }

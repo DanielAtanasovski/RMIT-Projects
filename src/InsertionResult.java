@@ -1,7 +1,6 @@
 import java.util.List;
 
 public class InsertionResult {
-
     private Node node;
     private int index;
 
