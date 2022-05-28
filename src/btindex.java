@@ -45,6 +45,8 @@ public class btindex {
         String[] heapFileSplit = args[2].split("\\.");
         int heapPageSize = Integer.parseInt(heapFileSplit[1]);
 
+        System.out.println("Starting Tree Creation");
+
         // Read File
         byte[] pageBytes      = new byte[heapPageSize];
         int    bytesRead      = 0;
@@ -76,7 +78,6 @@ public class btindex {
                     recordsNotIncludingNull += 1;
 
                     long key = currentRecord.getBirthDate().toEpochDay();
-
 
                     tree.insert(key, value);
                 }
