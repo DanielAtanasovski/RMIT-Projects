@@ -77,7 +77,7 @@ public class btsearch {
             e.printStackTrace();
         }
 
-        tree.printTree(true);
+        tree.printTree(false);
 
 
         // Read File
@@ -91,7 +91,10 @@ public class btsearch {
         // TODO: Create Tree from binary data
 
         long daysBetween = toDate.toEpochDay() - fromDate.toEpochDay();
+        System.out.println("Searching Birthdates between: " + fromDate.toString() + " -> " + toDate.toString());
         System.out.println("Days between: " + daysBetween);
+        System.out.println("-----------------------------");
+
         int recordsPerPage = (int) Math.floor(heapPageSize / Record.getMaxBytes());
 
         for (int i = 0; i < daysBetween; i++) {
@@ -108,12 +111,12 @@ public class btsearch {
             int pageBytesToSkip = pagesToSkip * heapPageSize;
             int recordBytesToSkip = recordsToSkip * Record.getMaxBytes();
 
-            System.out.println( "records bytes to skip: " + recordBytesToSkip);
+//            System.out.println( "records bytes to skip: " + recordBytesToSkip);
 
             try {
                 heapFile.seek(pageBytesToSkip);
                 int readBytes = heapFile.read(pageBytes);
-                System.out.println("Read: " + readBytes);
+//                System.out.println("Read: " + readBytes);
 
                 byte[] recordBytes =
                         Arrays.copyOfRange(pageBytes, recordBytesToSkip,  recordBytesToSkip + Record.getMaxBytes());
@@ -121,6 +124,7 @@ public class btsearch {
 
                 System.out.println("RecordID: " + value);
                 System.out.println("Name: " + record.getPersonName());
+                System.out.println("Date: " + record.getBirthDate());
             } catch (IOException e) {
                 e.printStackTrace();
             }
