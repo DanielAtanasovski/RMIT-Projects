@@ -1,0 +1,23 @@
+# Results
+
+Sample output from previous runs of all memory strategies are provided in the results directory and are also available in the report.
+
+# Compilation Instructions
+
+make memory
+
+# Execution Instructions
+
+./memory arg1 arg2 arg3
+
+arg1: Input file with list of names to use as the dataset.
+arg2: Output file with data produced by the program (If doesn't exist, will create it).
+arg3: Type of allocation strategy to use, includes: first, best and worst.
+
+# Example
+
+To run a first fit allocation strategy:
+./memory first-names.txt first-output.txt first
+
+To run a worst fit allocation strategy:
+./memory middle-names.txt randomOutputFile.txt worst
