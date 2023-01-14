@@ -1,0 +1,15 @@
+/BinarySearchTreeRQ.class
+/Node.class
+/OrderedArrayRQ.class
+/OrderedLinkedListRQ.class
+/Proc.class
+/Runqueue.class
+/RunqueueTester.class
+
+# vscode
+.vscode/
+bin/
+
+# other
+.classpath
+.project
