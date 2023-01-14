@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{e9b2b8c8-28b3-4eff-986f-98a1b2cd3417}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{bcf05b27-94ec-4779-9196-80d72bc5feac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{8b768568-454a-47a7-8289-8f183dc5c60b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World">
+      <UniqueIdentifier>{a578a98b-d67c-4058-9c64-fbea1d6fa199}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{3e4599d6-9ff3-42c0-9a8b-14b09b1855b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{5b3c945c-8b0c-4443-9353-730189183fd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects">
+      <UniqueIdentifier>{cae8db72-7015-40aa-adc2-d54d83c6d118}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entity\Player.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entity\Asteroid.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\math\Vector2.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\world\Arena.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Game.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GlutCallbackInterface.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\manager\Input.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\math\Vector3.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\physics\CollidableEntity.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entity\Entity.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\math\Math.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\effects\Particle.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\effects\TrailEffect.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entity\Bullet.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\effects\ExplosionEffect.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\entity\Player.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\entity\Asteroid.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\math\Vector2.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\world\Arena.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Game.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GlutCallbackInterface.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\manager\Input.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\math\Vector3.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\physics\CollidableEntity.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\entity\Entity.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\math\Math.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\effects\Particle.h">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\effects\TrailEffect.h">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\entity\Bullet.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\effects\ExplosionEffect.h">
+      <Filter>Effects</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
